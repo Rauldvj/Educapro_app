@@ -1,0 +1,134 @@
+<!-- Modal centrado verticalmente -->
+<dialog id="apoderado_titular_modal" class="max-w-2xl p-3 rounded-md bg-gradient-to-b from-blue-950 to-blue-900">
+    <div class="flex flex-col w-full h-auto">
+        <!-- Header -->
+        <h2 class="flex w-full justify-center items-center text-xl font-semibold font-sans text-white uppercase">
+            Edición Apoderado Titular de:
+        </h2>
+        <span class="flex w-full justify-center items-center text-xl font-semibold font-sans text-white">{{ apoderado_titular.estudiante }}</span>
+        <hr>
+
+        <!-- Modal Content-->
+        <div class="flex max-w-xl py-0 px-2 mt-5 justify-center items-center rounded-md text-center text-gray-500">
+            <form action="{% url 'apoderado_titular_edit' apoderado_titular.pk %}" method="post" id="apoderado_titular_form" class="" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <!-- ----FILA 1: rut, etnia, fecha nacimiento--- -->
+                <div class="mb-4 flex space-x-2">
+                    <div class="w-1/3 text-start">
+                        <label for="rut" class="form-label text-white text-sm italic mb-0">Rut</label>
+                        <input type="text" name="rut" id="rut_apoderado_titular" value="{{ apoderado_titular.rut }}" 
+                        class="rut-input bg-white text-gray-900 rounded-md pl-2 py-1 md:py-1 text-sm focus:outline-none w-full" placeholder="Ej: 11111111-1" maxlength="12" required />
+                    </div>
+                    <div class="w-1/3 text-start">
+                        <label for="etnia" class="form-label text-white text-sm italic mb-0">Etnia</label>
+                        <select name="etnia" id="etnia" class="bg-white text-gray-900 rounded-md pl-1 py-1 md:py-1 text-sm focus:outline-none w-full">
+                            {% for opcion in opciones_etnia %}
+                                <option value="{{ opcion.0 }}" {% if apoderado_titular.etnia == opcion.0 %}selected{% endif %}>{{ opcion.1 }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="w-1/3 text-start">
+                        <label for="fecha_nacimiento" class="form-label text-white text-sm italic mb-0">Fecha Nacimiento</label>
+                        <input type="text" name="fecha_nacimiento" id="fecha_nacimiento" value="{{ apoderado_titular.fecha_nacimiento|date:'d-m-Y' }}" 
+                        class="fecha-nacimiento-input bg-white text-gray-900 rounded-md pl-2 py-1 md:py-1 text-sm focus:outline-none w-full" 
+                        placeholder="DD-MM-YYYY" maxlength="10" required />
+                    </div>
+                </div>
+
+                <!-- ----FILA 2: nombres, apellido paterno, apellido materno--- -->
+                <div class="mb-4 flex space-x-2">
+                    <div class="w-1/3 text-start">
+                        <label for="nombres" class="form-label text-white text-sm italic mb-0">Nombres</label>
+                        <input type="text" name="nombres" id="nombres" value="{{ apoderado_titular.nombres }}" 
+                        class="bg-white text-gray-900 rounded-md pl-2 py-1 md:py-1 text-sm focus:outline-none w-full" placeholder="Nombres" />
+                    </div>
+                    <div class="w-1/3 text-start">
+                        <label for="apellido_paterno" class="form-label text-white text-sm italic mb-0">Apellido Paterno</label>
+                        <input type="text" name="apellido_paterno" id="apellido_paterno" value="{{ apoderado_titular.apellido_paterno }}" 
+                        class="bg-white text-gray-900 rounded-md pl-2 py-1 md:py-1 text-sm focus:outline-none w-full" placeholder="Apellido Paterno" />
+                    </div>
+                    <div class="w-1/3 text-start">
+                        <label for="apellido_materno" class="form-label text-white text-sm italic mb-0">Apellido Materno</label>
+                        <input type="text" name="apellido_materno" id="apellido_materno" value="{{ apoderado_titular.apellido_materno }}" 
+                        class="bg-white text-gray-900 rounded-md pl-2 py-1 md:py-1 text-sm focus:outline-none w-full" placeholder="Apellido Materno" />
+                    </div>
+                </div>
+
+                <!-- ----FILA 3: dirección, telefono, correo--- -->
+                <div class="mb-4 flex space-x-2">
+                    <div class="w-1/2 text-start">
+                        <label for="direccion" class="form-label text-white text-sm italic mb-0">Dirección</label>
+                        <input type="text" name="direccion" id="direccion" value="{{ apoderado_titular.direccion }}" 
+                        class="bg-white text-gray-900 rounded-md pl-2 py-1 md:py-1 text-sm focus:outline-none w-full" placeholder="Dirección 445" />
+                    </div>
+                    <div class="w-1/4 text-start">
+                        <label for="telefono" class="form-label text-white text-sm italic mb-0">Teléfono +56</label>
+                        <input type="text" name="telefono" id="telefono" value="{{ apoderado_titular.telefono }}" 
+                        class="bg-white text-gray-900 rounded-md pl-2 py-1 md:py-1 text-sm focus:outline-none w-full" placeholder="Ej: 912233333" maxlength="9" required />
+                    </div>
+                    <div class="w-1/3 text-start">
+                        <label for="email" class="form-label text-white text-sm italic mb-0">Email</label>
+                        <input type="email" name="email" id="email" value="{{ apoderado_titular.email }}" 
+                        class="bg-white text-gray-900 rounded-md pl-2 py-1 md:py-1 text-sm focus:outline-none w-full" placeholder="Ejemplo: 7Kqeh@gmail.com" />
+                    </div>
+                </div>
+
+                <!-- ----FILA 4: renta, Salud--- -->
+                <div class="mb-4 flex space-x-2">
+                    <div class="w-1/2 text-start">
+                        <label for="renta" class="form-label text-white text-sm italic mb-0">Renta</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-2 text-gray-500">$</span>
+                            <input type="text" name="renta" id="renta" value="{{ apoderado_titular.renta|floatformat:0|add:"."|add:".000" }}" required
+                            class="renta-input bg-white text-gray-900 rounded-md pl-6 py-1 md:py-1 text-sm focus:outline-none w-full" placeholder="199.990" />
+                        </div>
+                    </div>
+                    <div class="w-1/2 text-start">
+                        <label for="salud" class="form-label text-white text-sm font-sans italic mb-0">Tipo Salud</label>
+                        <select name="salud" id="salud" class="bg-white rounded-md pl-1 py-1 md:py-1 text-sm text-gray-900 focus:outline-none w-full">
+                            <!-- Opciones de salud -->
+                            {% for opcion in opciones_salud %}
+                                <option value="{{ opcion.0 }}" {% if opcion.0 == apoderado_titular.salud %}selected{% endif %}>{{ opcion.1 }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <!-- ----FILA 5: región, comuna--- -->
+                <div class="mb-4 flex space-x-2">
+                    <div class="w-1/2 text-start">
+                        <label for="region" class="form-label text-white text-sm italic mb-0">Región</label>
+                        <select name="region" id="region1" class="region-select bg-white text-gray-900 rounded-md pl-2 py-1 md:py-1 text-sm focus:outline-none w-full">
+                            {% for region in regiones %}
+                                <option value="{{ region.id }}" {% if apoderado_titular.region_id == region.id %}selected{% endif %}>{{ region.region }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="w-1/2 text-start">
+                        <label for="comuna" class="form-label text-white text-sm italic mb-0">Comuna</label>                      
+                        <select name="comuna" data-region-select="region1" 
+                        class="comuna-select bg-white text-gray-900 rounded-md pl-2 py-1 md:py-1 text-sm focus:outline-none w-full">
+                            <option value="">Seleccione comuna</option>
+                            {% for comuna in comunas %}
+                                <option value="{{ comuna.id }}" data-region="{{ comuna.region_id }}" {% if apoderado_titular.comuna_id == comuna.id %}selected{% endif %}>{{ comuna.comuna }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Modal Footer -->
+                <div class="modal-footer flex flex-col justify-end mt-3 w-full">
+                    <button type="submit" class="bg-gradient-to-b from-amber-200 via-amber-300 to-amber-300 
+                    hover:from-amber-600 hover:to-amber-500 text-blue-900 font-bold text-md p-2 md:p-2 uppercase w-full rounded-md mx-auto mb-4">GUARDAR CAMBIOS</button>
+
+                    <button type="button" class="bg-gradient-to-b from-blue-400 via-blue-500 to-blue-400 
+                    hover:from-blue-600 hover:to-blue-500 text-white py-2 px-4 rounded-md w-full" 
+                    onclick="document.getElementById('apoderado_titular_modal').close()">CERRAR</button>
+                </div>
+
+            </form>
+        </div>
+        <!-- End of Modal Content-->
+    </div>
+</dialog>

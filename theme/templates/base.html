@@ -1,0 +1,270 @@
+{% load static tailwind_tags %}
+
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <title>{% block title %} {% endblock %}</title>
+    <!-- Agregar el enlace al archivo de estilos de Tailwind CSS -->
+    <link href="{% static 'css/styles.css' %}" rel="stylesheet">
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <!-- Agregar el enlace al archivo de la biblioteca FontAwesome -->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+      rel="stylesheet"
+    />
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- //Borrar esta linea cuando se realice la producción// -->
+    {% tailwind_css %}
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Estilos personalizados para SweetAlert2 -->
+    <style>
+      .swal2-confirm {
+        background: linear-gradient(to bottom, #e3342f, #cc1f1a); /* Fondo degradado rojo */
+        color: #fff;
+        padding: 0.75rem 1.5rem; /* Padding vertical y horizontal */
+        margin-right: 1rem; /* Espaciado entre botones */
+        border: none; /* Quitar borde */
+      }
+      .swal2-confirm:hover {
+        background: linear-gradient(to bottom, #cc1f1a, #e3342f); /* Efecto hover */
+      }
+      .swal2-cancel {
+        background: linear-gradient(to bottom, #38c172, #1f9d55); /* Fondo degradado verde */
+        color: #fff;
+        padding: 0.75rem 1.5rem; /* Padding vertical y horizontal */
+        margin-left: 1rem; /* Espaciado entre botones */
+        border: none; /* Quitar borde */
+      }
+      .swal2-cancel:hover {
+        background: linear-gradient(to bottom, #1f9d55, #38c172); /* Efecto hover */
+      }
+      .swal2-actions {
+        display: flex;
+        justify-content: space-between;
+      }
+    </style>
+  </head>
+
+  <body class="bg-gradient-to-r from-blue-100 to-blue-200">
+   
+
+    <div class="header font-sans">{% block header %} {% endblock %}</div>
+
+    <div class="sidenav font-sans">{% block navbar %} {% endblock %}</div>
+    
+    <div class="sidebar font-sans">{% block sidebar %} {% endblock %}</div>
+    
+    <div class="contenido font-sans">{% block content %} {% endblock content %}</div>
+
+    <div class="imagen">{% block img %} {% endblock %}</div>
+
+    <div class="footer">{% block footer %} {% endblock %}</div>
+
+    <!-- Script para mensajes de Django con SweetAlert2 -->
+    {% if messages %}
+      {% for message in messages %}
+        {% if message.tags == 'success' %}
+          <script>
+            Swal.fire({
+              title: "¡Excelente!",
+              text: "{{ message }}",
+              icon: "success",
+              confirmButtonText: 'OK',
+              customClass: {
+                confirmButton: "swal2-confirm"
+              },
+              buttonsStyling: false
+            });
+          </script>
+        {% elif message.tags == 'error' %}
+          <script>
+            Swal.fire({
+              title: "Error",
+              text: "{{ message }}",
+              icon: "error",
+              confirmButtonText: 'OK',
+              customClass: {
+                confirmButton: "swal2-confirm"
+              },
+              buttonsStyling: false
+            });
+          </script>
+        {% elif message.tags == 'warning' %}
+          <script>
+            Swal.fire({
+              title: "Advertencia",
+              text: "{{ message }}",
+              icon: "warning",
+              confirmButtonText: 'OK',
+              customClass: {
+                confirmButton: "swal2-confirm"
+              },
+              buttonsStyling: false
+            });
+          </script>
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+
+    <!-- Script para confirmar el reseteo de contraseña -->
+    <script>
+      function confirmResetPassword() {
+        const swalWithBootstrapButtons = Swal.mixin({
+          customClass: {
+            confirmButton: "swal2-confirm",
+            cancelButton: "swal2-cancel"
+          },
+          buttonsStyling: false
+        });
+
+        swalWithBootstrapButtons.fire({
+          title: "¿Está seguro de resetear la contraseña?",
+          text: "¡No podrá revertir esto!",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonText: "SÍ, RESETEAR",
+          cancelButtonText: "NO, CANCELAR",
+          reverseButtons: true
+        }).then((result) => {
+          if (result.isConfirmed) {
+            document.getElementById('reset-password-form').submit();
+          } else if (result.dismiss === Swal.DismissReason.cancel) {
+            swalWithBootstrapButtons.fire({
+              title: "Cancelado",
+              text: "La contraseña no ha sido reseteada",
+              icon: "error",
+              customClass: {
+                confirmButton: "swal2-confirm"
+              },
+              buttonsStyling: false
+            });
+          }
+        });
+      }
+    </script>
+
+    <!-- Script para confirmar la eliminación de usuario -->
+    <script>
+      function confirmDeleteUser(userId) {
+        const swalWithBootstrapButtons = Swal.mixin({
+          customClass: {
+            confirmButton: "swal2-confirm",
+            cancelButton: "swal2-cancel"
+          },
+          buttonsStyling: false
+        });
+
+        swalWithBootstrapButtons.fire({
+          title: "¿Está seguro de eliminar este usuario?",
+          text: "¡No podrá revertir esto!",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonText: "SÍ, ELIMINAR",
+          cancelButtonText: "NO, CANCELAR",
+          reverseButtons: true
+        }).then((result) => {
+          if (result.isConfirmed) {
+            document.getElementById('delete-user-form-' + userId).submit();
+          } else if (result.dismiss === Swal.DismissReason.cancel) {
+            swalWithBootstrapButtons.fire({
+              title: "Cancelado",
+              text: "El usuario no ha sido eliminado",
+              icon: "error",
+              customClass: {
+                confirmButton: "swal2-confirm"
+              },
+              buttonsStyling: false
+            });
+          }
+        });
+      }
+    </script>
+
+    <!-- Script para confirmar la desactivación de usuario -->
+    <script>
+      function confirmDeactivateUser(userId) {
+        const swalWithBootstrapButtons = Swal.mixin({
+          customClass: {
+            confirmButton: "swal2-confirm",
+            cancelButton: "swal2-cancel"
+          },
+          buttonsStyling: false
+        });
+
+        swalWithBootstrapButtons.fire({
+          title: "¿Está seguro de desactivar este usuario?",
+          text: "¡No podrá revertir esto!",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonText: "SÍ, DESACTIVAR",
+          cancelButtonText: "NO, CANCELAR",
+          reverseButtons: true
+        }).then((result) => {
+          if (result.isConfirmed) {
+            document.getElementById('deactivate-user-form-' + userId).submit();
+          } else if (result.dismiss === Swal.DismissReason.cancel) {
+            swalWithBootstrapButtons.fire({
+              title: "Cancelado",
+              text: "El usuario no ha sido desactivado",
+              icon: "error",
+              customClass: {
+                confirmButton: "swal2-confirm"
+              },
+              buttonsStyling: false
+            });
+          }
+        });
+      }
+    </script>
+
+    <!-- Script para confirmar la activación de usuario -->
+    <script>
+      function confirmActivateUser(userId) {
+        const swalWithBootstrapButtons = Swal.mixin({
+          customClass: {
+            confirmButton: "swal2-confirm",
+            cancelButton: "swal2-cancel"
+          },
+          buttonsStyling: false
+        });
+
+        swalWithBootstrapButtons.fire({
+          title: "¿Está seguro de activar este usuario?",
+          text: "¡No podrá revertir esto!",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonText: "SÍ, ACTIVAR",
+          cancelButtonText: "NO, CANCELAR",
+          reverseButtons: true
+        }).then((result) => {
+          if (result.isConfirmed) {
+            document.getElementById('activate-user-form-' + userId).submit();
+          } else if (result.dismiss === Swal.DismissReason.cancel) {
+            swalWithBootstrapButtons.fire({
+              title: "Cancelado",
+              text: "El usuario no ha sido activado",
+              icon: "error",
+              customClass: {
+                confirmButton: "swal2-confirm"
+              },
+              buttonsStyling: false
+            });
+          }
+        });
+      }
+    </script>
+
+    {% block js %}
+    <!-- Aquí puedes agregar scripts adicionales específicos de cada página -->
+    {% endblock %}
+  </body>
+</html>

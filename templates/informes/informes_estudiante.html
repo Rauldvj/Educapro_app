@@ -1,0 +1,97 @@
+<!-- #PAGINA PARA VER EL PERFIL DE CADA USUARIO POR EL COORDINADOR O ADMINISTRADOR -->
+{% extends 'base.html' %}
+
+{% block title %} Informes Estudiante {% endblock %}
+
+
+{% block content %}
+
+{% load tailwind_filters %}
+
+{% load static %}
+
+<!-- Incluir el archivo funciones.js -->
+<script src="{% static 'js/funciones.js' %}"></script>
+
+
+{% include 'componentes/navbar.html' %}
+
+
+<h2 class="bg-gradient-to-r from-sky-700 to-sky-600 text-lg font-bold text-white italic py-2 px-3">Consulta de Informes del Estudiante</h2>
+<hr>
+
+<!-- Contenedor principal -->
+<div class="container h-full">
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-8 h-full">
+        <!-- Tarjeta de datos de perfil -->
+        <!-- Navegación lateral -->
+<aside class="bg-gradient-to-r from-sky-700 to-sky-600 p-3  text-white w-72 h-full fixed">
+    <div class="flex items-center">
+        <div>
+            <!-- Nombre y apellido del usuario -->
+            <h2 class="text-lg font-sans font-semibold text-white uppercase">{{ estudiante.nombres }}</h2>
+            <h2 class="text-md font-sans font-semibold text-white uppercase">
+                {{ estudiante.apellido_paterno}} {{estudiante.apellido_materno}}</h2>
+            <h2 class="mt-2 text-sm font-sans font-semibold italic text-white ">{{ estudiante.cursos}} </h2>
+            <h2 class="mt-2 text-sm font-sans font-semibold italic text-white ">{{ estudiante.nee}} </h2>
+        </div>
+        <img src="/static/Imagenes/LOGO LICEO TECNICO ADULTOS.jpg" alt="" class="w-24 ml-10">
+    </div>
+
+    <hr class="my-5">
+    <div class="space-y-1">
+        <p class="text-white text-sm italic py-2 px-3 uppercase">Aquí puedes revisar los informes</p>
+    </div>
+
+    <hr class="mt-4">
+
+    
+    <div class="flex flex-col items-stretch text-center">
+
+        <!-- Botón Bitácora -->
+        <a href="{% url 'bitacora_estudiante_list' estudiante.id %}"
+            class="mt-4 bg-gradient-to-b from-yellow-800 to-yellow-700
+                hover:from-yellow-600 hover:to-yellow-500 text-white py-2 px-4 rounded-sm block w-full">
+                    VER BITÁCORAS
+        </a>
+        <hr class="mt-4">
+
+        <!-- Botón Informes -->
+        <a href="{% url 'informes_estudiante' estudiante.id %}"
+            class="bg-gradient-to-b from-fuchsia-800 to-fuchsia-700
+          hover:from-fuchsia-600 hover:to-fuchsia-500  text-white mt-4 py-2 px-4 rounded-sm block w-full"
+            >INFORME ANAMNESIS
+        </a>
+
+        <hr class="mt-4">
+
+        <!-- Botón Editar al Estudiante--> 
+        <button onclick="document.getElementById('estudiante_modal').showModal()" id="btn"
+        class="py-2 px-4 mt-4 bg-gradient-to-b from-red-800 to-red-700  
+        hover:from-red-600 hover:to-red-500 text-white rounded-sm text shadow-xl block w-full">
+        INFORME PACI
+        </button> 
+        
+        <hr class="mt-4">
+        <!-- Botón Editar al Estudiante--> 
+        <button onclick="document.getElementById('estudiante_modal').showModal()" id="btn"
+        class="py-2 px-4 mt-4 bg-gradient-to-b from-red-800 to-red-700  
+        hover:from-red-600 hover:to-red-500 text-white rounded-sm text shadow-xl block w-full">
+        INFORME PAI
+        </button>  
+          
+        <hr class="mt-4">
+        <!-- Botón Regresar a Estudiante -->
+        <a href="{% url 'estudiante' estudiante.id %}"
+            class="bg-gradient-to-b from-lime-800 to-lime-700
+                hover:from-lime-600 hover:to-lime-500 text-white mt-4 py-2 px-4 rounded-sm block w-full">
+            REGRESAR
+        </a>
+    </div>
+</aside>
+
+
+
+
+<body/>
+{% endblock %}

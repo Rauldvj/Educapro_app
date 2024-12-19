@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>PAI Estudiante PDF</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 2.5cm;
+            @bottom-right {
+                content: "Pag " counter(page);
+                font-size: 0.9em;
+                color: #333;
+            }
+            @bottom-center {
+                content: "LOS DATOS CONTENIDOS EN ESTE DOCUMENTO SON CONFIDENCIALES";
+                font-size: 0.9em;
+                color: #333;
+            }
+        }
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            position: relative;
+            box-sizing: border-box;
+            padding-bottom: 50px;
+        }
+        .container {
+            margin: 0;
+            padding: 0;
+            position: relative;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 0;
+            padding: 0;
+        }
+        .header-left, .header-center, .header-right {
+            text-align: center;
+        }
+        .header img {
+            height: 60px;
+            object-fit: contain;
+        }
+        .header-left img {
+            text-align: left;
+        }
+        .titu {
+            color: #010137;
+            font-size: 1.5em;
+            text-align: center;
+            margin-top: 10px;
+        }
+        .content {
+            margin-top: 30px;
+        }
+        .section {
+            margin-bottom: 40px;
+        }
+        .section h3 {
+            font-size: 1rem;
+            margin-bottom: 10px;
+            color: #010137;
+        }
+        h4::before {
+            content: "• ";
+            color: #010137;
+        }
+        h4 {
+            color: #010137;
+            font-size: 1rem;
+            margin-bottom: 10px;
+        }
+        .section table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .section th, .section td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            font-size: 0.875rem;
+        }
+        .section th {
+            background-color: #7dd3fc;
+            color: #000;
+            font-weight: bold;
+            text-align: left;
+        }
+        .footer {
+            position: running(footer);
+            width: 100%;
+            padding: 15px 0;
+            background-color: white;
+            text-align: center;
+            color: #333;
+            font-size: 0.9em;
+            margin-bottom: 15px;
+        }
+        @media print {
+            body {
+                margin: 0;
+                padding: 0;
+                padding-bottom: 50px;
+            }
+            .container, .content {
+                margin: 0;
+                padding: 0;
+            }
+            .content {
+                margin-bottom: 50px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Encabezado con logos -->
+        <div class="header">
+            <div class="header-left">
+                <img src="{{ logo_liceo_url }}" alt="Logo Liceo Técnico">
+            </div>
+            <div class="header-center">
+                <img src="{{ logo_servicio_url }}" alt="Logo Servicio Local">
+            </div>
+            <div class="header-right">
+                <img src="{{ logo_pie_url }}" alt="Logo PIE">
+            </div>
+        </div>
+        <div class="titu">PLAN DE APOYO INDIVIDUAL / PAI</div>
+        <div class="content">
+            <!-- Sección 1: Identificación del Estudiante -->
+            <div class="section">
+                <h3>1. IDENTIFICACIÓN DEL ESTUDIANTE</h3>
+                <table>
+                    <tr>
+                        <th>Nombre completo</th>
+                        <td colspan="3">{{ estudiante.nombres }} {{ estudiante.apellido_paterno }} {{ estudiante.apellido_materno }}</td>
+                    </tr>
+                    <tr>
+                        <th>Rut</th>
+                        <td>{{ estudiante.rut }}</td>
+                        <th>Fecha de nacimiento</th>
+                        <td>{{ estudiante.fecha_nacimiento }}</td>
+                    </tr>
+                    <tr>
+                        <th>Dirección</th>
+                        <td colspan="3">{{ estudiante.direccion }}</td>
+                    </tr>
+                    <tr>
+                        <th>Curso actual</th>
+                        <td>{{ estudiante.cursos.nombre }}</td>
+                        <th>Edad</th>
+                        <td>{{ pai.edad }}</td>
+                    </tr>
+                    <tr>
+                        <th>Diagnóstico NEE</th>
+                        <td>{{ estudiante.nee }}</td>
+                        <th>Sexo</th>
+                        <td>{{ pai.sexo }}</td>
+                    </tr>
+                    <tr>
+                        <th>Fecha elaboración</th>
+                        <td colspan="3">{{ pai.fecha_elaboracion|date:'Y-m-d' }}</td>
+                    </tr>
+                </table>
+            </div>
+            <!-- Sección 2: Identificación del Establecimiento -->
+            <div class="section">
+                <h3>2. IDENTIFICACIÓN DEL ESTABLECIMIENTO</h3>
+                <table>
+                    <tr>
+                        <th>RBD</th>
+                        <td colspan="3">{{ pai.rbd }}</td>
+                    </tr>
+                    <tr>
+                        <th>Nombre del Establecimiento</th>
+                        <td colspan="3">{{ pai.nombre_establecimiento }}</td>
+                    </tr>
+                    <tr>
+                        <th>Región</th>
+                        <td>{{ pai.region }}</td>
+                        <th>Comuna</th>
+                        <td>{{ pai.comuna }}</td>
+                    </tr>
+                    <tr>
+                        <th>Coordinador(a) PIE</th>
+                        <td colspan="3">{{ pai.coordinador_pie }}</td>
+                    </tr>
+                </table>
+            </div>
+            <!-- Sección 3: Equipo Responsable PAI -->
+            <div class="section">
+                <h3>3. EQUIPO RESPONSABLE PAI</h3>
+                <table>
+                    <tr>
+                        <th>Nombre Profesional</th>
+                        <th>Cargo</th>
+                    </tr>
+                    {% for form in equipo_responsable_formset %}
+                    {% if form.instance.pk %}
+                    <tr>
+                        <td>{{ form.instance.nombre_profesional }}</td>
+                        <td>{{ form.instance.cargo }}</td>
+                    </tr>
+                    {% endif %}
+                    {% endfor %}
+                </table>
+            </div>
+            <!-- Sección 4: Docentes Integradores y Familia -->
+            <div class="section">
+                <h3>4. DOCENTES INTEGRADORES Y FAMILIA</h3>
+                <!-- Subsección 4.1: Familia -->
+                <h4>FAMILIA</h4>
+                <table>
+                    <tr>
+                        <th>Nombres</th>
+                        <th>Parentesco</th>
+                    </tr>
+                    {% for form in familia_formset %}
+                    {% if form.instance.pk %}
+                    <tr>
+                        <td>{{ form.instance.nombres }}</td>
+                        <td>{{ form.instance.parentesco }}</td>
+                    </tr>
+                    {% endif %}
+                    {% endfor %}
+                </table>
+                <!-- Subsección 4.2: Docentes Integradores -->
+                <h4>DOCENTES INTEGRADORES</h4>
+                <table>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Profesión</th>
+                    </tr>
+                    {% for form in docentes_formset %}
+                    {% if form.instance.pk %}
+                    <tr>
+                        <td>{{ form.instance.nombre }}</td>
+                        <td>{{ form.instance.profesion }}</td>
+                    </tr>
+                    {% endif %}
+                    {% endfor %}
+                </table>
+            </div>
+            <!-- Sección 5: Estrategias Diversificadas en el Aula -->
+            <div class="section">
+                <h3>5. ESTRATEGIAS DIVERSIFICADAS EN EL AULA</h3>
+                <table>
+                    <tr>
+                        <th>Criterio</th>
+                        <th>Estrategias</th>
+                        <th>Método</th>
+                    </tr>
+                    {% for form in estrategias_diversificadas_formset %}
+                    {% if form.instance.pk %}
+                    <tr>
+                        <td>{{ form.instance.criterio }}</td>
+                        <td>{{ form.instance.estrategias }}</td>
+                        <td>{{ form.instance.metodo }}</td>
+                    </tr>
+                    {% endif %}
+                    {% endfor %}
+                </table>
+            </div>
+            <!-- Sección 6: Organización de los Apoyos Especializados -->
+            <div class="section">
+                <h3>6. ORGANIZACIÓN DE LOS APOYOS ESPECIALIZADOS</h3>
+                <table>
+                    <tr>
+                        <th>Descripción</th>
+                        <th>Contexto</th>
+                    </tr>
+                    {% for form in apoyos_especializados_formset %}
+                    {% if form.instance.pk %}
+                    <tr>
+                        <td>{{ form.instance.descripcion }}</td>
+                        <td>{{ form.instance.contexto }}</td>
+                    </tr>
+                    {% endif %}
+                    {% endfor %}
+                </table>
+            </div>
+            <!-- Sección 7: Horario de los Apoyos Especializados -->
+            <div class="section">
+                <h3>7. HORARIO DE LOS APOYOS ESPECIALIZADOS</h3>
+                <table>
+                    <tr>
+                        <th>Día</th>
+                        <th>Horario</th>
+                        <th>Profesional</th>
+                        <th>Contexto</th>
+                    </tr>
+                    {% for form in horario_apoyos_formset %}
+                    {% if form.instance.pk %}
+                    <tr>
+                        <td>{{ form.instance.dia }}</td>
+                        <td>{{ form.instance.horario }}</td>
+                        <td>{{ form.instance.profesional }}</td>
+                        <td>{{ form.instance.contexto }}</td>
+                    </tr>
+                    {% endif %}
+                    {% endfor %}
+                </table>
+            </div>
+            <!-- Sección 8: Firma del Equipo Responsable PAI -->
+            <div class="section">
+                <h3>8. FIRMA DEL EQUIPO RESPONSABLE PAI</h3>
+                <table>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Cargo</th>
+                        <th>Firma</th>
+                    </tr>
+                    {% for form in firma_formset %}
+                    {% if form.instance.pk %}
+                    <tr>
+                        <td>{{ form.instance.nombre }}</td>
+                        <td>{{ form.instance.cargo }}</td>
+                        <td></td>
+                    </tr>
+                    {% endif %}
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        Generado por EducaPRO
+    </div>
+</body>
+</html>

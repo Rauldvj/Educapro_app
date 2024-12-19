@@ -1,0 +1,37 @@
+{
+  "[python]": {
+    "editor.defaultFormatter": "ms-python.autopep8"
+  },
+  "python.formatting.provider": "none",
+  "cSpell.words": [
+    "apoderadotitular",
+    "Bitacora",
+    "cardiacos",
+    "direccion",
+    "extranas",
+    "Fonoaudiologo",
+    "FUNCION",
+    "logeada",
+    "logeado",
+    "Logeamos",
+    "logueado",
+    "Manejador",
+    "opcion",
+    "paginación",
+    "PAGINADOR",
+    "pais",
+    "pasarle",
+    "pediatria",
+    "psicopedagogo",
+    "Psicopedagógo",
+    "redireccionamiento",
+    "redireccionamos",
+    "relacion",
+    "Renderizar",
+    "tecnicodiferen",
+    "telefono",
+    "titu"
+  ],
+  "CodeGPT.apiKey": "CodeGPT Plus Beta",
+  "git.ignoreLimitWarning": true
+}

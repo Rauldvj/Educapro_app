@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %} Home {% endblock %}
+
+{% block navbar %} 
+    {% include 'componentes/navbar.html' %}
+{% endblock %}
+
+{% block sidebar %} 
+    {% include 'componentes/sidebar.html' %}
+{% endblock %}
+
+    
+    {% load tailwind_filters %}
+    
+    {% block content %}
+
+    <body class="">
+        <img src="/static/Imagenes/frontis liceo.jpg" alt="" class="fixed inset-0 ml-64 object-cover opacity-90 z-[-1]">
+
+    </body>
+
+    {% endblock %}

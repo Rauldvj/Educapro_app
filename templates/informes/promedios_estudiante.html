@@ -1,0 +1,168 @@
+{% extends 'base.html' %}
+
+{% block title %} Promedios Bitácoras {% endblock %}
+
+{% block content %}
+
+{% load tailwind_filters %}
+{% load static %}
+
+<!-- Incluir el archivo funciones.js -->
+<script src="{% static 'js/funciones.js' %}"></script>
+
+<body class=""></body>
+
+{% include 'componentes/navbar.html' %}
+
+<h2 class="bg-gradient-to-b from-blue-950 to-blue-800 text-lg font-bold text-white italic py-2 px-3">Consulta de Informes de las Bitácoras</h2>
+<hr>
+
+<!-- Contenedor principal -->
+<div class="container h-full">
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-8 h-full">
+        <!-- Tarjeta de datos de perfil -->
+        <!-- Navegación lateral -->
+        <aside class="bg-gradient-to-b from-blue-950 to-blue-900 p-3 text-white w-72 h-full fixed">
+            <div class="flex items-center">
+                <div>
+                    <!-- Nombre y apellido del usuario -->
+                    <h2 class="text-lg font-sans font-semibold text-white uppercase">{{ estudiante.nombres }}</h2>
+                    <h2 class="text-md font-sans font-semibold text-white uppercase">
+                        {{ estudiante.apellido_paterno }} {{ estudiante.apellido_materno }}</h2>
+                    <h2 class="mt-4 text-xs font-sans font-semibold italic text-white">{{ estudiante.cursos }}</h2>
+                    <h2 class="mt-2 text-xs font-sans font-semibold italic text-white">Área: {{ estudiante.cursos.area_academica.nombre }}</h2>
+                    <h2 class="mt-2 text-xs font-sans font-semibold italic text-white">NEE: {{ estudiante.nee }}</h2>
+                </div>
+                <img src="/static/Imagenes/LOGO LICEO TECNICO ADULTOS.jpg" alt="" class="w-24 ml-10">
+            </div>
+
+            <hr class="my-5">
+            <div class="space-y-1">
+                <p class="text-white text-sm italic py-2 px-3 uppercase">Aquí puedes revisar el promedio de las bitácoras del estudiante</p>
+            </div>
+
+            <hr class="mt-4">
+
+            <div class="flex flex-col items-stretch text-center">
+                
+                <!-- Botón Regresar a Estudiante -->
+                <a href="{% url 'bitacora_estudiante_list' estudiante.id %}"
+                   class="bg-gradient-to-b from-blue-400 via-blue-500 to-blue-400 
+                   hover:from-blue-600 hover:to-blue-500 font-semibold text-white mt-60 py-2 px-4 rounded-md block w-full">
+                   REGRESAR
+                </a>
+            </div>
+        </aside>
+
+        <div class="lg:col-span-4 col-span-1 h-full flex flex-col ml-80">
+            <!-- DIV DE DATOS DEL APODERADO TITULAR -->
+            <div class="rounded mt-3">
+                <div class="block opacity-100" id="perfiles" role="tabpanel">
+
+                    <!-- Navegación de meses -->
+                    <div class="flex items-center ml-64 mb-4 font-semibold">
+                        {% if mes_actual == 1 %}
+                            <a href="?mes=12&ano={{ ano_actual|add:'-1' }}" class="text-white bg-blue-800 hover:bg-blue-700 px-3 py-1 rounded-md">
+                                &larr; Anterior
+                            </a>
+                        {% else %}
+                            <a href="?mes={{ mes_actual|add:'-1' }}&ano={{ ano_actual }}" class="text-white bg-blue-800 hover:bg-blue-700 px-3 py-1 rounded-md">
+                                &larr; Anterior
+                            </a>
+                        {% endif %}
+                        <span class="text-blue-950 text-lg mx-4 uppercase">{{ nombre_mes }} {{ ano_actual }}</span>
+                        {% if mes_actual == 12 %}
+                            <a href="?mes=1&ano={{ ano_actual|add:'1' }}" class="text-white bg-blue-800 hover:bg-blue-700 px-3 py-1 rounded-md">
+                                Siguiente &rarr;
+                            </a>
+                        {% else %}
+                            <a href="?mes={{ mes_actual|add:'1' }}&ano={{ ano_actual }}" class="text-white bg-blue-800 hover:bg-blue-700 px-3 py-1 rounded-md">
+                                Siguiente &rarr;
+                            </a>
+                        {% endif %}
+                    </div>
+
+                    <h5 class="text-blue-950 text-lg text-start -ml-8 px-2">Promedios Semanales</h5>
+                    <div class="flex flex-col -ml-8 px-2 mt-1 max-h-96 overflow-y-auto">
+                        <div class="overflow-x-auto">
+                            {% for semana in bitacoras_semanal %}
+                                <h6 class="text-blue-950 text-sm text-start italic">Semana {{ forloop.counter }}</h6>
+                                <table class="w-full mb-4">
+                                    <thead class="border-b bg-gradient-to-b from-blue-900 to-blue-800">
+                                        <tr>
+                                            <th scope="col" class="font-semibold font-sans text-xs text-start text-white px-2 py-1 min-w-1/6">FECHA INICIO</th>
+                                            <th scope="col" class="font-semibold font-sans text-xs text-start text-white px-2 py-1 min-w-1/6">FECHA TERMINO</th>
+                                            <th scope="col" class="font-semibold font-sans text-xs text-end text-white px-2 py-1 min-w-1/6">CANTIDAD BITÁCORAS</th>
+                                            <th scope="col" class="font-semibold font-sans text-xs text-end text-white px-2 py-1 min-w-1/6">LOGRADOS</th>
+                                            <th scope="col" class="font-semibold font-sans text-xs text-end text-white px-2 py-1 min-w-1/6">EN VÍAS DE LOGRO</th>
+                                            <th scope="col" class="font-semibold font-sans text-xs text-end text-white px-2 py-1 min-w-1/6">PROMEDIO</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="border-b border-neutral-100 bg-white shadow-2xl">
+                                            <td class="text-start text-gray-900 px-2 py-1 text-sm font-sans whitespace-no-wrap">{{ semana.inicio_semana }}</td>
+                                            <td class="text-start text-gray-900 px-2 py-1 text-sm font-sans whitespace-no-wrap">{{ semana.fin_semana }}</td>
+                                            <td class="text-end text-gray-900 px-2 py-1 text-sm font-sans whitespace-no-wrap">{{ semana.cantidad }}</td>
+                                            <td class="text-end text-gray-900 px-2 py-1 text-sm font-sans whitespace-no-wrap">{{ semana.logrados }}</td>
+                                            <td class="text-end text-gray-900 px-2 py-1 text-sm font-sans whitespace-no-wrap">{{ semana.vias_logro }}</td>
+                                            <td class="text-end text-gray-900 px-2 py-1 text-sm font-sans whitespace-no-wrap">
+                                                <div class="relative">
+                                                    <div class="absolute inset-1 ml-11 animate-pulse rounded-md py-2 w-16 {% if semana.promedio < 60 %}bg-yellow-500{% endif %}"></div>
+                                                    <div class="relative px-2 py-1">{{ semana.promedio|floatformat:2 }} %</div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DIV INFORME MENSUAL -->
+            <div class="rounded mt-3">
+                <div class="block opacity-100" id="perfiles" role="tabpanel">
+                    <h5 class="text-blue-950 text-lg text-start -ml-8 px-2">Promedio Mes</h5>
+
+                    <div class="flex flex-col -ml-8 mt-1 px-2 max-h-96 overflow-y-auto">
+                        <div class="overflow-x-auto">
+                            {% for mes in bitacoras_mensual %}
+                                <table class="w-full mb-4">
+                                    <thead class="border-b bg-gradient-to-b from-blue-900 to-blue-800">
+                                        <tr>
+                                            <th scope="col" class="font-semibold font-sans text-xs text-start text-white px-2 py-1 min-w-1/6">FECHA INICIO</th>
+                                            <th scope="col" class="font-semibold font-sans text-xs text-start text-white px-2 py-1 min-w-1/6">FECHA TERMINO</th>
+                                            <th scope="col" class="font-semibold font-sans text-xs text-end text-white px-2 py-1 min-w-1/6">CANTIDAD BITÁCORAS</th>
+                                            <th scope="col" class="font-semibold font-sans text-xs text-end text-white px-2 py-1 min-w-1/6">LOGRADOS</th>
+                                            <th scope="col" class="font-semibold font-sans text-xs text-end text-white px-2 py-1 min-w-1/6">EN VÍAS DE LOGRO</th>
+                                            <th scope="col" class="font-semibold font-sans text-xs text-end text-white px-2 py-1 min-w-1/6">PROMEDIO</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="border-b border-neutral-100 bg-white shadow-2xl">
+                                            <td class="text-start text-gray-900 px-2 py-1 text-sm font-sans whitespace-no-wrap">{{ mes.inicio_mes }}</td>
+                                            <td class="text-start text-gray-900 px-2 py-1 text-sm font-sans whitespace-no-wrap">{{ mes.fin_mes }}</td>
+                                            <td class="text-end text-gray-900 px-2 py-1 text-sm font-sans whitespace-no-wrap">{{ mes.cantidad }}</td>
+                                            <td class="text-end text-gray-900 px-2 py-1 text-sm font-sans whitespace-no-wrap">{{ mes.logrados }}</td>
+                                            <td class="text-end text-gray-900 px-2 py-1 text-sm font-sans whitespace-no-wrap">{{ mes.vias_logro }}</td>
+                                            <td class="text-end text-gray-900 px-2 py-1 text-sm font-sans whitespace-no-wrap">
+                                                <div class="relative">
+                                                    <div class="absolute inset-1 ml-3 animate-pulse rounded-2xl w-16 {% if mes.promedio < 60 %}bg-yellow-500{% endif %}"></div>
+                                                    <div class="relative px-2 py-1">{{ mes.promedio|floatformat:2 }} %</div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<body/>
+{% endblock %}

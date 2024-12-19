@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Anamnesis Estudiante PDF</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 2.5cm;
+            @bottom-right {
+                content: "Pag " counter(page);
+                font-size: 0.9em;
+                color: #333;
+            }
+        }
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            position: relative;
+            box-sizing: border-box;
+            padding-bottom: 50px;
+        }
+        .container {
+            margin: 0;
+            padding: 0;
+            position: relative;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 0;
+            padding: 0;
+        }
+        .header-left {
+            text-align: left;
+        }
+        .header-left h1 {
+            margin: 0;
+            padding: 0;
+            font-size: 1.2em;
+        }
+        .header-left h1.titu {
+            margin: 0;
+            line-height: 1.2;
+        }
+        .header-left h2 {
+            margin: 2px 0;
+            padding: 0;
+            font-size: 1.1em;
+        }
+        .header-left h3 {
+            margin: 2px 0;
+            padding: 0;
+            font-size: 1em;
+            font-style: italic;
+        }
+        .student-info {
+            padding: 0;
+            margin-top: 10px;
+        }
+        .header-right {
+            text-align: right;
+            align-items: flex-end;
+        }
+        .header-right p {
+            margin: 0;
+            padding: 0;
+            line-height: 1.5;
+        }
+        .titu {
+            color: #010137;
+        }
+        .content {
+            margin-top: 30px;
+            position: relative;
+        }
+        .section {
+            margin-bottom: 40px; /* Aumentar el espacio entre secciones */
+        }
+        .section h3 {
+            font-size: 1rem; /* text-md en Tailwind */
+            margin-bottom: 10px;
+        }
+        .section table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .section table, .section th, .section td {
+            border: 1px solid #ddd;
+        }
+        .section th {
+            background-color: #7dd3fc; /* sky-300 en Tailwind */
+            color: #000;
+            font-weight: bold;
+            padding: 8px;
+            text-align: left;
+            font-size: 0.875rem; /* text-sm en Tailwind */
+        }
+        .section td {
+            padding: 8px;
+            text-align: left;
+            font-size: 0.875rem; /* text-sm en Tailwind */
+        }
+        .section .field-name {
+            background-color: #e0f7fa; /* Azul claro para los campos */
+            font-weight: normal; /* No en negrita */
+            font-size: 0.875rem; /* text-sm en Tailwind */
+            margin-left: 8px; /* Mismo margen a la izquierda que el contenido */
+        }
+        .footer {
+            position: running(footer);
+            width: 100%;
+            padding: 15px 0;
+            background-color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .footer-left {
+            font-size: 0.9em;
+            color: #333;
+        }
+        .footer-right {
+            font-size: 0.9em;
+            color: #333;
+        }
+        @page {
+            @bottom-center {
+                content: "LOS DATOS CONTENIDOS EN ESTE DOCUMENTO SON CONFIDENCIALES";
+                font-size: 0.9em;
+                color: #333;
+            }
+        }
+        @media print {
+            body {
+                margin: 0;
+                padding: 0;
+                padding-bottom: 50px;
+            }
+            .container {
+                margin: 0;
+                padding: 0;
+            }
+            .content {
+                margin-bottom: 50px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Encabezado con logos -->
+        <div class="header">
+            <div class="flex-1">
+                <img src="{{ logo_liceo_url }}" alt="Logo Liceo Técnico" style="height: 60px; object-fit: contain;">
+            </div>
+            <div class="flex-1 text-center">
+                <img src="{{ logo_servicio_url }}" alt="Logo Servicio Local" style="height: 60px;">
+            </div>
+            <div class="flex-1 text-right">
+                <img src="{{ logo_pie_url }}" alt="Logo PIE" style="height: 60px; object-fit: contain;">
+            </div>
+        </div>
+        <div class="header" style="padding-top: 20px;">
+            <div class="header-left">
+                <h1 class="titu">ENTREVISTA ALUMNO / ANAMNESIS</h1>
+            </div>
+            <div class="header-right">
+                <p>Área PIE</p>
+                <p>Liceo Técnico Profesional</p>
+                <p>De Adultos</p>
+            </div>
+        </div>
+        <div class="content">
+            <div class="section">
+                <h3>1. IDENTIFICACIÓN DEL ESTUDIANTE</h3>
+                <table>
+                    <tr>
+                        <th>Nombre completo</th>
+                        <td>{{ estudiante.nombres }} {{ estudiante.apellido_paterno }} {{ estudiante.apellido_materno }}</td>
+                    </tr>
+                    <tr>
+                        <th>Rut</th>
+                        <td>{{ estudiante.rut }}</td>
+                        <th>Fecha de nacimiento</th>
+                        <td>{{ estudiante.fecha_nacimiento }}</td>
+                    </tr>
+                    <tr>
+                        <th>Dirección</th>
+                        <td colspan="3">{{ estudiante.direccion }}</td>
+                    </tr>
+                    <tr>
+                        <th>Curso actual</th>
+                        <td>{{ estudiante.cursos.nombre }}</td>
+                        <th>Edad</th>
+                        <td>{{ anamnesis_estudiante.edad }}</td>
+                    </tr>
+                    <tr>
+                        <th>Área</th>
+                        <td>{{ estudiante.cursos.area_academica }}</td>
+                    </tr>
+                    <tr>
+                        <th>País natal</th>
+                        <td>{{ anamnesis_estudiante.pais_natal }}</td>
+                        <th>Sexo</th>
+                        <td>{{ anamnesis_estudiante.sexo }}</td>
+                    </tr>
+                    <tr>
+                        <th>Teléfono</th>
+                        <td>{{ estudiante.telefono }}</td>
+                        <th>Lengua de uso</th>
+                        <td>{{ anamnesis_estudiante.lengua }}</td>
+                    </tr>
+                    <tr>
+                        <th>Alumno trabajador</th>
+                        <td colspan="3">{{ anamnesis_estudiante.alumno_trabajador|yesno:"Sí,No" }}</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="section">
+                <h3>2. IDENTIFICACIÓN DEL ENTREVISTADOR</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Cargo</th>
+                            <th>Fecha de la entrevista</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>{{ usuario_logueado.first_name }} {{ usuario_logueado.last_name }}</td>
+                            <td>{{ cargo }}</td>
+                            <td>{{ anamnesis_estudiante.fecha_entrevista|date:'Y-m-d' }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="section">
+                <h3>3. DEFINICIÓN DEL PROBLEMA O SITUACIÓN QUE MOTIVA LA ENTREVISTA</h3>
+                <table>
+                    <tr>
+                        <td>{{ anamnesis_estudiante.definicion_problema }}</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="section">
+                <h3>4. ANTECEDENTES RELATIVOS AL DESARROLLO Y A LA SALUD DEL/LA ESTUDIANTE</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th colspan="4">¿El o la estudiante tiene algún diagnóstico previo? No Sí (especificar)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="field-name">Pediatría</td>
+                            <td>{{ anamnesis_estudiante.pediatria|yesno:"Sí,No" }}</td>
+                            <td class="field-name">Psicología</td>
+                            <td>{{ anamnesis_estudiante.psicologia|yesno:"Sí,No" }}</td>
+                        </tr>
+                        <tr>
+                            <td class="field-name">Kinesiología</td>
+                            <td>{{ anamnesis_estudiante.kinesiologia|yesno:"Sí,No" }}</td>
+                            <td class="field-name">Psiquiatría</td>
+                            <td>{{ anamnesis_estudiante.psiquiatria|yesno:"Sí,No" }}</td>
+                        </tr>
+                        <tr>
+                            <td class="field-name">Genético</td>
+                            <td>{{ anamnesis_estudiante.genetico|yesno:"Sí,No" }}</td>
+                            <td class="field-name">Psicopedagogía</td>
+                            <td>{{ anamnesis_estudiante.psicopedagogia|yesno:"Sí,No" }}</td>
+                        </tr>
+                        <tr>
+                            <td class="field-name">Fonoaudiología</td>
+                            <td>{{ anamnesis_estudiante.fonoaudiologia|yesno:"Sí,No" }}</td>
+                            <td class="field-name">Terapia Ocupacional</td>
+                            <td>{{ anamnesis_estudiante.terapia_ocupacional|yesno:"Sí,No" }}</td>
+                        </tr>
+                        <tr>
+                            <td class="field-name">Neurología</td>
+                            <td>{{ anamnesis_estudiante.neurologia|yesno:"Sí,No" }}</td>
+                            <td class="field-name">Otro</td>
+                            <td>{{ anamnesis_estudiante.otro|yesno:"Sí,No" }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+                        <div class="section">
+                <h3>5. SÍNTESIS DE LOS ANTECEDENTES DE SALUD, ESCOLARES Y SOCIALES DEL ESTUDIANTE</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Antecedente</th>
+                            <th>Si</th>
+                            <th>No</th>
+                            <th>Antecedente</th>
+                            <th>Si</th>
+                            <th>No</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="field-name">Pérdida Auditiva</td>
+                            <td>{% if anamnesis_estudiante.perdida_auditiva %}Sí{% else %}{% endif %}</td>
+                            <td>{% if not anamnesis_estudiante.perdida_auditiva %}No{% else %}{% endif %}</td>
+                            <td class="field-name">Paraplejia</td>
+                            <td>{% if anamnesis_estudiante.paraplejia %}Sí{% else %}{% endif %}</td>
+                            <td>{% if not anamnesis_estudiante.paraplejia %}No{% else %}{% endif %}</td>
+                        </tr>
+                        <tr>
+                            <td class="field-name">Pérdida Visual</td>
+                            <td>{% if anamnesis_estudiante.perdida_visual %}Sí{% else %}{% endif %}</td>
+                            <td>{% if not anamnesis_estudiante.perdida_visual %}No{% else %}{% endif %}</td>
+                            <td class="field-name">Trastorno Conductual</td>
+                            <td>{% if anamnesis_estudiante.trastorno_conductual %}Sí{% else %}{% endif %}</td>
+                            <td>{% if not anamnesis_estudiante.trastorno_conductual %}No{% else %}{% endif %}</td>
+                        </tr>
+                        <tr>
+                            <td class="field-name">Motor</td>
+                            <td>{{ anamnesis_estudiante.motor|yesno:"Sí,No" }}</td>
+                            <td></td>
+                            <td class="field-name">Otros</td>
+                            <td colspan="4">{{ anamnesis_estudiante.otros }}</td>
+                        </tr>
+                        
+
+                    </tbody>
+                </table>
+            </div>
+            <div class="section">
+                <h3>6. ANTECEDENTES FAMILIARES</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Parentesco</th>
+                            <th>Edad</th>
+                            <th>Escolaridad</th>
+                            <th>Ocupación Actual</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for familiar in anamnesis_estudiante.familiares.all %}
+                        <tr>
+                            <td>{{ familiar.nombre }}</td>
+                            <td>{{ familiar.parentesco }}</td>
+                            <td>{{ familiar.edad }}</td>
+                            <td>{{ familiar.escolaridad }}</td>
+                            <td>{{ familiar.ocupacion_actual }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="section">
+                <h3>7. OBSERVACIONES</h3>
+                <table>
+                    <tr>
+                        <td>{{ anamnesis_estudiante.observaciones }}</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="section" style="display: flex; justify-content: space-between; margin-top: 40px;">
+                <div style="padding: 60px;">
+                    <p>Nombre y Firma Entrevistador</p>
+                </div>
+                <div style="padding: 60px;">
+                    <p>Firma Entrevistado</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        <div class="footer-left">Generado por EducaPRO</div>
+    </div>
+</body>
+</html>

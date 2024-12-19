@@ -1,0 +1,56 @@
+<div class="w-full -mt-4">
+  <div class="relative right-0 w-full">
+      <ul class="relative flex flex-wrap p-1 list-none rounded-sm bg-blue-gray-50/60 w-full" data-tabs="tabs" role="list">
+          <li class="z-30 flex-auto text-center">
+              <a class="z-30 flex items-center justify-center w-full px-0 py-1 mb-0 transition-all ease-in-out border-0 rounded-sm cursor-pointer text-slate-900 bg-inherit"
+                  data-tab-target="" active="" role="tab" aria-selected="true" aria-controls="perfiles">
+                  <span class="ml-1 font-bold">PERFILES</span>
+              </a>
+          </li>
+          <li class="z-30 flex-auto text-center">
+              <a class="z-30 flex items-center justify-center w-full px-0 py-1 mb-0 transition-all ease-in-out border-0 rounded-sm cursor-pointer text-slate-900 bg-inherit"
+                  data-tab-target="" role="tab" aria-selected="false" aria-controls="cursos">
+                  <span class="ml-1 font-bold">CURSOS</span>
+              </a>
+          </li>
+      </ul>
+
+      <div data-tab-content="" class="p-5 w-full">
+          <div class="block opacity-100" id="perfiles" role="tabpanel">
+              
+
+              <!-- FILTRO PARA VISUALIZAR SOLO UN GRUPO DE PROFESIONALES -->
+              
+              <form method="get" action="{% url 'profile' %}">
+                  <label class="text-white text-sm -ml-4" for="group-filter">Filtrar por Profesional:</label>
+                  <select class="rounded-sm pl-2 py-1 px-2 text-sm md:py-1" name="group" id="group-filter">
+                      <option value="">Todos</option>
+                      {% for group in all_groups %}
+                          {% if group.name != 'Administradores' %}
+                              <option value="{{ group.name }}">{{ group.name }}</option>
+                          {% endif %}
+                      {% endfor %}
+                  </select>
+                  <button class="bg-gradient-to-r from-sky-700 to-sky-600 
+                  hover:from-sky-700 hover:to-sky-900 hover:text-white text-white text-sm py-1 px-2 rounded-sm" 
+                  type="submit">Filtrar</button>
+              </form>
+
+
+              {% include 'profiles/admin-usuarios.html' %}
+          </div>
+          <div class="hidden opacity-0" id="cursos" role="tabpanel">
+              <p class="block font-sans text-base antialiased font-light leading-relaxed text-inherit text-white">
+                  "AQUÍ IRA LA INFORMACIÓN DE LOS CURSOS CON LINK QUE MUESTRE CADA PERFIL DE ALUMNO, DATOS PERSONALES Y DE APODERADOS"
+                  {% include 'pie/pie.html' %}
+              </p>
+          </div>
+      </div>
+  </div>
+</div>
+
+<!-- from node_modules -->
+<script src="node_modules/@material-tailwind/html/scripts/tabs.js"></script>
+
+<!-- from cdn -->
+<script src="https://unpkg.com/@material-tailwind/html@latest/scripts/tabs.js"></script>

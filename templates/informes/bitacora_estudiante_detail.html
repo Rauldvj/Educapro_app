@@ -1,0 +1,123 @@
+<!-- <! CONTENIDO DE LA BITÁCORA DETAIL ESTUDIANTE > -->
+
+<div class="ml-96 mt-6 mx-auto w-4/5">
+    <div class="flex flex-col lg:flex-row">
+        <div class="overflow-hidden flex items-center justify-center mt-1 w-full">
+            <div class="bg-gradient-to-b from-blue-950 to-blue-900 w-full shadow-3xl rounded-md mx-auto my-auto">
+
+                <form action="" method="post" class="p-4 md:p-4 w-full">
+                    <div class="mb-2 flex justify-between items-center">
+                        <div>
+                            <h2 class="text-white text-2xl font-semibold font-sans">BITÁCORA ESTUDIANTE</h2>
+                            <h2 class="text-white text-xl font-semibold font-sans">
+                                {{ estudiante.nombres }} {{ estudiante.apellido_paterno }} {{ estudiante.apellido_materno }}</h2>
+                            <h2 class="text-white text-md italic font-semibold font-sans">{{ estudiante.cursos }}</h2>
+                            <h2 class="text-white text-md italic font-semibold font-sans">Área: {{ estudiante.cursos.area_academica.nombre}}</h2>
+                        </div>
+                        <img src="/static/Imagenes/LOGO LICEO TECNICO ADULTOS.jpg" alt="" class="w-24 mr-2">
+                    </div>
+                    {% csrf_token %}
+                    <!-- Mostrar errores del formulario -->
+                    {% if form.errors %}
+                    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+                        <strong class="font-bold">Error:</strong>
+                        <span class="block sm:inline">
+                            {% for field, errors in form.errors.items %}
+                            {{ field }}: {{ errors|join:", " }}
+                            {% endfor %}
+                        </span>
+                    </div>
+                    {% endif %}
+                    <!-- ---------FILA 1--------- -->
+                    <div class="flex flex-wrap text-xl mb-1 md:mb-0">
+                        <div class="w-full md:w-1/2 px-1 mb-4 md:mb-0 md:pr-2">
+                            <label for="estudiante" class="form-label text-white text-sm font-sans italic mb-0">Estudiante</label>
+                            <input type="hidden" name="estudiante" id="estudiante" value="{{ estudiante.id }}" />
+                            <input type="text" name="estudiante_nombre" id="estudiante_nombre"
+                                class="bg-white text-black rounded-md pl-2 py-2 md:py-2 text-sm focus:outline-none w-full"
+                                value="{{ estudiante.nombres }} {{ estudiante.apellido_paterno }} {{ estudiante.apellido_materno }}"
+                                readonly />
+                        </div>
+                        <div class="w-full md:w-1/2 px-1 mb-4 md:mb-0">
+                            <label for="fecha" class="form-label text-white text-sm font-sans italic mb-0">Fecha</label>
+                            <input type="text" name="fecha" id="fecha"
+                                class="bg-white text-black rounded-md pl-2 py-2 md:py-2 text-sm focus:outline-none w-full"
+                                value="{{ bitacora.fecha }}" readonly />
+                        </div>
+                    </div>
+
+                    <!-- Iteración sobre las bitácoras del día -->
+                    <div class="mt-2">
+                        {% for bitacora in bitacoras %}
+                        <div class="w-full shadow-3xl rounded-md mx-auto my-2 p-2">
+                            <div class="flex flex-wrap text-xl mb-1 md:mb-1">
+                                <div class="w-full mb-4 md:mb-0">
+                                    <label for="profesional" class="form-label text-white text-sm font-sans italic mb-0">Profesional a cargo: {{ bitacora.profesional.group_name_singular }}</label>
+                                    <input type="text" name="profesional" id="profesional"
+                                        class="bg-white text-black rounded-md pl-2 py-2 md:py-2 text-sm focus:outline-none w-full"
+                                        value="{{ bitacora.profesional.user.first_name }} {{ bitacora.profesional.user.last_name }}" readonly />
+                                </div>
+                            </div>
+                            <div class="flex flex-wrap text-xl mb-1 md:mb-1">
+                                <div class="w-full md:w-1/2 mb-4 md:mb-0 md:pr-2">
+                                    <label for="aula" class="form-label text-white text-sm font-sans italic mb-0">Lugar de Apoyo</label>
+                                    <input type="text" name="aula" id="aula"
+                                        class="bg-white text-black rounded-md pl-2 py-2 md:py-2 text-sm focus:outline-none w-full"
+                                        value="{{ bitacora.aula }}" readonly />
+                                </div>
+                                <div class="w-full md:w-1/2 mb-4 md:mb-0">
+                                    <label for="horas_estudiante" class="form-label text-white text-sm font-sans italic mb-0">Horas Pedagógicas</label>
+                                    <input type="text" name="horas_estudiante" id="horas_estudiante"
+                                        class="bg-white text-black text-center rounded-md pl-2 py-2 md:py-2 text-sm focus:outline-none w-full"
+                                        value="{{ bitacora.horas_estudiante }}" readonly />
+                                </div>
+                            </div>
+                            <div class="flex flex-wrap text-xl mb-1 md:mb-1">
+                                <div class="w-full md:w-1/2 mb-4 md:mb-0 md:pr-2">
+                                    <label for="asignatura" class="form-label text-white text-sm font-sans italic mb-0">Asignatura</label>
+                                    <input type="text" name="asignatura" id="asignatura"
+                                        class="bg-white rounded-md pl-2 py-2 md:py-2 text-sm focus:outline-none w-full"
+                                        value="{{ bitacora.asignatura.asignatura }}" readonly />
+                                </div>
+                                <div class="w-full md:w-1/2 mb-4 md:mb-0">
+                                    <label for="nivelLogro" class="form-label text-white text-sm font-sans italic mb-0">Nivel de Logro</label>
+                                    <div class="form-check flex items-center">
+                                        <span class="text-white text-sm">{% if bitacora.nivelLogro %}Logrado{% else %}En Vías de Logro{% endif %}</span>
+                                        <div class="ml-2 w-6 h-6 rounded-md {% if bitacora.nivelLogro %}bg-green-500{% else %}bg-yellow-500{% endif %}"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex flex-wrap text-xl mb-1 md:mb-1 mt-4">
+                                <div class="w-full mb-4 md:mb-0">
+                                    <label for="actividad" class="form-label text-white text-sm font-sans italic mb-0">Actividad</label>
+                                    <textarea name="actividad" id="actividad"
+                                        class="bg-white text-black rounded-md pl-2 py-2 md:py-2 text-sm focus:outline-none w-full h-48"
+                                        rows="4" readonly>{{ bitacora.actividad }}</textarea>
+                                </div>
+                            </div>
+
+                            <!-- ---------FILA 6--------- -->
+                            <div class="flex flex-wrap text-xl mb-2 md:mb-2 mt-4">
+                                <div class="w-full mb-4 md:mb-0">
+                                    <label for="observaciones" class="form-label text-white text-sm font-sans italic mb-0">Observaciones</label>
+                                    <textarea name="observaciones" id="observaciones"
+                                        class="bg-white text-black rounded-md pl-2 py-2 md:py-2 text-sm focus:outline-none w-full h-48"
+                                        rows="4" readonly>{{ bitacora.observaciones }}</textarea>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <!-- Botón de descarga de PDF -->
+                    <div class="flex justify-center">
+                        <a class="bg-gradient-to-b from-amber-200 via-amber-300 to-amber-300 
+                        hover:from-amber-600 hover:to-amber-500 text-blue-900 font-semibold  p-2 md:p-2 
+                        uppercase text-center w-2/4 rounded-md mx-auto" href="?download=true">
+                        DESCARGAR PDF</a>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,127 @@
+<div class="flex flex-col ml-8 w-11/12">
+    <div class="sm:-mx-6 lg:-mx-16">
+        <div class="inline-block w-full py-2">
+            <div class="overflow-hidden">
+
+
+
+                <table class="w-full text-center font-light">
+                    <thead class="border-b dark:border-neutral-500 bg-gradient-to-b from-blue-800 to-blue-700 ">
+                      <tr>
+                        <th scope="col" class="font-semibold font-sans text-xs text-start text-white px-2 py-1 min-w-1/4">
+                            <a href="?sort=nombres" class="text-white">NOMBRES</a>
+                        </th>
+                        <th scope="col" class="font-semibold font-sans text-xs text-start text-white px-2 py-1 min-w-1/4">
+                            <a href="?sort=apellido_paterno" class="text-white">APELLIDO PATERNO</a>
+                        </th>
+                        <th scope="col" class="font-semibold font-sans text-xs text-start text-white px-2 py-1 min-w-1/4">
+                            <a href="?sort=apellido_materno" class="text-white">APELLIDO MATERNO</a>
+                        </th>
+                        <th scope="col" class="font-semibold font-sans text-xs text-start text-white px-2 py-1 min-w-1/4">
+                            <a href="?sort=usuario" class="text-white">USUARIO</a>
+                        </th>
+                        <th scope="col" class="font-semibold font-sans text-xs text-start text-white px-2 py-1 min-w-1/4">
+                            <a href="?sort=cargo" class="text-white">CARGO</a>
+                        </th>
+                        <th scope="col" class="font-semibold text-sm text-start text-white px-1 py-2 border-b w-20">
+                            <a href="?sort=activo" class="text-white">ACTIVO</a>
+                        </th>
+                        <th scope="col" class="font-semibold text-sm text-start text-white px-4 py-2 border-b w-8">VER</th>
+                        <th scope="col" class="font-semibold text-sm text-start text-white px-3 py-2 border-b w-28">ACCIÓN</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                        {% for user_profile in user_profiles %}
+                            <tr class="{% cycle 'bg-white text-black' 'bg-blue-100 text-gray-900' %} border-b border-neutral-100">
+                                <!-- Cuerpo de la tabla -->
+                                <td class="text-start whitespace-nowrap px-2 py-2 text-sm text-black">
+                                    {{ user_profile.user.first_name | capfirst }}
+                                </td>
+                                <td class="text-start text-sm whitespace-nowrap px-2 py-1 text-black">{{ user_profile.user.profile.apellido_paterno }}</td>
+                                <td class="text-start text-sm whitespace-nowrap px-2 py-1 text-black">{{ user_profile.user.profile.apellido_materno }}</td>
+                                <td class="text-start text-sm whitespace-nowrap px-2 py-1 text-black">{{ user_profile.user.username }}</td>
+                                <td class="text-start text-sm whitespace-nowrap px-2 py-1 text-black">{{ user_profile.groups | join:", " | capfirst }}</td>
+                                <td class="text-start text-sm whitespace-nowrap px-1 py-1 text-black w-20">
+                                    {% if user_profile.user.is_active %}
+                                        Sí
+                                    {% else %}
+                                        No
+                                    {% endif %}
+                                </td>
+                                <td class="text-start text-sm whitespace-nowrap px-1 py-1">
+                                    <a href="{% url 'profile_detail' user_profile.user.id %}"
+                                    class="text-blue-900 text-sm font-semibold px-4 mr-3 py-1 w-20">
+                                    INFO
+                                    </a>
+                                </td>
+                                <td class="text-start text-sm whitespace-nowrap px-1 py-1">
+                                    <form id="{% if user_profile.user.is_active %}deactivate{% else %}activate{% endif %}-user-form-{{ user_profile.user.id }}" 
+                                          action="{% if user_profile.user.is_active %}{% url 'desactivar_user' user_profile.user.id %}{% else %}{% url 'activar_user' user_profile.user.id %}{% endif %}" 
+                                          method="post" 
+                                          style="display:inline;">
+                                        {% csrf_token %}
+                                        <button type="button" 
+                                                class="{% if user_profile.user.is_active %}text-red-900{% else %}text-green-700{% endif %} text-sm font-semibold px-2 py-1 w-20"
+                                                onclick="{% if user_profile.user.is_active %}confirmDeactivateUser{% else %}confirmActivateUser{% endif %}({{ user_profile.user.id }})">
+                                            {% if user_profile.user.is_active %}
+                                                DESACTIVAR
+                                            {% else %}
+                                                ACTIVAR
+                                            {% endif %}
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Enlaces de paginaci��n -->
+    <div class="flex justify-center mt-4">
+        <ul class="flex space-x-2">
+            {% if user_profiles.has_previous %}
+                <li><a href="?page=1" 
+                    class="bg-gradient-to-r from-blue-900 to-blue-700 
+                    hover:from-blue-600 hover:to-blue-600
+                    font-sans text-white text-sm px-2 py-1 rounded-sm">
+                    Primera Pagina</a></li>
+                <li><a href="?page={{ user_profiles.previous_page_number }}" 
+                    class="bg-gradient-to-r from-blue-900 to-blue-700 
+                    hover:from-blue-600 hover:to-blue-600
+                    font-sans text-white text-sm px-2 py-1 rounded-sm"
+                    >Anterior</a></li>
+            {% endif %}
+            
+            <li class="bg-gradient-to-r from-blue-900 to-blue-700 
+            hover:from-blue-600 hover:to-blue-600
+            font-sans text-white text-sm px-3 py-1 rounded-full"
+            >{{ user_profiles.number }}</li>
+            
+            {% if user_profiles.has_next %}
+                <li><a href="?page={{ user_profiles.next_page_number }}" 
+                    class="bg-gradient-to-r from-blue-900 to-blue-700 
+                    hover:from-blue-600 hover:to-blue-600
+                    font-sans text-white text-sm px-2 py-1 rounded-sm"
+                    >Siguiente</a></li>
+                <li><a href="?page={{ user_profiles.paginator.num_pages }}" 
+                    class="bg-gradient-to-r from-blue-900 to-blue-700 
+                    hover:from-blue-600 hover:to-blue-600
+                    font-sans text-white text-sm px-2 py-1 rounded-sm"
+                    >�0�3ltima</a></li>
+            {% endif %}
+        </ul>
+    </div>
+
+    <div class="flex flex-col -ml-16 mt-2">
+        <button onclick="document.getElementById('add_user_modal').showModal()" id="btn"
+                    class="py-2 px-2 mt-1 mb-1 bg-gradient-to-b from-amber-200 via-amber-300 to-amber-300 
+                    hover:from-amber-600 hover:to-amber-500 text-blue-900 rounded-xl text shadow-xl font-semibold block w-1/6">
+                        AGREGAR USUARIO
+        </button> 
+    </div>
+</div>
+
+{% include 'profiles/add_user.html' %}

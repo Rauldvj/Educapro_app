@@ -1,0 +1,453 @@
+<!-- #PAGINA PARA VER EL PERFIL DE CADA USUARIO POR EL COORDINADOR O ADMINISTRADOR -->
+
+{% extends 'base.html' %}
+
+{% block title %} Estudiante {% endblock %}
+
+
+{% block content %}
+
+{% load tailwind_filters %}
+
+{% load static %}
+
+<!-- Incluir el archivo funciones.js -->
+<script src="{% static 'js/funciones.js' %}"></script>
+
+
+
+
+{% include 'componentes/navbar.html' %}
+
+
+<h2 class="bg-gradient-to-b from-blue-950 to-blue-900  text-md font-semibold text-white italic py-2 px-3">Consulta de
+    Datos del
+    Estudiante</h2>
+<hr class="border-blue-950">
+
+<!-- Contenedor principal -->
+<div class="container h-full">
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-8 h-full">
+        <!-- Tarjeta de datos de perfil -->
+        <!-- Navegación lateral -->
+        <aside class="bg-gradient-to-b from-blue-950 to-blue-900  p-3  text-white w-72 h-full fixed">
+            <div class="flex items-start justify-between mt-4">
+                <div class="flex-1">
+                    <!-- Nombre y apellido del usuario -->
+                    <h2 class="text-lg font-sans font-semibold text-white uppercase w-full">{{ estudiante.nombres }}
+                    </h2>
+                    <h3 class="text-md font-sans font-semibold text-white uppercase">
+                        {{ estudiante.apellido_paterno }} {{ estudiante.apellido_materno }}
+                    </h3>
+                    <h2 class="mt-4 text-xs font-sans font-semibold italic text-white">{{ estudiante.cursos }} </h2>
+                    <h2 class="mt-2 text-xs font-sans font-semibold italic text-white">
+                        Área: {{estudiante.cursos.area_academica.nombre }} </h2>
+                    <h2 class="mt-2 text-xs font-sans font-semibold italic text-white">NEE: {{ estudiante.nee }}</h2>
+                </div>
+                <img src="/static/Imagenes/LOGO LICEO TECNICO ADULTOS.jpg" alt="" class="w-24 ml-4">
+            </div>
+
+            <hr class="my-3">
+            <!-- Datos personales del usuario -->
+            <div class="space-y-1">
+                <p class="text-white text-sm"><strong>Rut: </strong>{{ estudiante.rut }}</p>
+                <p class="text-white text-sm"><strong>Fecha Nacimiento: </strong>{{ estudiante.fecha_nacimiento }}</p>
+                <p class="text-white text-sm"><strong>Etnia: </strong>{{ estudiante.etnia }}</p>
+                <p class="text-white text-sm"><strong>Dirección: </strong>{{ estudiante.direccion }}</p>
+                <p class="text-white text-sm"><strong>Región: </strong>{{ estudiante.region }} </p>
+                <p class="text-white text-sm"><strong>Comuna: </strong>{{ estudiante.comuna }} </p>
+                <p class="text-white text-sm"><strong>Teléfono: </strong>+56 {{ estudiante.telefono }}</p>
+                <p class="text-white text-sm"><strong>Email: </strong>{{ estudiante.correo }}</p>
+            </div>
+
+            <hr class="mt-4">
+
+
+            <div class="flex flex-col items-stretch text-center">
+                <!-- Botón Bitácora -->
+                <a href="{% url 'bitacora_estudiante_list' estudiante.id %}" class="mt-2 bg-gradient-to-b from-amber-200 via-amber-300 to-amber-300 
+                    hover:from-amber-600 hover:to-amber-500 
+                    text-blue-900 font-semibold py-2 px-4 rounded-md block w-full">
+                    VER BITÁCORAS
+                </a>
+
+
+                <hr class="mt-2">
+                <!-- Botón Editar al Estudiante-->
+                <button onclick="document.getElementById('estudiante_modal').showModal()" id="btn"
+                    class="py-2 px-4 mt-2 mb-2 bg-gradient-to-b from-amber-300 via-amber-500 to-amber-400 
+                hover:from-amber-600 hover:to-amber-500 text-blue-900 font-semibold rounded-md text shadow-xl block w-full">
+                    EDITAR ESTUDIANTE
+                </button>
+
+                <hr>
+                <!-- Botón Pie -->
+                <a href="{% url 'pie' %}"
+                    class="bg-gradient-to-b from-blue-400 via-blue-500 to-blue-400 
+                hover:from-blue-600 hover:to-blue-500 font-semibold text-white mt-2 py-2 px-4 rounded-md block w-full">REGRESAR A PIE
+                </a>
+            </div>
+        </aside>
+
+        <div class="lg:col-span-4 col-span-1 ml-72 px-5">
+
+            <div class="w-full mt-4 ml-2">
+                <div class="relative right-0 w-full">
+                    <ul class="relative flex flex-wrap p-1 list-none rounded-sm bg-blue-gray-50/60 w-full"
+                        data-tabs="tabs" role="list">
+                        <li class="z-30 flex-auto text-center">
+                            <a class="z-30 flex items-center justify-center w-full px-0 py-1 mb-0 transition-all ease-in-out 
+                            border border-t-blue-900 border-r-blue-900 border-b-blue-900 border-l-blue-900 rounded-md cursor-pointer text-slate-900 bg-inherit"
+                                data-tab-target="#perfiles" role="tab" aria-selected="true" aria-controls="perfiles">
+                                <span class="ml-1 font-bold">APODERADO</span>
+                            </a>
+                        </li>
+
+                        <li class="z-30 flex-auto text-center">
+                            <a class="z-30 flex items-center justify-center w-full px-0 py-1 mb-0 transition-all ease-in-out 
+                            border border-t-blue-900 border-r-blue-900 border-b-blue-900 border-l-blue-900 rounded-md cursor-pointer text-slate-900 bg-inherit"
+                                data-tab-target="#informes" role="tab" aria-selected="false" aria-controls="informes">
+                                <span class="ml-1 font-bold">INFORMES</span>
+                            </a>
+                        </li>
+                    </ul>
+
+                    <div data-tab-content="" class="p-5 w-full">
+                        <div class="block opacity-100" id="perfiles" role="tabpanel">
+                            <!-- DIV DE DATOS DEL APODERADO TITULAR -->
+                            <div class="rounded mt-3">
+                                <h5 class="text-blue-950 text-sm text-start -ml-4">Apoderado Titular </h5>
+
+                                <div class="flex flex-col -ml-4 mt-1">
+                                    <div class="overflow-x-auto">
+                                        <table class="w-full">
+                                            <thead class="border-b bg-gradient-to-b from-blue-800 to-blue-700">
+                                                <tr>
+                                                    <th scope="col"
+                                                        class="font-semibold font-sans text-xs text-start text-white px-2 py-1 min-w-1/4">
+                                                        NOMBRES</th>
+                                                    <th scope="col"
+                                                        class="font-semibold font-sans text-xs text-start text-white px-2 py-1 min-w-1/4">
+                                                        APELLIDO PATERNO</th>
+                                                    <th scope="col"
+                                                        class="font-semibold font-sans text-xs text-start text-white px-2 py-1 min-w-1/4">
+                                                        APELLIDO MATERNO</th>
+                                                    <th scope="col"
+                                                        class="font-semibold font-sans text-xs text-start text-white px-2 py-1 min-w-1/4">
+                                                        TELÉFONO</th>
+                                                    <th scope="col"
+                                                        class="font-semibold font-sans text-xs text-start text-white px-2 py-1 min-w-1/4">
+                                                        INFO COMPLETA</th>
+                                                    <th scope="col"
+                                                        class="font-semibold font-sans text-xs text-start text-white px-4 py-1 min-w-1/4">
+                                                        ACCIÓN</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr class="border-b border-neutral-100 bg-white shadow-2xl">
+                                                    <td
+                                                        class="text-start text-gray-900 px-2 py-1 text-sm font-sans whitespace-no-wrap">
+                                                        {{apoderado_titular.nombres}}</td>
+                                                    <td
+                                                        class="text-start text-gray-900 px-2 py-1 text-sm font-sans whitespace-no-wrap">
+                                                        {{apoderado_titular.apellido_paterno}}</td>
+                                                    <td
+                                                        class="text-start text-gray-900 px-2 py-1 text-sm font-sans whitespace-no-wrap">
+                                                        {{apoderado_titular.apellido_materno}}</td>
+                                                    <td
+                                                        class="text-start text-gray-900 px-2 py-1 text-sm font-sans whitespace-no-wrap">
+                                                        {{ apoderado_titular.telefono|capfirst}}</td>
+                                                    <td
+                                                        class="text-start text-gray-900 px-2 py-1 text-sm font-sans whitespace-no-wrap">
+                                                        <button
+                                                            onclick="document.getElementById('apoderado_titular').showModal()"
+                                                            class="ml-5 px-3 py-1 rounded-md text-blue-900 font-bold hover:bg-gray-300">VER</button>
+                                                    </td>
+                                                    <td
+                                                        class="text-start text-gray-900 px-2 text-sm font-sans whitespace-no-wrap">
+                                                        <button
+                                                            onclick="document.getElementById('apoderado_titular_modal').showModal()"
+                                                            class="text-amber-600 font-bold hover:bg-gray-300 rounded-md shadow-x text-start px-2 py-1 text-sm font-sans whitespace-no-wrap">EDITAR</button>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="hidden opacity-0" id="informes" role="tabpanel">
+                            <!-- DIV INFORME ANAMNESIS -->
+                            <div class="rounded mt-3">
+                                <div class="block opacity-100" id="anamnesis" role="tabpanel">
+                                    <h5 class="text-blue-950 text-sm text-start -ml-4">Evaluación Anamnesis</h5>
+
+                                    <div class="flex flex-col -ml-4 mt-1">
+                                        <div class="overflow-x-auto">
+                                            <table class="w-full">
+                                                <thead class="border-b bg-gradient-to-b from-blue-800 to-blue-700">
+                                                    <tr>
+                                                        <th scope="col"
+                                                            class="font-semibold font-sans text-xs text-start text-white px-2 py-1 w-44">
+                                                            ENTREVISTADOR</th>
+                                                        <th scope="col"
+                                                            class="font-semibold font-sans text-xs text-start text-white px-2 py-1 min-w-1/4">
+                                                            NOMBRES</th>
+                                                        <th scope="col"
+                                                            class="font-semibold font-sans text-xs text-start text-white px-2 py-1 min-w-1/4">
+                                                            APELLIDOS</th>
+                                                        <th scope="col"
+                                                            class="font-semibold font-sans text-xs text-start text-white px-2 py-1 min-w-1/4">
+                                                            FECHA ENTREVISTA</th>
+                                                        <th scope="col"
+                                                            class="font-semibold font-sans text-xs text-start text-white px-2 py-1 min-w-1/4">
+                                                            INFO COMPLETA</th>
+                                                        <th scope="col"
+                                                            class="font-semibold font-sans text-xs text-start text-white px-4 py-1 min-w-1/4">
+                                                            ACCIÓN</th>
+                                                        <th scope="col"
+                                                            class="font-semibold font-sans text-xs text-center text-white py-1 min-w-1/4">
+                                                            PDF</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% if anamnesis %}
+                                                    <tr class="border-b border-neutral-100 bg-white">
+                                                        <td
+                                                            class="text-start text-gray-900 px-2 py-1 text-sm font-sans whitespace-no-wrap">
+                                                            {{ group_name_singular_anamnesis }}</td>
+                                                        <td
+                                                            class="text-start text-gray-900 px-2 py-1 text-sm font-sans whitespace-no-wrap">
+                                                            {{ anamnesis.entrevistador.user.first_name }}</td>
+                                                        <td
+                                                            class="text-start text-gray-900 px-2 py-1 text-sm font-sans whitespace-no-wrap">
+                                                            {{ anamnesis.entrevistador.user.profile.apellido_paterno }}
+                                                            {{ anamnesis.entrevistador.user.profile.apellido_materno }}
+                                                        </td>
+                                                        <td
+                                                            class="text-start text-gray-900 px-2 py-1 text-sm font-sans whitespace-no-wrap">
+                                                            {{ anamnesis.fecha_entrevista }}</td>
+                                                        <td
+                                                            class="text-start text-gray-900 px-2 py-1 text-sm font-sans whitespace-no-wrap">
+                                                            <button
+                                                                onclick="document.getElementById('anamnesis_estudiante_modal').showModal()"
+                                                                class="ml-5 px-3 rounded-md py-2 text-blue-900 font-bold hover:bg-blue-200 ">VER</button>
+                                                        </td>
+                                                        <td
+                                                            class="text-start text-gray-900 px-2 text-sm font-sans whitespace-no-wrap">
+                                                            <a href="{% url 'anamnesis_estudiante' estudiante.id %}"
+                                                                class="text-amber-600 font-bold hover:bg-amber-200 rounded-md shadow-x text-start px-2 py-2 text-sm font-sans whitespace-no-wrap">EDITAR</a>
+                                                        </td>
+                                                        <td
+                                                            class="text-center text-gray-900 px-2 py-1 text-sm font-sans whitespace-no-wrap">
+                                                            <a href="{% url 'anamnesis_estudiante' pk=estudiante.pk %}?download=1"
+                                                                class="text-red-700 font-bold hover:bg-red-200 rounded-md py-2 px-3 text-center inline-flex items-center gap-1">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
+                                                                    viewBox="0 0 20 20" fill="currentColor">
+                                                                    <path fill-rule="evenodd"
+                                                                        d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"
+                                                                        clip-rule="evenodd" />
+                                                                </svg>
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                    {% else %}
+                                                    <tr>
+                                                        <td colspan="6"
+                                                            class="text-center text-gray-900 px-2 py-1 text-sm font-sans whitespace-no-wrap">
+                                                            No hay datos de anamnesis disponibles.</td>
+                                                    </tr>
+                                                    {% endif %}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- DIV INFORME PAI -->
+                            <div class="rounded mt-3">
+                                <div class="block opacity-100" id="pai" role="tabpanel">
+                                    <h5 class="text-blue-950 text-sm text-start -ml-4">Evaluación PAI</h5>
+
+                                    <div class="flex flex-col -ml-4 mt-1">
+                                        <div class="overflow-x-auto">
+                                            <table class="w-full">
+                                                <thead class="border-b bg-gradient-to-b from-blue-800 to-blue-700">
+                                                    <tr>
+                                                        <th scope="col"
+                                                            class="font-semibold font-sans text-xs text-start text-white px-4 py-1 w-44">
+                                                            RESPONSABLE</th>
+                                                        <th scope="col"
+                                                            class="font-semibold font-sans text-xs text-start text-white px-2 py-1 w-96">
+                                                            NOMBRES Y APELLIDOS</th>
+                                                        <th scope="col"
+                                                            class="font-semibold font-sans text-xs text-start text-white px-2 py-1 w-72">
+                                                            FECHA ELABORACIÓN</th>
+                                                        <th scope="col"
+                                                            class="font-semibold font-sans text-xs text-start text-white px-2 py-1 w-48">
+                                                            INFO COMPLETA</th>
+                                                        <th scope="col"
+                                                            class="font-semibold font-sans text-xs text-start text-white px-4 py-1 w-32">
+                                                            ACCIÓN</th>
+                                                        <th scope="col"
+                                                            class="font-semibold font-sans text-xs text-center text-white py-1 w-24">
+                                                            PDF</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% if pai %}
+                                                    {% with equipo=pai.equipo_responsable.first %}
+                                                    <tr class="border-b border-neutral-100 bg-white">
+                                                        <td
+                                                            class="text-start text-gray-900 px-2 py-1 text-sm font-sans whitespace-no-wrap">
+                                                            {{ equipo.cargo }}</td>
+                                                        <td
+                                                            class="text-start text-gray-900 px-2 py-1 text-sm font-sans whitespace-no-wrap">
+                                                            {{ equipo.nombre_profesional }}</td>
+                                                        <td
+                                                            class="text-start text-gray-900 px-2 py-1 text-sm font-sans whitespace-no-wrap">
+                                                            {{ pai.fecha_elaboracion }}</td>
+                                                        <td
+                                                            class="text-start text-gray-900 px-2 py-1 text-sm font-sans whitespace-no-wrap">
+                                                            <button
+                                                                onclick="document.getElementById('pai_estudiante_modal').showModal()"
+                                                                class="ml-5 px-3 rounded-md py-2 text-blue-900 font-bold hover:bg-blue-200 ">VER</button>
+                                                        </td>
+                                                        <td
+                                                            class="text-start text-gray-900 px-2 text-sm font-sans whitespace-no-wrap">
+                                                            <a href="{% url 'pai_estudiante' estudiante.id %}"
+                                                                class="text-amber-600 font-bold hover:bg-amber-200 rounded-md shadow-x text-start px-2 py-2 text-sm font-sans whitespace-no-wrap">EDITAR</a>
+                                                        </td>
+                                                        <td
+                                                            class="text-center text-gray-900 px-2 py-1 text-sm font-sans whitespace-no-wrap">
+                                                            <a href="{% url 'pai_estudiante' estudiante.pk %}?download=true"
+                                                                class="text-red-700 font-bold hover:bg-red-200 rounded-md py-2 px-3 text-center inline-flex items-center gap-1">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
+                                                                    viewBox="0 0 20 20" fill="currentColor">
+                                                                    <path fill-rule="evenodd"
+                                                                        d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"
+                                                                        clip-rule="evenodd" />
+                                                                </svg>
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                    {% endwith %}
+                                                    {% else %}
+                                                    <tr>
+                                                        <td colspan="6"
+                                                            class="text-center text-gray-900 px-2 py-1 text-sm font-sans whitespace-no-wrap">
+                                                            No hay datos de PAI disponibles.</td>
+                                                    </tr>
+                                                    {% endif %}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- DIV INFORME PACI -->
+                            <div class="rounded mt-3">
+                                <div class="block opacity-100" id="paci" role="tabpanel">
+                                    <h5 class="text-blue-950 text-sm text-start -ml-4">Evaluación PACI</h5>
+
+                                    <div class="flex flex-col -ml-4 mt-1">
+                                        <div class="overflow-x-auto">
+                                            <table class="w-full">
+                                                <thead class="border-b bg-gradient-to-b from-blue-800 to-blue-700">
+                                                    <tr>
+                                                        <th scope="col"
+                                                            class="font-semibold font-sans text-xs text-start text-white px-4 py-1 w-44">
+                                                            RESPONSABLES</th>
+                                                        <th scope="col"
+                                                            class="font-semibold font-sans text-xs text-start text-white px-2 py-1 w-96">
+                                                            NOMBRES Y APELLIDOS</th>
+                                                        <th scope="col"
+                                                            class="font-semibold font-sans text-xs text-start text-white px-2 py-1 w-72">
+                                                            FECHA ELABORACIÓN</th>
+                                                        <th scope="col"
+                                                            class="font-semibold font-sans text-xs text-start text-white px-2 py-1 w-48">
+                                                            INFO COMPLETA</th>
+                                                        <th scope="col"
+                                                            class="font-semibold font-sans text-xs text-center text-white px-4 py-1 w-36">
+                                                            ACCIÓN</th>
+                                                        <th scope="col"
+                                                            class="font-semibold font-sans text-xs text-center text-white py-1 w-28">
+                                                            PDF</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% if paci %}
+                                                    {% with equipo=paci.equipo_responsable.first %}
+                                                    <tr class="border-b border-neutral-100 bg-white">
+                                                        <td
+                                                            class="text-start text-gray-900 px-2 py-1 text-sm font-sans whitespace-no-wrap">
+                                                            {{ equipo.profesion }}</td>
+                                                        <td
+                                                            class="text-start text-gray-900 px-2 py-1 text-sm font-sans whitespace-no-wrap">
+                                                            {{ equipo.nombre }}</td>
+                                                        <td
+                                                            class="text-start text-gray-900 px-2 py-1 text-sm font-sans whitespace-no-wrap">
+                                                            {{ paci.fecha_elaboracion }}</td>
+                                                        <td
+                                                            class="text-start text-gray-900 px-2 py-1 text-sm font-sans whitespace-no-wrap">
+                                                            <button
+                                                                onclick="document.getElementById('paci_estudiante_modal').showModal()"
+                                                                class="ml-5 px-3 rounded-md py-2 text-blue-900 font-bold hover:bg-blue-200 ">VER</button>
+                                                        </td>
+                                                        <td
+                                                            class="text-start text-gray-900 px-2 text-sm font-sans whitespace-no-wrap">
+                                                            <a href="{% url 'paci_estudiante' estudiante.id %}"
+                                                                class="text-amber-600 font-bold hover:bg-amber-200 rounded-md shadow-x text-start ml-8 px-2 py-2 text-sm font-sans whitespace-no-wrap">EDITAR</a>
+                                                        </td>
+                                                        <td
+                                                            class="text-center text-gray-900 px-2 py-1 text-sm font-sans whitespace-no-wrap">
+                                                            <a href="{% url 'paci_estudiante' estudiante.pk %}?download=true"
+                                                                class="text-red-700 font-bold hover:bg-red-200 rounded-md py-2 px-3 text-center inline-flex items-center gap-1">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
+                                                                    viewBox="0 0 20 20" fill="currentColor">
+                                                                    <path fill-rule="evenodd"
+                                                                        d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"
+                                                                        clip-rule="evenodd" />
+                                                                </svg>
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                    {% endwith %}
+                                                    {% else %}
+                                                    <tr>
+                                                        <td colspan="6"
+                                                            class="text-center text-gray-900 px-2 py-1 text-sm font-sans whitespace-no-wrap">
+                                                            No hay datos de PACI disponibles.</td>
+                                                    </tr>
+                                                    {% endif %}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- from node_modules -->
+                            <script src="node_modules/@material-tailwind/html/scripts/tabs.js"></script>
+
+                            <!-- from cdn -->
+                            <script src="https://unpkg.com/@material-tailwind/html@latest/scripts/tabs.js"></script>
+                        </div>
+
+
+                        <!-- Incluir los modales de los apoderados         -->
+                        {% include 'pie/apoderado_titular.html' %}
+
+                        {% include 'pie/apoderado_titular_edit.html' %}
+
+                        {% include 'pie/estudiante_edit.html' %}
+
+                        {% include 'informes/anamnesis_view.html' %}
+
+                        {% include 'informes/pai_estudiante_view.html' %}
+
+                        {% include 'informes/paci_estudiante_view.html' %}
+
+                        {% endblock %}

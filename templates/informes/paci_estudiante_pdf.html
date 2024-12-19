@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>PACI Estudiante PDF</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 2.5cm;
+            @bottom-right {
+                content: "Pag " counter(page);
+                font-size: 0.9em;
+                color: #333;
+            }
+            @bottom-center {
+                content: "LOS DATOS CONTENIDOS EN ESTE DOCUMENTO SON CONFIDENCIALES";
+                font-size: 0.9em;
+                color: #333;
+            }
+        }
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            position: relative;
+            box-sizing: border-box;
+            padding-bottom: 50px;
+        }
+        .container {
+            margin: 0;
+            padding: 0;
+            position: relative;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 0;
+            padding: 0;
+        }
+        .header-left, .header-center, .header-right {
+            text-align: center;
+        }
+        .header img {
+            height: 60px;
+            object-fit: contain;
+        }
+        .header-left img {
+            text-align: left;
+        }
+        .titu {
+            color: #010137;
+            font-size: 1.3em;
+            text-align: center;
+            margin-top: 40px;
+            margin-bottom: 60px;
+        }
+        .content {
+            margin-top: 30px;
+        }
+        .section {
+            margin-bottom: 40px;
+        }
+        .section h3 {
+            font-size: 1rem;
+            margin-bottom: 10px;
+            color: #010137;
+        }
+        h4::before {
+            content: "• ";
+            color: #010137;
+        }
+        h4 {
+            color: #010137;
+            font-size: 1rem;
+            margin-bottom: 10px;
+        }
+        .section table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .section th, .section td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            font-size: 0.875rem;
+        }
+        .section th {
+            background-color: #7dd3fc;
+            color: #000;
+            font-weight: bold;
+            text-align: left;
+        }
+        .footer {
+            position: running(footer);
+            width: 100%;
+            padding: 15px 0;
+            background-color: white;
+            text-align: center;
+            color: #333;
+            font-size: 0.9em;
+            margin-bottom: 15px;
+        }
+        @media print {
+            body {
+                margin: 0;
+                padding: 0;
+                padding-bottom: 50px;
+            }
+            .container, .content {
+                margin: 0;
+                padding: 0;
+            }
+            .content {
+                margin-bottom: 50px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Encabezado con logos -->
+        <div class="header">
+            <div class="header-left">
+                <img src="{{ logo_liceo_url }}" alt="Logo Liceo Técnico">
+            </div>
+            <div class="header-center">
+                <img src="{{ logo_servicio_url }}" alt="Logo Servicio Local">
+            </div>
+            <div class="header-right">
+                <img src="{{ logo_pie_url }}" alt="Logo PIE">
+            </div>
+        </div>
+        <div class="titu">PLAN DE ADECUACIÓN CURRICULAR INDIVIDUAL / PACI</div>
+        <div class="content">
+            <!-- Sección 1: Identificación del Estudiante -->
+            <div class="section">
+                <h3>1. IDENTIFICACIÓN DEL ESTUDIANTE</h3>
+                <table>
+                    <tr>
+                        <th>Nombre completo</th>
+                        <td colspan="3">{{ estudiante.nombres }} {{ estudiante.apellido_paterno }} {{ estudiante.apellido_materno }}</td>
+                    </tr>
+                    <tr>
+                        <th>Rut</th>
+                        <td>{{ estudiante.rut }}</td>
+                        <th>Fecha de nacimiento</th>
+                        <td>{{ estudiante.fecha_nacimiento }}</td>
+                    </tr>
+                    <tr>
+                        <th>Dirección</th>
+                        <td colspan="3">{{ estudiante.direccion }}</td>
+                    </tr>
+                    <tr>
+                        <th>Curso actual</th>
+                        <td>{{ estudiante.cursos.nombre }}</td>
+                        <th>Edad</th>
+                        <td>{{ paci.edad }}</td>
+                    </tr>
+                    <tr>
+                        <th>Diagnóstico NEE</th>
+                        <td>{{ estudiante.nee }}</td>
+                        <th>Sexo</th>
+                        <td>{{ paci.sexo }}</td>
+                    </tr>
+                    <tr>
+                        <th>Fecha elaboración</th>
+                        <td colspan="3">{{ paci.fecha_elaboracion|date:'Y-m-d' }}</td>
+                    </tr>
+                </table>
+            </div>
+            <!-- Sección 2: Identificación del Establecimiento -->
+            <div class="section">
+                <h3>2. IDENTIFICACIÓN DEL ESTABLECIMIENTO</h3>
+                <table>
+                    <tr>
+                        <th>RBD</th>
+                        <td colspan="3">{{ paci.rbd }}</td>
+                    </tr>
+                    <tr>
+                        <th>Nombre del Establecimiento</th>
+                        <td colspan="3">{{ paci.nombre_establecimiento }}</td>
+                    </tr>
+                    <tr>
+                        <th>Región</th>
+                        <td>{{ paci.region }}</td>
+                        <th>Comuna</th>
+                        <td>{{ paci.comuna }}</td>
+                    </tr>
+                    <tr>
+                        <th>Coordinador(a) PIE</th>
+                        <td colspan="3">{{ paci.coordinador_pie }}</td>
+                    </tr>
+                    <tr>
+                        <th>Jefe UTP</th>
+                        <td colspan="3">{{ paci.jefe_utp }}</td>
+                    </tr>
+                </table>
+            </div>
+            <!-- Sección 3: Equipo Responsable -->
+            <div class="section">
+                <h3>3. EQUIPO RESPONSABLE</h3>
+                <table>
+                    <tr>
+                        <th>Nombre Profesional</th>
+                        <th>Profesión</th>
+                        <th>Función</th>
+                        <th>N° Registro</th>
+                    </tr>
+                    {% for equipo in paci.equipo_responsable.all %}
+                    <tr>
+                        <td>{{ equipo.nombre }}</td>
+                        <td>{{ equipo.profesion }}</td>
+                        <td>{{ equipo.funcion }}</td>
+                        <td>{{ equipo.n_registro }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+            <!-- Sección 4: Recursos y Modalidad de Apoyo -->
+            <div class="section">
+                <h3>4. RECURSOS Y MODALIDAD DE APOYO</h3>
+                <table>
+                    <tr>
+                        <th>Aula de Recursos</th>
+                    </tr>
+                    {% for recurso in paci.aula_recursos.all %}
+                    <tr>
+                        <td>{{ recurso.aula_de_recursos }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+            <!-- Sección 4.1: Aula Regular -->
+            <div class="section">
+                <table>
+                    <tr>
+                        <th>Aula Regular</th>
+                    </tr>
+                    {% for aula in paci.aula_regular.all %}
+                    <tr>
+                        <td>{{ aula.aula_regular }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+            <!-- Sección 5: Adecuación de Acceso -->
+            <div class="section">
+                <h3>5. ADECUACIÓN DE ACCESO</h3>
+                <table>
+                    <tr>
+                        <th>Presentación y Representación de la Información</th>
+                    </tr>
+                    {% for presentacion in paci.presentacion_representacion.all %}
+                    <tr>
+                        <td>{{ presentacion.presentacion_representacion }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+            <!-- Sección 5.1: Medios de Ejecución y Expresión -->
+            <div class="section">
+                <table>
+                    <tr>
+                        <th>Medios de Ejecución y Expresión</th>
+                    </tr>
+                    {% for medio in paci.medios_ejecucion_expresion.all %}
+                    <tr>
+                        <td>{{ medio.medios_ejecucion_expresion }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+            <!-- Sección 5.2: Proporcionar múltiples medios de participación y compromiso -->
+            <div class="section">
+                <table>
+                    <tr>
+                        <th>Proporcionar múltiples medios de participación y compromiso</th>
+                    </tr>
+                    {% for medio in paci.multiples_medios.all %}
+                    <tr>
+                        <td>{{ medio.multiples_medios }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+            <!-- Sección 5.3: Entorno (Adecuación en los espacios, ubicación y condiciones) -->
+            <div class="section">
+                <table>
+                    <tr>
+                        <th>Entorno (Adecuación en los espacios, ubicación y condiciones)</th>
+                    </tr>
+                    {% for entorno in paci.entorno.all %}
+                    <tr>
+                        <td>{{ entorno.entorno }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+            <!-- Sección 5.4: Organización del tiempo y el horario -->
+            <div class="section">
+                <table>
+                    <tr>
+                        <th>Organización del tiempo y el horario</th>
+                    </tr>
+                    {% for organizacion in paci.organizacion_tiempo.all %}
+                    <tr>
+                        <td>{{ organizacion.organizacion_tiempo }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+            <!-- Sección 6: Adecuación de Objetivos -->
+            <div class="section">
+                <h3>6. ADECUACIÓN DE OBJETIVOS</h3>
+                <table>
+                    <tr>
+                        <th>Graduación del nivel de complejidad</th>
+                    </tr>
+                    {% for graduacion in paci.graduacion_complejidad.all %}
+                    <tr>
+                        <td>{{ graduacion.graduacion_complejidad }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+            <!-- Sección 6.1: Priorización de OA y contenidos -->
+            <div class="section">
+                <table>
+                    <tr>
+                        <th>Priorización de OA y contenidos</th>
+                    </tr>
+                    {% for priorizacion in paci.priorizacion_oa.all %}
+                    <tr>
+                        <td>{{ priorizacion.priorizacion_oa }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+            <!-- Sección 6.2: Temporalización -->
+            <div class="section">
+                <table>
+                    <tr>
+                        <th>Temporalización</th>
+                    </tr>
+                    {% for temporalizacion in paci.temporalizacion.all %}
+                    <tr>
+                        <td>{{ temporalizacion.temporalizacion }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+            <!-- Sección 6.3: Enriquecimiento del Curriculum -->
+            <div class="section">
+                <table>
+                    <tr>
+                        <th>Enriquecimiento del Curriculum</th>
+                    </tr>
+                    {% for enriquecimiento in paci.enriquecimiento_curriculum.all %}
+                    <tr>
+                        <td>{{ enriquecimiento.enriquecimiento_curriculum }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+            <!-- Sección 7: Objetivos de Aprendizaje -->
+            <div class="section">
+                <h3>7. OBJETIVOS DE APRENDIZAJE</h3>
+                {% for objetivo in paci.objetivos_aprendizaje.all %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Descripción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <table>
+                                    <tbody>
+                                        <tr>
+                                            <th>Nivel de Enseñanza</th>
+                                            <td>{{ objetivo.nivel_ensenanza }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Curso</th>
+                                            <td>{{ objetivo.curso }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Asignatura o Núcleo</th>
+                                            <td>{{ objetivo.asignatura_o_nucleo }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Eje o Ámbito</th>
+                                            <td>{{ objetivo.eje_o_ambito }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Contexto o Espacio Educativo</th>
+                                            <td>{{ objetivo.espacio_educativo }}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                {% endfor %}
+            </div>
+            <!-- Sección 7.1: Columnas de Objetivos de Aprendizaje -->
+            <div class="section">
+
+                <table>
+                    <tr>
+                        <th>Código</th>
+                        <th>Objetivos de Aprendizaje Priorizados</th>
+                        <th>Adaptación de OA</th>
+                        <th>Estrategias Metodológicas</th>
+                        <th>Evaluación de OA</th>
+                    </tr>
+                    {% for columna in paci.columnas_objetivos_aprendizaje.all %}
+                    <tr>
+                        <td>{{ columna.codigo }}</td>
+                        <td>{{ columna.objetivos_aprendizaje }}</td>
+                        <td>{{ columna.adaptacion_de_oa }}</td>
+                        <td>{{ columna.estrategias_metodologicas }}</td>
+                        <td>{{ columna.evaluacion_de_oa }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+            <!-- Sección 8: Colaboración de la Familia -->
+            <div class="section">
+                <h3>8. COLABORACIÓN DE LA FAMILIA</h3>
+                <table>
+                    <tr>
+                        <th>Aspectos a Considerar</th>
+                    </tr>
+                    {% for colaboracion in paci.colaboracion_familia.all %}
+                    <tr>
+                        <td>{{ colaboracion.aspectos_familia }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+            <!-- Sección 9: Criterios de Evaluación y Promoción -->
+            <div class="section">
+                <h3>9. CRITERIOS DE EVALUACIÓN Y PROMOCIÓN</h3>
+                <table>
+                    <tr>
+                        <th>Aspectos a Considerar</th>
+                    </tr>
+                    {% for criterio in paci.crit_evaluacion_promocion.all %}
+                    <tr>
+                        <td>{{ criterio.criterios }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+            <!-- Sección 10: Seguimiento de PACI -->
+            <div class="section">
+                <h3>10. SEGUIMIENTO DE PACI</h3>
+                <table>
+                    <tr>
+                        <th>Aspectos a Considerar</th>
+                    </tr>
+                    {% for seguimiento in paci.seguimiento_paci.all %}
+                    <tr>
+                        <td>{{ seguimiento.seguimiento }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+            <!-- Sección 11: Firma Equipo Responsable PACI -->
+            <div class="section">
+                <h3>11. FIRMA EQUIPO RESPONSABLE PACI</h3>
+                <table>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Cargo</th>
+                        <th>Firma</th>
+                    </tr>
+                    {% for firma in paci.firma_paci.all %}
+                    <tr>
+                        <td>{{ firma.nombre }}</td>
+                        <td>{{ firma.cargo }}</td>
+                        <td></td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        Generado por EducaPRO
+    </div>
+</body>
+</html>

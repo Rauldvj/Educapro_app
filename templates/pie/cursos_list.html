@@ -1,0 +1,70 @@
+<div class="flex flex-col ml-8 w-11/12">
+    <div class="sm:-mx-6 lg:-mx-16">
+        <div class="inline-block w-full py-2">
+            <div class="">
+                <table class="w-full text-center font-light">
+                    <thead class="border-b dark:border-neutral-500 bg-gradient-to-b from-blue-800 to-blue-700 ">
+                      <tr>
+                        <th scope="col" class="font-semibold font-sans text-xs text-start text-white px-2 py-1 min-w-1/4">
+                            <a href="?sort=nombres" class="text-white">ÁREA</a>
+                        </th>
+                        <th scope="col" class="font-semibold font-sans text-xs text-start text-white px-2 py-1 min-w-1/4">
+                            <a href="?sort=apellido_paterno" class="text-white">CURSO</a>
+                        </th>
+                        <th scope="col" class="font-semibold font-sans text-xs text-start text-white px-2 py-1 min-w-1/4">
+                            <a href="?sort=apellido_materno" class="text-white">NEE TRANSITORIOS</a>
+                        </th>
+                        <th scope="col" class="font-semibold font-sans text-xs text-start text-white px-2 py-1 min-w-1/4">
+                            <a href="?sort=usuario" class="text-white">NEE PERMANENTES</a>
+                    </thead>
+                    <tbody>
+                        {% for curso in cursos_data %}
+                            <tr class="{% cycle 'bg-white text-black' 'bg-blue-100 text-gray-900' %} border-b border-neutral-100">
+                                <td class="text-start whitespace-nowrap px-2 py-2 text-sm text-black">{{ curso.area_academica }}</td>
+                                <td class="text-start text-sm whitespace-nowrap px-1 py-1 text-black">{{ curso.curso }}</td>
+                                <td class="text-start text-sm whitespace-nowrap px-1 py-1 text-black">{{ curso.nee_transitorios }}</td>
+                                <td class="text-start text-sm whitespace-nowrap px-1 py-1 text-black">{{ curso.nee_permanentes }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Enlaces de paginacion -->
+    <div class="flex justify-center mt-4">
+        <ul class="flex space-x-2">
+            {% if cursos_data.has_previous %}
+                <li><a href="?page_cursos=1" 
+                    class="bg-gradient-to-r from-blue-900 to-blue-700 
+                    hover:from-blue-600 hover:to-blue-600
+                    font-sans text-white text-sm px-2 py-1 rounded-sm">
+                    Primera Pagina</a></li>
+                <li><a href="?page_cursos={{ cursos_data.previous_page_number }}" 
+                    class="bg-gradient-to-r from-blue-900 to-blue-700 
+                    hover:from-blue-600 hover:to-blue-600
+                    font-sans text-white text-sm px-2 py-1 rounded-sm"
+                    >Anterior</a></li>
+            {% endif %}
+            
+            <li class="bg-gradient-to-r from-blue-900 to-blue-700 
+            hover:from-blue-600 hover:to-blue-600
+            font-sans text-white text-sm px-3 py-1 rounded-full"
+            >{{ cursos_data.number }}</li>
+            
+            {% if cursos_data.has_next %}
+                <li><a href="?page_cursos={{ cursos_data.next_page_number }}" 
+                    class="bg-gradient-to-r from-blue-900 to-blue-700 
+                    hover:from-blue-600 hover:to-blue-600
+                    font-sans text-white text-sm px-2 py-1 rounded-sm"
+                    >Siguiente</a></li>
+                <li><a href="?page_cursos={{ cursos_data.paginator.num_pages }}" 
+                    class="bg-gradient-to-r from-blue-900 to-blue-700 
+                    hover:from-blue-600 hover:to-blue-600
+                    font-sans text-white text-sm px-2 py-1 rounded-sm"
+                    >Última</a></li>
+            {% endif %}
+        </ul>
+    </div>
+</div>

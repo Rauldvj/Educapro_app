@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Bitácora Estudiante PDF</title>
+    <style>
+        /* Configuración de la página para impresión con márgenes uniformes de 2.5cm */
+        @page {
+            size: A4;
+            margin: 2.5cm;
+        }
+        
+        /* Estilos generales del documento */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            position: relative;
+            box-sizing: border-box;
+            padding-bottom: 50px; /* Espacio para el footer */
+        }
+
+        /* Contenedor principal con márgenes uniformes */
+        .container {
+            margin: 0;
+            padding: 0;
+            position: relative;
+        }
+
+        /* Encabezado con flex para alinear elementos */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Resto de estilos sin cambios */
+        .header-left {
+            text-align: left;
+        }
+
+        .header-left h1 {
+            margin: 0;
+            padding: 0;
+            font-size: 1.8em;
+        }
+
+        .header-left h1.titu {
+            margin: 0;
+            line-height: 1.2;
+        }
+
+        .header-left h2 {
+            margin: 2px 0;
+            padding: 0;
+            font-size: 1.1em;
+        }
+
+        .header-left h3 {
+            margin: 2px 0;
+            padding: 0;
+            font-size: 1em;
+            font-style: italic;
+        }
+
+        .student-info {
+            padding: 0;
+            margin-top: 10px;
+        }
+
+        .header-right {
+            text-align: right;
+            align-items: flex-end;
+        }
+
+        .header-right p {
+            margin: 0;
+            padding: 0;
+            line-height: 1.5;
+        }
+
+        .titu {
+            color: #010137;
+        }
+
+        .content {
+            margin-top: 30px;
+            position: relative;
+        }
+
+        .fecha-container {
+            padding-bottom: 25px;
+            margin-bottom: 10px;
+        }
+
+        .bitacora {
+            border: 1px solid #010137;
+            padding: 15px;
+            margin-bottom: 30px;
+        }
+
+        .bitacora h2 {
+            margin: 0;
+            padding: 0;
+            font-size: 1.1em;
+            font-style: italic;
+            color: #333;
+            border-bottom: 1px solid #333;
+            display: inline-block;
+            padding-bottom: 3px;
+            margin-bottom: 15px;
+        }
+
+        .bitacora p {
+            margin: 5px 0;
+        }
+
+        .bitacora p.profesional {
+            padding-bottom: 1px;
+            margin-bottom: 5px;
+        }
+
+        .bitacora p.asignatura {
+            margin-top: 15px; /* Agrega más espacio superior */
+        }
+
+        .bitacora p.actividad {
+            margin-top: 5px; /* Agrega menos espacio superior */
+        }
+
+        .bitacora p.actividad-content {
+            padding: 5px; /* Agrega padding a la actividad */
+        }
+
+        .bitacora p.aula-horas {
+            padding-top: 10px; /* Agrega más padding superior */
+            margin-top: 10px; /* Agrega más margen superior */
+        }
+
+        .bitacora:last-child {
+            margin-bottom: 20px;
+        }
+
+        /* Footer fijo al final de cada página */
+        .footer {
+            position: running(footer);
+            width: 100%;
+            padding: 15px 0;
+            background-color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .footer-left {
+            font-size: 0.9em;
+            color: #333;
+        }
+
+        .footer-right {
+            font-size: 0.9em;
+            color: #333;
+        }
+
+        /* Configuración para asegurar que el footer aparezca en cada página */
+        @page {
+            @bottom-left {
+                content: element(footer);
+            }
+        }
+
+        @media print {
+            body {
+                margin: 0;
+                padding: 0;
+                padding-bottom: 50px;
+            }
+            
+            .container {
+                margin: 0;
+                padding: 0;
+            }
+
+            /* Asegura que el contenido no se sobreponga con el footer */
+            .content {
+                margin-bottom: 50px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-left">
+                <h1 class="titu">BITACORA</h1>
+                <h1 class="titu">ESTUDIANTE</h1>
+                <div class="student-info">
+                    <h2>{{ estudiante.nombres }}</h2>
+                    <h2>{{ estudiante.apellido_paterno }} {{ estudiante.apellido_materno }}</h2>
+                    <h3>{{ estudiante.cursos }}</h3>
+                </div>
+            </div>
+            <div class="header-right">
+                <p>Área PIE</p>
+                <p>Liceo Técnico Profesional</p>
+                <p>De Adultos</p>
+                <img src="{{ logo_url }}" alt="Logo" style="width: 100px;">
+            </div>
+        </div>
+        <div class="content">
+            <div class="fecha-container">
+                <p><strong>Fecha:</strong> {{ bitacora.fecha }}</p>
+            </div>
+            {% for bitacora in bitacoras %}
+            <div class="bitacora">
+                <h2>Descripción</h2>
+                <p class="profesional"><strong>Profesional a cargo:</strong> {{ bitacora.profesional.group_name_singular }}</p>
+                <p class="profesional"><strong>Nombre: </strong> {{ bitacora.profesional.user.first_name }} {{ bitacora.profesional.user.last_name }}</p>
+                <p class="aula-horas"><strong>Lugar de apoyo:</strong> {{ bitacora.aula }} | <strong>Horas Pedagógicas:</strong> {{ bitacora.horas_estudiante }}</p>
+                <p class="asignatura"><strong>Asignatura:</strong> {{ bitacora.asignatura.asignatura }}</p>
+                <p class="actividad"><strong>Actividad {{ forloop.counter }}:</strong> {{ bitacora.actividad }}</p>
+                <p class="nivel-logro"><strong>Objetivo: </strong> {% if bitacora.nivelLogro %}Logrado{% else %}En Vías de Logro{% endif %}</p>
+                <p class="asignatura"><strong>Observaciones:</strong> {{ bitacora.observaciones }}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="footer">
+        <div class="footer-left">Generado por EducaPRO</div>
+    </div>
+</body>
+</html>

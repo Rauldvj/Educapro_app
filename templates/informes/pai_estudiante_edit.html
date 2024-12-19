@@ -1,0 +1,948 @@
+{% extends 'base.html' %}
+
+{% block title %} PAI Estudiante {% endblock %}
+
+{% block content %}
+
+{% load tailwind_filters %}
+{% load static %}
+
+<!-- Incluir el archivo funciones.js -->
+<script src="{% static 'js/funciones.js' %}"></script>
+
+<body class=" p-8">
+    {% include 'componentes/navbar.html' %}
+
+    <div class="max-w-6xl mx-auto bg-gradient-to-b from-blue-950 to-blue-900 rounded-md shadow-xl p-6">
+        <!-- Encabezado con logos -->
+        <div class="flex justify-between items-center mb-6">
+            <img src="/static/Imagenes/LOGO LICEO TECNICO ADULTOS.jpg" alt="Logo Liceo Técnico" class="h-20 object-contain"/>
+            <img src="/static/Imagenes/Servicio_local.jpg" class="h-20" alt="">
+            <img src="/static/Imagenes/Imagen_PIE.jpg" alt="Logo PIE" class="h-20 object-contain"/>
+        </div>
+
+        <h2 class="text-white text-2xl text-center font-bold mb-">PLAN DE APOYO INDIVIDUAL / PAI</h2>
+        <h2 class="text-white text-xl text-center font-bold mb-8">ÁREA PSICOPEDAGÓGICA</h2>
+
+        <form action="" method="post" class="space-y-6">
+            {% csrf_token %}
+
+            <!-- Sección 1: Identificación del Estudiante -->
+            <div>
+                <h3 class="text-white text-xl font-semibold mb-4">1. IDENTIFICACIÓN DEL ESTUDIANTE</h3>
+                <table class="w-full border-collapse bg-white rounded-md overflow-hidden">
+                    <tbody class="divide-y divide-gray-200">
+                        <tr>
+                            <td class="bg-blue-100 px-2 py-2 w-1/4 text-black font-semibold text-sm rounded-sm">Nombre completo</td>
+                            <td class="px-2 py-2" colspan="3">
+                                <input type="text" name="estudiante_nombre" id="estudiante_nombre" class="w-full bg-transparent focus:outline-none text-sm rounded-md" value="{{ estudiante.nombres }} {{ estudiante.apellido_paterno }} {{ estudiante.apellido_materno }}" readonly/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="bg-blue-100 px-2 py-2 text-black font-semibold text-sm rounded-sm">Rut</td>
+                            <td class="px-2 py-2">
+                                <input type="text" name="rut" id="rut" class="w-full bg-transparent focus:outline-none text-sm rounded-md" value="{{ estudiante.rut }}" readonly/>
+                            </td>
+                            <td class="bg-blue-100 px-2 py-2  text-black font-semibold text-sm rounded-sm">Fecha de nacimiento</td>
+                            <td class="px-2 py-2">
+                                <input type="text" name="fecha_nacimiento" id="fecha_nacimiento" class="w-full bg-transparent focus:outline-none text-sm rounded-md" value="{{ estudiante.fecha_nacimiento }}" readonly/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="bg-blue-100 px-2 py-2  text-black font-semibold text-sm rounded-sm">Dirección</td>
+                            <td class="px-2 py-2" colspan="3">
+                                <input type="text" name="direccion" id="direccion" class="w-full bg-transparent focus:outline-none text-sm rounded-md" value="{{ estudiante.direccion }}" readonly/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="bg-blue-100 px-2 py-2 text-black font-semibold text-sm rounded-sm">Curso actual</td>
+                            <td class="px-2 py-2">
+                                <input type="text" name="curso" id="curso" class="w-full bg-transparent focus:outline-none text-sm rounded-md" value="{{ estudiante.cursos.nombre }}" readonly/>
+                            </td>
+                            <td class="bg-blue-100 px-2 py-2 text-black font-semibold text-sm rounded-sm">Edad</td>
+                            <td class="px-2 py-2">
+                                <input type="text" name="edad" id="edad" class="w-full bg-transparent focus:outline-none text-sm rounded-md" value="{{ pai.edad }}" readonly/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="bg-blue-100 px-2 py-2 text-black font-semibold text-sm rounded-sm">Diagnóstico NEE: </td>
+                            <td class="px-2 py-2">
+                                <input type="text" name="nee" id="nee" class="w-full bg-transparent focus:outline-none text-sm rounded-md" value="{{ estudiante.nee }}" readonly/>
+                            </td>
+                            <td class="bg-blue-100 px-2 py-2 text-black font-semibold text-sm rounded-sm">Sexo</td>
+                            <td class="px-2 py-2">
+                                <div class="flex space-x-4">
+                                    <label class="flex items-center">
+                                        <input type="radio" name="sexo" id="sexo_masculino" value="Masculino" class="mr-2 text-sm rounded-md" {% if pai.sexo == 'Masculino' %}checked{% endif %}>
+                                        <span>Masculino</span>
+                                    </label>
+                                    <label class="flex items-center">
+                                        <input type="radio" name="sexo" id="sexo_femenino" value="Femenino" class="mr-2 text-sm rounded-md" {% if pai.sexo == 'Femenino' %}checked{% endif %}>
+                                        <span>Femenino</span>
+                                    </label>
+                                    <label class="flex items-center">
+                                        <input type="radio" name="sexo" id="sexo_otro" value="Otro" class="mr-2 text-sm rounded-md" {% if pai.sexo == 'Otro' %}checked{% endif %}>
+                                        <span>Otro</span>
+                                    </label>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="bg-blue-100 px-2 py-2 text-black font-semibold text-sm rounded-sm">Fecha elaboración</td>
+                            <td class="px-2 py-2" colspan="3">
+                                <input type="date" name="fecha_elaboracion" id="fecha_elaboracion" 
+                                class="fecha-calendario w-full bg-transparent focus:outline-none text-sm rounded-md" value="{{ pai.fecha_elaboracion|date:'Y-m-d' }}"/>
+                                {% if form.fecha_elaboracion.errors %}
+                                    <div class="text-red-500 text-sm mt-1">
+                                        {{ form.fecha_elaboracion.errors }}
+                                    </div>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Sección 2: IDENTIFICACIÓN DEL ESTABLECIMIENTO -->
+            <div>
+                <h3 class="text-white text-xl font-semibold mb-4">2. IDENTIFICACIÓN DEL ESTABLECIMIENTO</h3>
+                <table class="w-full border-collapse bg-white rounded-md overflow-hidden">
+                    <tbody>
+                        <tr>
+                            <td class="bg-blue-100 px-2 py-2 w-1/4 text-black font-semibold text-sm rounded-sm">RBD</td>
+                            <td class="px-2 py-2" colspan="3">
+                                <input type="text" name="rbd" id="rbd" class="w-full bg-transparent focus:outline-none text-sm rounded-md" value="{{ pai.rbd }}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="bg-blue-100 px-2 py-2 w-1/4 text-black font-semibold text-sm rounded-sm">Nombre del Establecimiento: </td>
+                            <td class="px-2 py-2" colspan="3">
+                                <input type="text" name="nombre_establecimiento" id="nombre_establecimiento" class="w-full bg-transparent focus:outline-none text-sm rounded-md" value="{{ pai.nombre_establecimiento }}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="bg-blue-100 px-2 py-2 text-black font-semibold text-sm rounded-sm">Región</td>
+                            <td class="px-2 py-2 w-1/3" colspan="1">
+                                <select name="region" id="region_pai" class="region-select w-full px-3 bg-transparent focus:outline-none text-sm rounded-md py-2" required>
+                                    {% for region in regiones %}
+                                        <option value="{{ region.id }}" {% if pai.region_id == region.id %}selected{% endif %}>{{ region.region }}</option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                            <td class="bg-blue-100 px-2 py-2  text-black font-semibold text-sm rounded-sm">Comuna</td>
+                            <td class="px-2 py-2 w-1/3" colspan="1">
+                                <select name="comuna" id="comuna_pai" class="comuna-select w-full px-3 bg-transparent focus:outline-none text-sm rounded-md py-2" required>
+                                    <option value="">Seleccione comuna</option>
+                                    {% for comuna in comunas %}
+                                        <option value="{{ comuna.id }}" data-region="{{ comuna.region_id }}" {% if pai.comuna_id == comuna.id %}selected{% endif %}>{{ comuna.comuna }}</option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                        </tr>
+                                                   <tr>
+                            <td class="bg-blue-100 px-2 py-2 w-1/4 text-black font-semibold text-sm rounded-sm">Coordinador(a) PIE: </td>
+                            <td class="px-2 py-2" colspan="3">
+                                <select name="coordinador_pie" id="coordinador_pie" class="w-full py-2 px-3 bg-transparent focus:outline-none text-sm rounded-md">
+                                    {% for coordinador in coordinadores %}
+                                        <option value="{{ coordinador.id }}" {% if pai.coordinador_pie_id == coordinador.id %}selected{% endif %}>
+                                            {{ coordinador.user.get_full_name }} {{ coordinador.apellido_paterno }} {{ coordinador.apellido_materno }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Sección 3: EQUIPO RESPONSABLE PAI -->
+            <div>
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-white text-xl font-semibold">3. EQUIPO RESPONSABLE PAI</h3>
+                    <div class="flex gap-2 mt-2">
+                        <!-- Botón Agregar Fila con ícono "+" -->
+                        <button type="button" class="bg-gradient-to-b from-amber-200 via-amber-300 to-amber-300 hover:from-amber-600 hover:to-amber-500 text-blue-900 px-4 py-2 rounded-md text-sm font-semibold flex items-center justify-center" onclick="addRow()" aria-label="Agregar Fila">
+                            <!-- Ícono de "+" -->
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                
+                        <!-- Botón Eliminar Fila con ícono "-" -->
+                        <button type="button" class="bg-gradient-to-b from-blue-400 via-blue-500 to-blue-400 hover:from-blue-600 hover:to-blue-500 text-white px-4 py-2 rounded-md text-sm font-semibold flex items-center justify-center" onclick="removeLastRow()" aria-label="Eliminar Fila">
+                            <!-- Ícono de "-" -->
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M5 10a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <table class="w-full border-collapse bg-white rounded-md overflow-hidden">
+                    <thead>
+                        <tr>
+                            <th class="bg-blue-100 px-2 py-2 text-start text-black font-semibold text-sm rounded-sm">Nombre Profesional</th>
+                            <th class="bg-blue-100 px-2 py-2 text-start text-black font-semibold text-sm rounded-sm">Cargo</th>
+                            <th class="bg-blue-100 px-2 py-2 text-center text-black font-semibold text-sm rounded-sm">Eliminar</th>
+                        </tr>
+                    </thead>
+                    <tbody id="equipo-responsable-formset">
+                        {{ equipo_responsable_formset.management_form }}
+                        {% for form in equipo_responsable_formset %}
+                        {% if form.instance.pk %}
+                        <tr class="text-center">
+                            <td class="px-2 py-2 w-2/5 text-sm">
+                                {{ form.nombre_profesional }}
+                                {% if form.nombre_profesional.errors %}
+                                    <div class="text-red-500 text-sm mt-1">
+                                        {{ form.nombre_profesional.errors }}
+                                    </div>
+                                {% endif %}
+                            </td>
+                            <td class="px-2 py-2 w-1/6">
+                                {{ form.cargo }}
+                                {% if form.cargo.errors %}
+                                    <div class="text-red-500 text-sm mt-1">
+                                        {{ form.cargo.errors }}
+                                    </div>
+                                {% endif %}
+                            </td>
+                            <td class="px-2 py-2 w-1/12">
+                                {{ form.DELETE }}
+                            </td>
+                            {{ form.id }}
+                        </tr>
+                        {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            
+            <script>
+            function addRow() {
+                const formset = document.getElementById("equipo-responsable-formset");
+                const totalForms = document.getElementById("id_equipo_responsable-TOTAL_FORMS"); // Input oculto con el total de formularios
+                const newFormIndex = totalForms.value;
+                const emptyFormTemplate = document.getElementById("empty-form-template").innerHTML;
+                const newFormHtml = emptyFormTemplate.replace(/__prefix__/g, newFormIndex);
+                const tr = document.createElement('tr');
+                tr.innerHTML = newFormHtml;
+                tr.classList.add('text-center'); // Agregar clase para centrar el texto
+                formset.appendChild(tr);
+                totalForms.value = parseInt(totalForms.value) + 1;
+            }
+            
+            function removeLastRow() {
+                const formset = document.getElementById("equipo-responsable-formset");
+                const totalForms = document.getElementById("id_equipo_responsable-TOTAL_FORMS");
+                const rows = Array.from(formset.getElementsByTagName('tr')).filter(row => {
+                    const idField = row.querySelector('input[name*="-id"]');
+                    return !idField || !idField.value; // Solo eliminar filas nuevas
+                });
+                if (rows.length > 0) {
+                    const lastRow = rows[rows.length - 1];
+                    formset.removeChild(lastRow);
+                    totalForms.value = parseInt(totalForms.value) - 1;
+                }
+            }
+            </script>
+            
+            <script type="text/template" id="empty-form-template">
+            <tr class="text-center">
+                <td class="px-2 py-2 w-2/5">
+                    {{ equipo_responsable_formset.empty_form.nombre_profesional }}
+                </td>
+                <td class="px-2 py-2 w-1/6">
+                    {{ equipo_responsable_formset.empty_form.cargo }}
+                </td>
+                <td class="px-2 py-2 w-1/12">
+                    {{ equipo_responsable_formset.empty_form.DELETE }}
+                </td>
+            </tr>
+            </script>
+
+            
+            <!-- Sección 4: DOCENTES INTEGRADORES Y FAMILIA -->
+            <div>
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-white text-xl font-semibold">4. DOCENTES INTEGRADORES Y FAMILIA</h3>
+                    <div class="flex gap-2 mt-2">
+                        <!-- Botón Agregar Docente con ícono "+" -->
+                        <button type="button" class="bg-gradient-to-b from-amber-200 via-amber-300 to-amber-300 hover:from-amber-600 hover:to-amber-500 text-blue-900 px-4 py-2 rounded-md text-sm font-semibold flex items-center justify-center" onclick="addDocenteRow()" aria-label="Agregar Docente">
+                            <!-- Ícono de "+" -->
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                
+                        <!-- Botón Eliminar Docente con ícono "-" -->
+                        <button type="button" class="bg-gradient-to-b from-blue-400 via-blue-500 to-blue-400 hover:from-blue-600 hover:to-blue-500 text-white px-4 py-2 rounded-md text-sm font-semibold flex items-center justify-center" onclick="removeLastDocenteRow()" aria-label="Eliminar Docente">
+                            <!-- Ícono de "-" -->
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M5 10a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <table class="w-full border-collapse bg-white rounded-md overflow-hidden">
+                    <thead>
+                        <tr>
+                            <th class="bg-blue-100 px-2 py-2 text-start text-black font-semibold text-sm rounded-sm">Nombre</th>
+                            <th class="bg-blue-100 px-2 py-2 text-start text-black font-semibold text-sm rounded-sm">Profesión</th>
+                            <th class="bg-blue-100 px-2 py-2 text-center text-black font-semibold text-sm rounded-sm">Eliminar</th>
+                        </tr>
+                    </thead>
+                    <tbody id="docentes-formset">
+                        {{ docentes_formset.management_form }}
+                        {% for form in docentes_formset %}
+                        {% if form.instance.pk %}
+                        <tr class="text-center">
+                            <td class="px-2 py-2 w-2/5 text-sm">
+                                {{ form.nombre }}
+                                {% if form.nombre.errors %}
+                                    <div class="text-red-500 text-sm mt-1">
+                                        {{ form.nombre.errors }}
+                                    </div>
+                                {% endif %}
+                            </td>
+                            <td class="px-2 py-2 w-1/6">
+                                {{ form.profesion }}
+                                {% if form.profesion.errors %}
+                                    <div class="text-red-500 text-sm mt-1">
+                                        {{ form.profesion.errors }}
+                                    </div>
+                                {% endif %}
+                            </td>
+                            <td class="px-2 py-2 w-1/12">
+                                {{ form.DELETE }}
+                            </td>
+                            {{ form.id }}
+                        </tr>
+                        {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            
+            <script>
+            function addDocenteRow() {
+                const formset = document.getElementById("docentes-formset");
+                const totalForms = document.getElementById("id_docentes-TOTAL_FORMS"); // Input oculto con el total de formularios
+                const newFormIndex = totalForms.value;
+                const emptyFormTemplate = document.getElementById("empty-docente-form-template").innerHTML;
+                const newFormHtml = emptyFormTemplate.replace(/__prefix__/g, newFormIndex);
+                const tr = document.createElement('tr');
+                tr.innerHTML = newFormHtml;
+                tr.classList.add('text-center'); // Agregar clase para centrar el texto
+                formset.appendChild(tr);
+                totalForms.value = parseInt(totalForms.value) + 1;
+            }
+            
+            function removeLastDocenteRow() {
+                const formset = document.getElementById("docentes-formset");
+                const totalForms = document.getElementById("id_docentes-TOTAL_FORMS");
+                const rows = Array.from(formset.getElementsByTagName('tr')).filter(row => {
+                    const idField = row.querySelector('input[name*="-id"]');
+                    return !idField || !idField.value; // Solo eliminar filas nuevas
+                });
+                if (rows.length > 0) {
+                    const lastRow = rows[rows.length - 1];
+                    formset.removeChild(lastRow);
+                    totalForms.value = parseInt(totalForms.value) - 1;
+                }
+            }
+            </script>
+            
+            <script type="text/template" id="empty-docente-form-template">
+            <tr class="text-center">
+                <td class="px-2 py-2 w-2/5">
+                    {{ docentes_formset.empty_form.nombre }}
+                </td>
+                <td class="px-2 py-2 w-1/6">
+                    {{ docentes_formset.empty_form.profesion }}
+                </td>
+                <td class="px-2 py-2 w-1/12">
+                    {{ docentes_formset.empty_form.DELETE }}
+                </td>
+            </tr>
+            </script>
+
+                        <!-- Sección 4.1: FAMILIA -->
+            <div>
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-white text-xl font-semibold">4.1 FAMILIA</h3>
+                    <div class="flex gap-2 mt-2">
+                        <!-- Botón Agregar Familiar con ícono "+" -->
+                        <button type="button" class="bg-gradient-to-b from-amber-200 via-amber-300 to-amber-300 hover:from-amber-600 hover:to-amber-500 text-blue-900 px-4 py-2 rounded-md text-sm font-semibold flex items-center justify-center" onclick="addFamiliaRow()" aria-label="Agregar Familiar">
+                            <!-- Ícono de "+" -->
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                
+                        <!-- Botón Eliminar Familiar con ícono "-" -->
+                        <button type="button" class="bg-gradient-to-b from-blue-400 via-blue-500 to-blue-400 hover:from-blue-600 hover:to-blue-500 text-white px-4 py-2 rounded-md text-sm font-semibold flex items-center justify-center" onclick="removeLastFamiliaRow()" aria-label="Eliminar Familiar">
+                            <!-- Ícono de "-" -->
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M5 10a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <table class="w-full border-collapse bg-white rounded-md overflow-hidden">
+                    <thead>
+                        <tr>
+                            <th class="bg-blue-100 px-2 py-2 text-start text-black font-semibold text-sm rounded-sm">Nombres</th>
+                            <th class="bg-blue-100 px-2 py-2 text-start text-black font-semibold text-sm rounded-sm">Parentesco</th>
+                            <th class="bg-blue-100 px-2 py-2 text-center text-black font-semibold text-sm rounded-sm">Eliminar</th>
+                        </tr>
+                    </thead>
+                    <tbody id="familia-formset">
+                        {{ familia_formset.management_form }}
+                        {% for form in familia_formset %}
+                        {% if form.instance.pk %}
+                        <tr class="text-center">
+                            <td class="px-2 py-2 w-2/5 text-sm">
+                                {{ form.nombres }}
+                                {% if form.nombres.errors %}
+                                    <div class="text-red-500 text-sm mt-1">
+                                        {{ form.nombres.errors }}
+                                    </div>
+                                {% endif %}
+                            </td>
+                            <td class="px-2 py-2 w-1/6">
+                                {{ form.parentesco }}
+                                {% if form.parentesco.errors %}
+                                    <div class="text-red-500 text-sm mt-1">
+                                        {{ form.parentesco.errors }}
+                                    </div>
+                                {% endif %}
+                            </td>
+                            <td class="px-2 py-2 w-1/12">
+                                {{ form.DELETE }}
+                            </td>
+                            {{ form.id }}
+                        </tr>
+                        {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            
+            <script>
+            function addFamiliaRow() {
+                const formset = document.getElementById("familia-formset");
+                const totalForms = document.getElementById("id_familia-TOTAL_FORMS"); // Input oculto con el total de formularios
+                const newFormIndex = totalForms.value;
+                const emptyFormTemplate = document.getElementById("empty-familia-form-template").innerHTML;
+                const newFormHtml = emptyFormTemplate.replace(/__prefix__/g, newFormIndex);
+                const tr = document.createElement('tr');
+                tr.innerHTML = newFormHtml;
+                tr.classList.add('text-center'); // Agregar clase para centrar el texto
+                formset.appendChild(tr);
+                totalForms.value = parseInt(totalForms.value) + 1;
+            }
+            
+            function removeLastFamiliaRow() {
+                const formset = document.getElementById("familia-formset");
+                const totalForms = document.getElementById("id_familia-TOTAL_FORMS");
+                const rows = Array.from(formset.getElementsByTagName('tr')).filter(row => {
+                    const idField = row.querySelector('input[name*="-id"]');
+                    return !idField || !idField.value; // Solo eliminar filas nuevas
+                });
+                if (rows.length > 0) {
+                    const lastRow = rows[rows.length - 1];
+                    formset.removeChild(lastRow);
+                    totalForms.value = parseInt(totalForms.value) - 1;
+                }
+            }
+            </script>
+            
+            <script type="text/template" id="empty-familia-form-template">
+            <tr class="text-center">
+                <td class="px-2 py-2 w-2/5">
+                    {{ familia_formset.empty_form.nombres }}
+                </td>
+                <td class="px-2 py-2 w-1/6">
+                    {{ familia_formset.empty_form.parentesco }}
+                </td>
+                <td class="px-2 py-2 w-1/12">
+                    {{ familia_formset.empty_form.DELETE }}
+                </td>
+            </tr>
+            </script>
+
+
+                        <!-- Sección 5: ESTRATEGIAS DIVERSIFICADAS EN EL AULA -->
+            <div>
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-white text-xl font-semibold">5. ESTRATEGIAS DIVERSIFICADAS EN EL AULA</h3>
+                    <div class="flex gap-2 mt-2">
+                        <!-- Botón Agregar Estrategia con ícono "+" -->
+                        <button type="button" class="bg-gradient-to-b from-amber-200 via-amber-300 to-amber-300 hover:from-amber-600 hover:to-amber-500 text-blue-900 px-4 py-2 rounded-md text-sm font-semibold flex items-center justify-center" onclick="addEstrategiaRow()" aria-label="Agregar Estrategia">
+                            <!-- Ícono de "+" -->
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                
+                        <!-- Botón Eliminar Estrategia con ícono "-" -->
+                        <button type="button" class="bg-gradient-to-b from-blue-400 via-blue-500 to-blue-400 hover:from-blue-600 hover:to-blue-500 text-white px-4 py-2 rounded-md text-sm font-semibold flex items-center justify-center" onclick="removeLastEstrategiaRow()" aria-label="Eliminar Estrategia">
+                            <!-- Ícono de "-" -->
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M5 10a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <table class="w-full border-collapse bg-white rounded-md overflow-hidden">
+                    <thead>
+                        <tr>
+                            <th class="bg-blue-100 px-2 py-2 text-start text-black font-semibold text-sm rounded-sm">Criterio</th>
+                            <th class="bg-blue-100 px-2 py-2 text-start text-black font-semibold text-sm rounded-sm">Estrategias</th>
+                            <th class="bg-blue-100 px-2 py-2 text-start text-black font-semibold text-sm rounded-sm">Método</th>
+                            <th class="bg-blue-100 px-2 py-2 text-center text-black font-semibold text-sm rounded-sm">Eliminar</th>
+                        </tr>
+                    </thead>
+                    <tbody id="estrategias-diversificadas-formset">
+                        {{ estrategias_diversificadas_formset.management_form }}
+                        {% for form in estrategias_diversificadas_formset %}
+                        {% if form.instance.pk %}
+                        <tr class="text-center">
+                            <td class="px-2 py-2 w-2/5 text-sm">
+                                {{ form.criterio }}
+                                {% if form.criterio.errors %}
+                                    <div class="text-red-500 text-sm mt-1">
+                                        {{ form.criterio.errors }}
+                                    </div>
+                                {% endif %}
+                            </td>
+                            <td class="px-2 py-2 w-1/6">
+                                {{ form.estrategias }}
+                                {% if form.estrategias.errors %}
+                                    <div class="text-red-500 text-sm mt-1">
+                                        {{ form.estrategias.errors }}
+                                    </div>
+                                {% endif %}
+                            </td>
+                            <td class="px-2 py-2 w-1/6">
+                                {{ form.metodo }}
+                                {% if form.metodo.errors %}
+                                    <div class="text-red-500 text-sm mt-1">
+                                        {{ form.metodo.errors }}
+                                    </div>
+                                {% endif %}
+                            </td>
+                            <td class="px-2 py-2 w-1/12">
+                                {{ form.DELETE }}
+                            </td>
+                            {{ form.id }}
+                        </tr>
+                        {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            
+            <script>
+            function addEstrategiaRow() {
+                const formset = document.getElementById("estrategias-diversificadas-formset");
+                const totalForms = document.getElementById("id_estrategias_diversificadas-TOTAL_FORMS"); // Input oculto con el total de formularios
+                const newFormIndex = totalForms.value;
+                const emptyFormTemplate = document.getElementById("empty-estrategia-form-template").innerHTML;
+                const newFormHtml = emptyFormTemplate.replace(/__prefix__/g, newFormIndex);
+                const tr = document.createElement('tr');
+                tr.innerHTML = newFormHtml;
+                tr.classList.add('text-center'); // Agregar clase para centrar el texto
+                formset.appendChild(tr);
+                totalForms.value = parseInt(totalForms.value) + 1;
+            }
+            
+            function removeLastEstrategiaRow() {
+                const formset = document.getElementById("estrategias-diversificadas-formset");
+                const totalForms = document.getElementById("id_estrategias_diversificadas-TOTAL_FORMS");
+                const rows = Array.from(formset.getElementsByTagName('tr')).filter(row => {
+                    const idField = row.querySelector('input[name*="-id"]');
+                    return !idField || !idField.value; // Solo eliminar filas nuevas
+                });
+                if (rows.length > 0) {
+                    const lastRow = rows[rows.length - 1];
+                    formset.removeChild(lastRow);
+                    totalForms.value = parseInt(totalForms.value) - 1;
+                }
+            }
+            </script>
+            
+            <script type="text/template" id="empty-estrategia-form-template">
+            <tr class="text-center">
+                <td class="px-2 py-2 w-2/5">
+                    {{ estrategias_diversificadas_formset.empty_form.criterio }}
+                </td>
+                <td class="px-2 py-2 w-1/6">
+                    {{ estrategias_diversificadas_formset.empty_form.estrategias }}
+                </td>
+                <td class="px-2 py-2 w-1/6">
+                    {{ estrategias_diversificadas_formset.empty_form.metodo }}
+                </td>
+                <td class="px-2 py-2 w-1/12">
+                    {{ estrategias_diversificadas_formset.empty_form.DELETE }}
+                </td>
+            </tr>
+            </script>
+            
+            
+                        <!-- Sección 6: ORGANIZACIÓN DE LOS APOYOS ESPECIALIZADOS -->
+            <div>
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-white text-xl font-semibold">6. ORGANIZACIÓN DE LOS APOYOS ESPECIALIZADOS</h3>
+                    <div class="flex gap-2 mt-2">
+                        <!-- Botón Agregar Apoyo con ícono "+" -->
+                        <button type="button" class="bg-gradient-to-b from-amber-200 via-amber-300 to-amber-300 hover:from-amber-600 hover:to-amber-500 text-blue-900 px-4 py-2 rounded-md text-sm font-semibold flex items-center justify-center" onclick="addApoyoRow()" aria-label="Agregar Apoyo">
+                            <!-- Ícono de "+" -->
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                
+                        <!-- Botón Eliminar Apoyo con ícono "-" -->
+                        <button type="button" class="bg-gradient-to-b from-blue-400 via-blue-500 to-blue-400 hover:from-blue-600 hover:to-blue-500 text-white px-4 py-2 rounded-md text-sm font-semibold flex items-center justify-center" onclick="removeLastApoyoRow()" aria-label="Eliminar Apoyo">
+                            <!-- Ícono de "-" -->
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M5 10a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <table class="w-full border-collapse bg-white rounded-md overflow-hidden">
+                    <thead>
+                        <tr>
+                            <th class="bg-blue-100 px-2 py-2 text-start text-black font-semibold text-sm rounded-sm">Descripción</th>
+                            <th class="bg-blue-100 px-2 py-2 text-start text-black font-semibold text-sm rounded-sm">Contexto</th>
+                            <th class="bg-blue-100 px-2 py-2 text-center text-black font-semibold text-sm rounded-sm">Eliminar</th>
+                        </tr>
+                    </thead>
+                    <tbody id="apoyos-especializados-formset">
+                        {{ apoyos_especializados_formset.management_form }}
+                        {% for form in apoyos_especializados_formset %}
+                        {% if form.instance.pk %}
+                        <tr class="text-center">
+                            <td class="px-2 py-2 w-2/5 text-sm">
+                                {{ form.descripcion }}
+                                {% if form.descripcion.errors %}
+                                    <div class="text-red-500 text-sm mt-1">
+                                        {{ form.descripcion.errors }}
+                                    </div>
+                                {% endif %}
+                            </td>
+                            <td class="px-2 py-2 w-1/6">
+                                {{ form.contexto }}
+                                {% if form.contexto.errors %}
+                                    <div class="text-red-500 text-sm mt-1">
+                                        {{ form.contexto.errors }}
+                                    </div>
+                                {% endif %}
+                            </td>
+                            <td class="px-2 py-2 w-1/12">
+                                {{ form.DELETE }}
+                            </td>
+                            {{ form.id }}
+                        </tr>
+                        {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            
+            <script>
+            function addApoyoRow() {
+                const formset = document.getElementById("apoyos-especializados-formset");
+                const totalForms = document.getElementById("id_apoyos_especializados-TOTAL_FORMS"); // Input oculto con el total de formularios
+                const newFormIndex = totalForms.value;
+                const emptyFormTemplate = document.getElementById("empty-apoyo-form-template").innerHTML;
+                const newFormHtml = emptyFormTemplate.replace(/__prefix__/g, newFormIndex);
+                const tr = document.createElement('tr');
+                tr.innerHTML = newFormHtml;
+                tr.classList.add('text-center'); // Agregar clase para centrar el texto
+                formset.appendChild(tr);
+                totalForms.value = parseInt(totalForms.value) + 1;
+            }
+            
+            function removeLastApoyoRow() {
+                const formset = document.getElementById("apoyos-especializados-formset");
+                const totalForms = document.getElementById("id_apoyos_especializados-TOTAL_FORMS");
+                const rows = Array.from(formset.getElementsByTagName('tr')).filter(row => {
+                    const idField = row.querySelector('input[name*="-id"]');
+                    return !idField || !idField.value; // Solo eliminar filas nuevas
+                });
+                if (rows.length > 0) {
+                    const lastRow = rows[rows.length - 1];
+                    formset.removeChild(lastRow);
+                    totalForms.value = parseInt(totalForms.value) - 1;
+                }
+            }
+            </script>
+            
+            <script type="text/template" id="empty-apoyo-form-template">
+            <tr class="text-center">
+                <td class="px-2 py-2 w-2/5">
+                    {{ apoyos_especializados_formset.empty_form.descripcion }}
+                </td>
+                <td class="px-2 py-2 w-1/6">
+                    {{ apoyos_especializados_formset.empty_form.contexto }}
+                </td>
+                <td class="px-2 py-2 w-1/12">
+                    {{ apoyos_especializados_formset.empty_form.DELETE }}
+                </td>
+            </tr>
+            </script>
+
+                        <!-- Sección 7: HORARIO DE LOS APOYOS ESPECIALIZADOS -->
+            <div>
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-white text-xl font-semibold">7. HORARIO DE LOS APOYOS ESPECIALIZADOS</h3>
+                    <div class="flex gap-2 mt-2">
+                        <!-- Botón Agregar Horario con ícono "+" -->
+                        <button type="button" class="bg-gradient-to-b from-amber-200 via-amber-300 to-amber-300 hover:from-amber-600 hover:to-amber-500 text-blue-900 px-4 py-2 rounded-md text-sm font-semibold flex items-center justify-center" onclick="addHorarioRow()" aria-label="Agregar Horario">
+                            <!-- Ícono de "+" -->
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                
+                        <!-- Botón Eliminar Horario con ícono "-" -->
+                        <button type="button" class="bg-gradient-to-b from-blue-400 via-blue-500 to-blue-400 hover:from-blue-600 hover:to-blue-500 text-white px-4 py-2 rounded-md text-sm font-semibold flex items-center justify-center" onclick="removeLastHorarioRow()" aria-label="Eliminar Horario">
+                            <!-- Ícono de "-" -->
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M5 10a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <table class="w-full border-collapse bg-white rounded-md overflow-hidden">
+                    <thead>
+                        <tr>
+                            <th class="bg-blue-100 px-2 py-2 text-start text-black font-semibold text-sm rounded-sm">Día</th>
+                            <th class="bg-blue-100 px-2 py-2 text-start text-black font-semibold text-sm rounded-sm">Horario</th>
+                            <th class="bg-blue-100 px-2 py-2 text-start text-black font-semibold text-sm rounded-sm">Profesional</th>
+                            <th class="bg-blue-100 px-2 py-2 text-start text-black font-semibold text-sm rounded-sm">Contexto</th>
+                            <th class="bg-blue-100 px-2 py-2 text-center text-black font-semibold text-sm rounded-sm">Eliminar</th>
+                        </tr>
+                    </thead>
+                    <tbody id="horario-apoyos-formset">
+                        {{ horario_apoyos_formset.management_form }}
+                        {% for form in horario_apoyos_formset %}
+                        {% if form.instance.pk %}
+                        <tr class="text-center">
+                            <td class="px-2 py-2 w-2/5 text-sm">
+                                {{ form.dia }}
+                                {% if form.dia.errors %}
+                                    <div class="text-red-500 text-sm mt-1">
+                                        {{ form.dia.errors }}
+                                    </div>
+                                {% endif %}
+                            </td>
+                            <td class="px-2 py-2 w-1/6">
+                                {{ form.horario }}
+                                {% if form.horario.errors %}
+                                    <div class="text-red-500 text-sm mt-1">
+                                        {{ form.horario.errors }}
+                                    </div>
+                                {% endif %}
+                            </td>
+                            <td class="px-2 py-2 w-1/6">
+                                {{ form.profesional }}
+                                {% if form.profesional.errors %}
+                                    <div class="text-red-500 text-sm mt-1">
+                                        {{ form.profesional.errors }}
+                                    </div>
+                                {% endif %}
+                            </td>
+                            <td class="px-2 py-2 w-1/6">
+                                {{ form.contexto }}
+                                {% if form.contexto.errors %}
+                                    <div class="text-red-500 text-sm mt-1">
+                                        {{ form.contexto.errors }}
+                                    </div>
+                                {% endif %}
+                            </td>
+                            <td class="px-2 py-2 w-1/12">
+                                {{ form.DELETE }}
+                            </td>
+                            {{ form.id }}
+                        </tr>
+                        {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            
+            <script>
+            function addHorarioRow() {
+                const formset = document.getElementById("horario-apoyos-formset");
+                const totalForms = document.getElementById("id_horario_apoyos-TOTAL_FORMS"); // Input oculto con el total de formularios
+                const newFormIndex = totalForms.value;
+                const emptyFormTemplate = document.getElementById("empty-horario-form-template").innerHTML;
+                const newFormHtml = emptyFormTemplate.replace(/__prefix__/g, newFormIndex);
+                const tr = document.createElement('tr');
+                tr.innerHTML = newFormHtml;
+                tr.classList.add('text-center'); // Agregar clase para centrar el texto
+                formset.appendChild(tr);
+                totalForms.value = parseInt(totalForms.value) + 1;
+            }
+            
+            function removeLastHorarioRow() {
+                const formset = document.getElementById("horario-apoyos-formset");
+                const totalForms = document.getElementById("id_horario_apoyos-TOTAL_FORMS");
+                const rows = Array.from(formset.getElementsByTagName('tr')).filter(row => {
+                    const idField = row.querySelector('input[name*="-id"]');
+                    return !idField || !idField.value; // Solo eliminar filas nuevas
+                });
+                if (rows.length > 0) {
+                    const lastRow = rows[rows.length - 1];
+                    formset.removeChild(lastRow);
+                    totalForms.value = parseInt(totalForms.value) - 1;
+                }
+            }
+            </script>
+            
+            <script type="text/template" id="empty-horario-form-template">
+            <tr class="text-center">
+                <td class="px-2 py-2 w-2/5">
+                    {{ horario_apoyos_formset.empty_form.dia }}
+                </td>
+                <td class="px-2 py-2 w-1/6">
+                    {{ horario_apoyos_formset.empty_form.horario }}
+                </td>
+                <td class="px-2 py-2 w-1/6">
+                    {{ horario_apoyos_formset.empty_form.profesional }}
+                </td>
+                <td class="px-2 py-2 w-1/6">
+                    {{ horario_apoyos_formset.empty_form.contexto }}
+                </td>
+                <td class="px-2 py-2 w-1/12">
+                    {{ horario_apoyos_formset.empty_form.DELETE }}
+                </td>
+            </tr>
+            </script>
+
+                        <!-- Sección 8: FIRMA DEL EQUIPO RESPONSABLE PAI -->
+            <div>
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-white text-xl font-semibold">8. FIRMA DEL EQUIPO RESPONSABLE PAI</h3>
+                    <div class="flex gap-2 mt-2">
+                        <!-- Botón Agregar Firma con ícono "+" -->
+                        <button type="button" class="bg-gradient-to-b from-amber-200 via-amber-300 to-amber-300 hover:from-amber-600 hover:to-amber-500 text-blue-900 px-4 py-2 rounded-md text-sm font-semibold flex items-center justify-center" onclick="addFirmaRow()" aria-label="Agregar Firma">
+                            <!-- Ícono de "+" -->
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                
+                        <!-- Botón Eliminar Firma con ícono "-" -->
+                        <button type="button" class="bg-gradient-to-b from-blue-400 via-blue-500 to-blue-400 hover:from-blue-600 hover:to-blue-500 text-white px-4 py-2 rounded-md text-sm font-semibold flex items-center justify-center" onclick="removeLastFirmaRow()" aria-label="Eliminar Firma">
+                            <!-- Ícono de "-" -->
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M5 10a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <table class="w-full border-collapse bg-white rounded-md overflow-hidden">
+                    <thead>
+                        <tr>
+                            <th class="bg-blue-100 px-2 py-2 text-start text-black font-semibold text-sm rounded-sm">Nombre</th>
+                            <th class="bg-blue-100 px-2 py-2 text-start text-black font-semibold text-sm rounded-sm">Cargo</th>
+                            <th class="bg-blue-100 px-2 py-2 text-center text-black font-semibold text-sm rounded-sm">Eliminar</th>
+                        </tr>
+                    </thead>
+                    <tbody id="firma-formset">
+                        {{ firma_formset.management_form }}
+                        {% for form in firma_formset %}
+                        {% if form.instance.pk %}
+                        <tr class="text-center">
+                            <td class="px-2 py-2 w-2/5 text-sm">
+                                {{ form.nombre }}
+                                {% if form.nombre.errors %}
+                                    <div class="text-red-500 text-sm mt-1">
+                                        {{ form.nombre.errors }}
+                                    </div>
+                                {% endif %}
+                            </td>
+                            <td class="px-2 py-2 w-1/6">
+                                {{ form.cargo }}
+                                {% if form.cargo.errors %}
+                                    <div class="text-red-500 text-sm mt-1">
+                                        {{ form.cargo.errors }}
+                                    </div>
+                                {% endif %}
+                            </td>
+                            <td class="px-2 py-2 w-1/12">
+                                {{ form.DELETE }}
+                            </td>
+                            {{ form.id }}
+                        </tr>
+                        {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            
+            <script>
+            function addFirmaRow() {
+                const formset = document.getElementById("firma-formset");
+                const totalForms = document.getElementById("id_firma-TOTAL_FORMS"); // Input oculto con el total de formularios
+                const newFormIndex = totalForms.value;
+                const emptyFormTemplate = document.getElementById("empty-firma-form-template").innerHTML;
+                const newFormHtml = emptyFormTemplate.replace(/__prefix__/g, newFormIndex);
+                const tr = document.createElement('tr');
+                tr.innerHTML = newFormHtml;
+                tr.classList.add('text-center'); // Agregar clase para centrar el texto
+                formset.appendChild(tr);
+                totalForms.value = parseInt(totalForms.value) + 1;
+            }
+            
+            function removeLastFirmaRow() {
+                const formset = document.getElementById("firma-formset");
+                const totalForms = document.getElementById("id_firma-TOTAL_FORMS");
+                const rows = Array.from(formset.getElementsByTagName('tr')).filter(row => {
+                    const idField = row.querySelector('input[name*="-id"]');
+                    return !idField || !idField.value; // Solo eliminar filas nuevas
+                });
+                if (rows.length > 0) {
+                    const lastRow = rows[rows.length - 1];
+                    formset.removeChild(lastRow);
+                    totalForms.value = parseInt(totalForms.value) - 1;
+                }
+            }
+            </script>
+            
+            <script type="text/template" id="empty-firma-form-template">
+            <tr class="text-center">
+                <td class="px-2 py-2 w-2/5">
+                    {{ firma_formset.empty_form.nombre }}
+                </td>
+                <td class="px-2 py-2 w-1/6">
+                    {{ firma_formset.empty_form.cargo }}
+                </td>
+                <td class="px-2 py-2 w-1/12">
+                    {{ firma_formset.empty_form.DELETE }}
+                </td>
+            </tr>
+            </script>
+            <!-- Botones -->
+            <div class="flex space-x-4 justify-end">
+                <button type="submit" 
+                class="bg-gradient-to-b from-amber-200 via-amber-300 to-amber-300 
+                hover:from-amber-600 hover:to-amber-500 text-blue-900 font-semibold px-6 py-2 rounded-md mt-4">
+                    GUARDAR FORMULARIO PAI
+                </button>
+                <a href="{% url 'estudiante' estudiante.id %}" 
+                class="bg-gradient-to-b from-blue-400 via-blue-500 to-blue-400 
+                hover:from-blue-600 hover:to-blue-500 text-white font-semibold px-6 py-2 rounded-md text-center mt-4">
+                    REGRESAR
+                </a>
+            </div>
+
+        </form>
+    </div>
+</body>
+{% endblock %}

@@ -1,0 +1,73 @@
+{% load static tailwind_tags %}
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="{% static 'css/styles.css' %}" rel="stylesheet">
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Index</title>
+    {% tailwind_css %}
+  </head>
+  <body class=" flex flex-col min-h-screen">
+    <div class="area">
+      <ul class="circles">
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+      </ul>
+    </div>
+    <div class="mt-10 flex-grow">
+      
+
+      <!-- CARGAR EL ENCABEZADO DE LA PAGINA -->
+  
+      <div class="mt-14 mb-10">
+        <h1 class="text-center py-4 text-white text-2xl font-sans font-bold">
+          APLICACIÓN DE GESTIÓN DE ESTUDIANTES ÁREA PIE
+        </h1> 
+        <h1 class="text-center py-4 text-white text-4xl font-sans font-bold">EDUCAPRO</h1>
+      </div>
+  
+      <div class="flex justify-center">
+        <div class="flex flex-col md:flex-row md:max-w-max shadow-xl rounded-xl bg-gradient-to-r from-blue-950 to-blue-800">
+          <video
+            class="max-w-max h-full md:h-auto object-cover md:w-48 rounded-xl"
+            controls
+            autoplay
+            muted
+            loop
+            src="https://educapro-bucket.s3.amazonaws.com/static/videos/Colegio.mp4"
+          ></video>
+          <div class="p-6 flex flex-col justify-start">
+            <h5 class="text-white text-xl font-semibold mb-2">Estimado Usuario</h5>
+            <p class="text-white text-md mb-10">
+              Para acceder ingrese sus credenciales de acceso.
+            </p>
+            <a
+              href="{% url 'custom_login' %}"
+              class="font-bold text-center px-6 py-3 mb-10 no-underline text-xl  
+              bg-gradient-to-b from-amber-200 via-amber-300 to-amber-300 hover:from-amber-600 hover:to-amber-500 text-blue-900 rounded-full"
+            >ACCEDER</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      {% include 'componentes/footer.html' %}
+    </div>
+    
+  </body>
+</html>

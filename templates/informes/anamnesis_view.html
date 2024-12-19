@@ -1,0 +1,288 @@
+<!-- Modal centrado verticalmente -->
+<dialog id="anamnesis_estudiante_modal" class="max-w-6xl mx-auto rounded-md bg-gradient-to-b from-blue-950 to-blue-900 z shadow-xl p-6">
+    <div class="max-w-6xl h-auto">
+        <!-- Encabezado con logos -->
+        <div class="flex justify-between items-center mb-6">
+            <img src="/static/Imagenes/LOGO LICEO TECNICO ADULTOS.jpg" alt="Logo Liceo Técnico" class="h-20 object-contain"/>
+            <img src="/static/Imagenes/Servicio_local.jpg" class="h-20" alt="">
+            <img src="/static/Imagenes/Imagen_PIE.jpg" alt="Logo PIE" class="h-20 object-contain"/>
+        </div>
+        <!-- Header -->
+        <h2 class="flex w-full justify-center items-center text-2xl font-bold text-white mb-8">
+            ENTREVISTA ALUMNO / ANAMNESIS
+        </h2>
+        <hr>
+
+        <!-- Modal Content-->
+        <div class="flex max-w-6xl py-0 px-2 mt-5 justify-center items-center rounded-sm text-center text-gray-500">
+            <form action="" method="post" class="space-y-6 w-full">
+                {% csrf_token %}
+
+                <!-- Sección 1: Identificación del Estudiante -->
+                <div>
+                    <h3 class="text-white text-xl font-semibold mb-4 text-start">1. IDENTIFICACIÓN DEL ESTUDIANTE</h3>
+                    <table class="w-full border-collapse bg-white rounded-sm overflow-hidden">
+                        <tbody class="divide-y divide-gray-200">
+                            <tr>
+                                <td class="bg-blue-100 px-2 py-2 w-1/4 text-black font-semibold text-sm rounded-sm text-start">Nombre completo</td>
+                                <td class="px-2 py-2" colspan="3">
+                                    <input type="text" name="estudiante_nombre" id="estudiante_nombre" class="w-full bg-transparent focus:outline-none text-sm rounded-md" value="{{ estudiante.nombres }} {{ estudiante.apellido_paterno }} {{ estudiante.apellido_materno }}" readonly/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="bg-blue-100 px-2 py-2 text-black font-semibold text-sm rounded-sm text-start">Rut</td>
+                                <td class="px-2 py-2">
+                                    <input type="text" name="rut" id="rut" class="w-full bg-transparent focus:outline-none text-sm rounded-md" value="{{ estudiante.rut }}" readonly/>
+                                </td>
+                                <td class="bg-blue-100 px-2 py-2 text-black font-semibold text-sm rounded-sm text-start">Fecha de nacimiento</td>
+                                <td class="px-2 py-2">
+                                    <input type="text" name="fecha_nacimiento" id="fecha_nacimiento" class="w-full bg-transparent focus:outline-none text-sm rounded-md" value="{{ estudiante.fecha_nacimiento }}" readonly/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="bg-blue-100 px-2 py-2 text-black font-semibold text-sm rounded-sm text-start">Dirección</td>
+                                <td class="px-2 py-2" colspan="3">
+                                    <input type="text" name="direccion" id="direccion" class="w-full bg-transparent focus:outline-none text-sm rounded-md" value="{{ estudiante.direccion }}" readonly/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="bg-blue-100 px-2 py-2 text-black font-semibold text-sm rounded-sm text-start">Curso actual</td>
+                                <td class="px-2 py-2">
+                                    <input type="text" name="curso" id="curso" class="w-full bg-transparent focus:outline-none text-sm rounded-md" value="{{ estudiante.cursos.nombre }} - Área {{ estudiante.cursos.area_academica }}" readonly/>
+                                </td>
+                                <td class="bg-blue-100 px-2 py-2 text-black font-semibold text-sm rounded-sm text-start">Edad</td>
+                                <td class="px-2 py-2">
+                                    <input type="text" name="edad" id="edad" class="w-full bg-transparent focus:outline-none text-sm rounded-md" value="{{ anamnesis_estudiante.edad }}" readonly/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="bg-blue-100 px-2 py-2 text-black font-semibold text-sm rounded-sm text-start">País natal</td>
+                                <td class="px-2 py-2">
+                                    <input type="text" name="pais_natal" id="pais_natal" class="w-full bg-transparent focus:outline-none text-sm rounded-md" value="{{ anamnesis_estudiante.pais_natal }}" readonly/>
+                                </td>
+                                <td class="bg-blue-100 px-2 py-2 text-black font-semibold text-sm rounded-sm text-start">Sexo</td>
+                                <td class="px-2 py-2">
+                                    <input type="text" name="sexo" id="sexo" class="w-full bg-transparent focus:outline-none text-sm rounded-md" value="{{ anamnesis_estudiante.sexo }}" readonly/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="bg-blue-100 px-2 py-2 text-black font-semibold text-sm rounded-sm text-start">Teléfono</td>
+                                <td class="px-2 py-2">
+                                    <input type="tel" name="telefono" id="telefono" class="w-full bg-transparent focus:outline-none text-sm rounded-md" value="{{ estudiante.telefono }}" readonly/>
+                                </td>
+                                <td class="bg-blue-100 px-2 py-2 text-black font-semibold text-sm rounded-sm text-start">Lengua de uso</td>
+                                <td class="px-2 py-2">
+                                    <input type="text" name="lengua" id="lengua" class="w-full bg-transparent focus:outline-none text-sm rounded-md" value="{{ anamnesis_estudiante.lengua }}" readonly/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="bg-blue-100 px-2 py-2 text-black font-semibold text-sm rounded-sm text-start">Alumno trabajador</td>
+                                <td class="px-2 py-2" colspan="3">
+                                    <input type="text" name="alumno_trabajador" id="alumno_trabajador" class="w-full bg-transparent focus:outline-none text-sm rounded-md" value="{{ anamnesis_estudiante.alumno_trabajador|yesno:"Sí,No" }}" readonly/>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Sección 2: Identificación del Entrevistador -->
+                <div>
+                    <h3 class="text-white text-xl font-semibold mb-4 text-start">2. IDENTIFICACIÓN DEL ENTREVISTADOR</h3>
+                    <table class="w-full border-collapse bg-white rounded-sm overflow-hidden">
+                        <tbody>
+                            <tr>
+                                <td class="bg-blue-100 px-2 py-2 text-black font-semibold text-sm rounded-sm text-start">Fecha de la entrevista</td>
+                                <td class="px-2 py-2" colspan="3">
+                                    <input type="text" name="fecha_entrevista" id="fecha_entrevista" class="w-full bg-transparent focus:outline-none text-sm rounded-md" value="{{ anamnesis_estudiante.fecha_entrevista|date:'Y-m-d' }}" readonly/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="bg-blue-100 px-2 py-2 text-black font-semibold text-sm rounded-sm text-start">Nombre</td>
+                                <td class="px-2 py-2 w-1/3">
+                                    <input type="text" name="profesional" id="profesional" class="w-full bg-transparent focus:outline-none text-sm rounded-md" value="{{ usuario_logueado.first_name }} {{ usuario_logueado.last_name }}" readonly/>
+                                </td>
+                                <td class="bg-blue-100 px-2 py-2 text-black font-semibold text-sm rounded-sm text-start">Cargo</td>
+                                <td class="px-2 py-2 w-1/3">
+                                    <input type="text" name="cargo" id="cargo" class="w-full bg-transparent focus:outline-none text-sm rounded-md" value="{{ cargo }}" readonly/>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Sección 3: DEFINICIÓN DEL PROBLEMA O SITUACIÓN QUE MOTIVA LA ENTREVISTA -->
+                <div>
+                    <h3 class="text-white text-xl font-semibold mb-4 text-start">3. DEFINICIÓN DEL PROBLEMA O SITUACIÓN QUE MOTIVA LA ENTREVISTA</h3>
+                    <table class="w-full border-collapse bg-white rounded-sm overflow-hidden">
+                        <tbody>
+                            <tr>
+                                <td class="px-2 py-2 text-start" colspan="3">
+                                    <textarea name="definicion_problema" id="definicion_problema" class="w-full px-2 py-2 bg-transparent focus:outline-none text-sm rounded-md" readonly>{{ anamnesis_estudiante.definicion_problema }}</textarea>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                
+                <!-- Sección 4: ANTECEDENTES RELATIVOS AL DESARROLLO Y A LA SALUD DEL/LA ESTUDIANTE -->
+                <div>
+                    <h3 class="text-white text-xl font-semibold mb-4 text-start">4. ANTECEDENTES RELATIVOS AL DESARROLLO Y A LA SALUD DEL/LA ESTUDIANTE</h3>
+                    <table class="w-full border-collapse bg-white rounded-sm overflow-hidden">
+                        <tbody>
+                            <tr>
+                                <td class="bg-blue-100 px-2 py-2 text-black font-semibold text-sm rounded-sm text-start">Pediatría</td>
+                                <td class="px-2 py-2 text-start">
+                                    <input type="text" name="pediatria" id="pediatria" class="w-full bg-transparent focus:outline-none text-sm rounded-md" value="{{ anamnesis_estudiante.pediatria|yesno:"Sí,No" }}" readonly/>
+                                </td>
+                                <td class="bg-blue-100 px-2 py-2 text-black font-semibold text-sm rounded-sm text-start">Psicología</td>
+                                <td class="px-2 py-2 text-start">
+                                    <input type="text" name="psicologia" id="psicologia" class="w-full bg-transparent focus:outline-none text-sm rounded-md" value="{{ anamnesis_estudiante.psicologia|yesno:"Sí,No" }}" readonly/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="bg-blue-100 px-2 py-2 text-black font-semibold text-sm rounded-sm text-start">Kinesiología</td>
+                                <td class="px-2 py-2 text-start">
+                                    <input type="text" name="kinesiologia" id="kinesiologia" class="w-full bg-transparent focus:outline-none text-sm rounded-md" value="{{ anamnesis_estudiante.kinesiologia|yesno:"Sí,No" }}" readonly/>
+                                </td>
+                                <td class="bg-blue-100 px-2 py-2 text-black font-semibold text-sm rounded-sm text-start">Psiquiatría</td>
+                                <td class="px-2 py-2 text-start">
+                                    <input type="text" name="psiquiatria" id="psiquiatria" class="w-full bg-transparent focus:outline-none text-sm rounded-md" value="{{ anamnesis_estudiante.psiquiatria|yesno:"Sí,No" }}" readonly/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="bg-blue-100 px-2 py-2 text-black font-semibold text-sm rounded-sm text-start">Genético</td>
+                                <td class="px-2 py-2 text-start">
+                                    <input type="text" name="genetico" id="genetico" class="w-full bg-transparent focus:outline-none text-sm rounded-md" value="{{ anamnesis_estudiante.genetico|yesno:"Sí,No" }}" readonly/>
+                                </td>
+                                <td class="bg-blue-100 px-2 py-2 text-black font-semibold text-sm rounded-sm text-start">Psicopedagogía</td>
+                                <td class="px-2 py-2 text-start">
+                                    <input type="text" name="psicopedagogia" id="psicopedagogia" class="w-full bg-transparent focus:outline-none text-sm rounded-md" value="{{ anamnesis_estudiante.psicopedagogia|yesno:"Sí,No" }}" readonly/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="bg-blue-100 px-2 py-2 text-black font-semibold text-sm rounded-sm text-start">Fonoaudiología</td>
+                                <td class="px-2 py-2 text-start">
+                                    <input type="text" name="fonoaudiologia" id="fonoaudiologia" class="w-full bg-transparent focus:outline-none text-sm rounded-md" value="{{ anamnesis_estudiante.fonoaudiologia|yesno:"Sí,No" }}" readonly/>
+                                </td>
+                                <td class="bg-blue-100 px-2 py-2 text-black font-semibold text-sm rounded-sm text-start">Terapia Ocupacional</td>
+                                <td class="px-2 py-2 text-start">
+                                    <input type="text" name="terapia_ocupacional" id="terapia_ocupacional" class="w-full bg-transparent focus:outline-none text-sm rounded-md" value="{{ anamnesis_estudiante.terapia_ocupacional|yesno:"Sí,No" }}" readonly/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="bg-blue-100 px-2 py-2 text-black font-semibold text-sm rounded-sm text-start">Neurología</td>
+                                <td class="px-2 py-2 text-start">
+                                    <input type="text" name="neurologia" id="neurologia" class="w-full bg-transparent focus:outline-none text-sm rounded-md" value="{{ anamnesis_estudiante.neurologia|yesno:"Sí,No" }}" readonly/>
+                                </td>
+                                <td class="bg-blue-100 px-2 py-2 text-black font-semibold text-sm rounded-sm text-start">Otro</td>
+                                <td class="px-2 py-2 text-start">
+                                    <input type="text" name="otro" id="otro" class="w-full bg-transparent focus:outline-none text-sm rounded-md" value="{{ anamnesis_estudiante.otro|yesno:"Sí,No" }}" readonly/>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                
+                <!-- Sección 5: SÍNTESIS DE LOS ANTECEDENTES DE SALUD, ESCOLARES Y SOCIALES DEL ESTUDIANTE -->
+                <div>
+                    <h3 class="text-white text-start text-xl font-semibold mb-4">5. SÍNTESIS DE LOS ANTECEDENTES DE SALUD, ESCOLARES Y SOCIALES DEL ESTUDIANTE</h3>
+                    <table class="w-full border-collapse bg-white rounded-sm overflow-hidden">
+                        <tbody>
+                            <tr>
+                                <td class="bg-blue-100 px-2 py-2 text-black font-semibold text-sm rounded-sm text-start">Pérdida Auditiva</td>
+                                <td class="px-2 py-2 text-start">
+                                    <input type="text" name="perdida_auditiva" id="perdida_auditiva" class="w-full bg-transparent focus:outline-none text-sm rounded-md" value="{{ anamnesis_estudiante.perdida_auditiva|yesno:"Sí,No" }}" readonly/>
+                                </td>
+                                <td class="bg-blue-100 px-2 py-2 text-black font-semibold text-sm rounded-sm text-start">Paraplejia</td>
+                                <td class="px-2 py-2 text-start">
+                                    <input type="text" name="paraplejia" id="paraplejia" class="w-full bg-transparent focus:outline-none text-sm rounded-md" value="{{ anamnesis_estudiante.paraplejia|yesno:"Sí,No" }}" readonly/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="bg-blue-100 px-2 py-2 text-black font-semibold text-sm rounded-sm text-start">Pérdida Visual</td>
+                                <td class="px-2 py-2 text-start">
+                                    <input type="text" name="perdida_visual" id="perdida_visual" class="w-full bg-transparent focus:outline-none text-sm rounded-md" value="{{ anamnesis_estudiante.perdida_visual|yesno:"Sí,No" }}" readonly/>
+                                </td>
+                                <td class="bg-blue-100 px-2 py-2 text-black font-semibold text-sm rounded-sm text-start">Trastorno Conductual</td>
+                                <td class="px-2 py-2 text-start">
+                                    <input type="text" name="trastorno_conductual" id="trastorno_conductual" class="w-full bg-transparent focus:outline-none text-sm rounded-md" value="{{ anamnesis_estudiante.trastorno_conductual|yesno:"Sí,No" }}" readonly/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="bg-blue-100 px-2 py-2 text-black font-semibold text-sm rounded-sm text-start">Motor</td>
+                                <td class="px-2 py-2 text-start">
+                                    <input type="text" name="motor" id="motor" class="w-full bg-transparent focus:outline-none text-sm rounded-md" value="{{ anamnesis_estudiante.motor|yesno:"Sí,No" }}" readonly/>
+                                </td>
+                                <td class="bg-blue-100 px-2 py-2 text-black font-semibold text-sm rounded-sm text-start">Otros</td>
+                                <td class="px-2 py-2 text-start">
+                                    <input type="text" name="otros" id="otros" class="w-full bg-transparent focus:outline-none text-sm rounded-md" value="{{ anamnesis_estudiante.otros }}" readonly/>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                                <!-- Sección 6: ANTECEDENTES FAMILIARES -->
+                <div>
+                    <h3 class="text-white text-start text-xl font-semibold mb-4">6. ANTECEDENTES FAMILIARES</h3>
+                    <table class="w-full border-collapse bg-white rounded-sm overflow-hidden">
+                        <thead>
+                            <tr>
+                                <th class="bg-blue-100 px-2 text-black py-2 text-sm rounded-sm text-start">Nombre</th>
+                                <th class="bg-blue-100 px-2 text-black py-2 text-sm rounded-sm text-start">Parentesco</th>
+                                <th class="bg-blue-100 px-2 text-black py-2 text-sm rounded-sm text-start">Edad</th>
+                                <th class="bg-blue-100 px-2 text-black py-2 text-sm rounded-sm text-start">Escolaridad</th>
+                                <th class="bg-blue-100 px-2 text-black py-2 text-sm rounded-sm text-start">Ocupación Actual</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for familiar in anamnesis_estudiante.familiares.all %} <!-- Aquí se usa el método all -->
+                            <tr>
+                                <td class="px-2 py-2 text-start">
+                                    <input type="text" name="familiar_nombre_{{ forloop.counter }}" id="familiar_nombre_{{ forloop.counter }}" class="w-full bg-transparent focus:outline-none text-sm rounded-md value="{{ familiar.nombre }}" readonly/>
+                                </td>
+                                <td class="px-2 py-2 text-start">
+                                    <input type="text" name="familiar_parentesco_{{ forloop.counter }}" id="familiar_parentesco_{{ forloop.counter }}" class="w-full bg-transparent focus:outline-none text-sm rounded-md" value="{{ familiar.parentesco }}" readonly/>
+                                </td>
+                                <td class="px-2 py-2 text-start">
+                                    <input type="text" name="familiar_edad_{{ forloop.counter }}" id="familiar_edad_{{ forloop.counter }}" class="w-full bg-transparent focus:outline-none text-sm rounded-md" value="{{ familiar.edad }}" readonly/>
+                                </td>
+                                <td class="px-2 py-2 text-start">
+                                    <input type="text" name="familiar_escolaridad_{{ forloop.counter }}" id="familiar_escolaridad_{{ forloop.counter }}" class="w-full bg-transparent focus:outline-none text-sm rounded-md" value="{{ familiar.escolaridad }}" readonly/>
+                                </td>
+                                <td class="px-2 py-2 text-start">
+                                    <input type="text" name="familiar_ocupacion_actual{{ forloop.counter }}" id="familiar_ocupacion_actual{{ forloop.counter }}" class="w-full bg-transparent focus:outline-none text-sm rounded-md" value="{{ familiar.ocupacion_actual }}" readonly/>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Sección 7: OBSERVACIONES -->
+                <div>
+                    <h3 class="text-white text-xl font-semibold mb-4">7. OBSERVACIONES</h3>
+                    <table class="w-full border-collapse bg-white rounded-sm overflow-hidden">
+                        <tbody>
+                            <tr>
+                                <td class="px-2 py-2 text-start" colspan="3">
+                                    <textarea name="observaciones" id="observaciones" class="w-full bg-transparent focus:outline-none text-sm rounded-md py-2 px-2" readonly>{{ anamnesis_estudiante.observaciones }}</textarea>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+
+                                <!-- Modal Footer -->
+                <div class="modal-footer flex justify-end mt-3 w-full space-x-2">
+                     <button type="button" class="bg-gradient-to-b from-blue-400 via-blue-500 to-blue-400 
+                     hover:from-blue-600 hover:to-blue-500 text-white font-semibold py-2 px-3 rounded-md" onclick="document.getElementById('anamnesis_estudiante_modal').close()">CERRAR</button>
+                </div>
+            </form>
+        </div>
+        <!-- End of Modal Content-->
+    </div>
+</dialog>

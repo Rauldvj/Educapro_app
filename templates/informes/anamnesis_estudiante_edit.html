@@ -1,0 +1,500 @@
+{% extends 'base.html' %}
+
+{% block title %} Anamnesis Estudiante {% endblock %}
+
+{% block content %}
+
+{% load tailwind_filters %}
+{% load static %}
+
+<!-- Incluir el archivo funciones.js -->
+<script src="{% static 'js/funciones.js' %}"></script>
+
+<body class=" p-8">
+    {% include 'componentes/navbar.html' %}
+
+    <div class="max-w-6xl mx-auto bg-gradient-to-b from-blue-950 to-blue-900 rounded-md shadow-xl p-6">
+        <!-- Encabezado con logos -->
+        <div class="flex justify-between items-center mb-6">
+            <img src="/static/Imagenes/LOGO LICEO TECNICO ADULTOS.jpg" alt="Logo Liceo Técnico" class="h-20 object-contain"/>
+            <img src="/static/Imagenes/Servicio_local.jpg" class="h-20" alt="">
+            <img src="/static/Imagenes/Imagen_PIE.jpg" alt="Logo PIE" class="h-20 object-contain"/>
+        </div>
+
+        <h2 class="text-white text-2xl text-center font-bold mb-8">ENTREVISTA ALUMNO / ANAMNESIS</h2>
+
+        <form action="" method="post" class="space-y-6">
+            {% csrf_token %}
+
+                        <!-- Sección 1: Identificación del Estudiante -->
+            <div>
+                <h3 class="text-white text-xl font-semibold mb-4">1. IDENTIFICACIÓN DEL ESTUDIANTE</h3>
+                <table class="w-full border-collapse bg-white rounded-md overflow-hidden">
+                    <tbody class="divide-y divide-gray-200">
+                        <tr>
+                            <td class="bg-blue-100 px-2 py-2 w-1/4 text-black font-semibold text-sm rounded-sm">Nombre completo</td>
+                            <td class="px-2 py-2" colspan="3">
+                                <input type="text" name="estudiante_nombre" id="estudiante_nombre" class="w-full bg-transparent focus:outline-none text-sm rounded-md" value="{{ estudiante.nombres }} {{ estudiante.apellido_paterno }} {{ estudiante.apellido_materno }}" readonly/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="bg-blue-100 px-2 py-2 text-black font-semibold text-sm rounded-sm">Rut</td>
+                            <td class="px-2 py-2">
+                                <input type="text" name="rut" id="rut" class="w-full bg-transparent focus:outline-none text-sm rounded-md" value="{{ estudiante.rut }}" readonly/>
+                            </td>
+                            <td class="bg-blue-100 px-2 py-2  text-black font-semibold text-sm rounded-sm">Fecha de nacimiento</td>
+                            <td class="px-2 py-2">
+                                <input type="text" name="fecha_nacimiento" id="fecha_nacimiento" class="w-full bg-transparent focus:outline-none text-sm rounded-md" value="{{ estudiante.fecha_nacimiento }}" readonly/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="bg-blue-100 px-2 py-2  text-black font-semibold text-sm rounded-sm">Dirección</td>
+                            <td class="px-2 py-2" colspan="3">
+                                <input type="text" name="direccion" id="direccion" class="w-full bg-transparent focus:outline-none text-sm rounded-md" value="{{ estudiante.direccion }}" readonly/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="bg-blue-100 px-2 py-2 text-black font-semibold text-sm rounded-sm">Curso actual</td>
+                            <td class="px-2 py-2">
+                                <input type="text" name="curso" id="curso" class="w-full bg-transparent focus:outline-none text-sm rounded-md" value="{{ estudiante.cursos.nombre }}" readonly/>
+                            </td>
+                            <td class="bg-blue-100 px-2 py-2 text-black font-semibold text-sm rounded-sm">Edad</td>
+                            <td class="px-2 py-2">
+                                <input type="text" name="edad" id="edad" class="w-full bg-transparent focus:outline-none text-sm rounded-md" value="{{ anamnesis_estudiante.edad }}" readonly/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="bg-blue-100 px-2 py-2 text-black font-semibold text-sm rounded-sm">País natal</td>
+                            <td class="px-2 py-2">
+                                <select name="pais_natal" id="pais_natal" class="px-2 py-2 w-full bg-transparent focus:outline-none text-sm rounded-md">
+                                    {% for pais in opciones_pais %}
+                                        <option value="{{ pais.0 }}" {% if anamnesis_estudiante.pais_natal == pais.0 %}selected{% endif %}>{{ pais.1 }}</option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                            <td class="bg-blue-100 px-2 py-2 text-black font-semibold text-sm rounded-sm">Sexo</td>
+                            <td class="px-2 py-2">
+                                <div class="flex space-x-4">
+                                    <label class="flex items-center">
+                                        <input type="radio" name="sexo" id="sexo_masculino" value="Masculino" class="mr-2 text-sm rounded-md" {% if anamnesis_estudiante.sexo == 'Masculino' %}checked{% endif %}>
+                                        <span>Masculino</span>
+                                    </label>
+                                    <label class="flex items-center">
+                                        <input type="radio" name="sexo" id="sexo_femenino" value="Femenino" class="mr-2 text-sm rounded-md" {% if anamnesis_estudiante.sexo == 'Femenino' %}checked{% endif %}>
+                                        <span>Femenino</span>
+                                    </label>
+                                    <label class="flex items-center">
+                                        <input type="radio" name="sexo" id="sexo_otro" value="Otro" class="mr-2 text-sm rounded-md" {% if anamnesis_estudiante.sexo == 'Otro' %}checked{% endif %}>
+                                        <span>Otro</span>
+                                    </label>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="bg-blue-100 px-2 py-2 text-black font-semibold text-sm rounded-sm">Teléfono</td>
+                            <td class="px-2 py-2">
+                                <input type="tel" name="telefono" id="telefono" class="w-full bg-transparent focus:outline-none text-sm rounded-md" value="{{ estudiante.telefono }}" readonly/>
+                            </td>
+                            <td class="bg-blue-100 px-2 py-2 text-black font-semibold text-sm rounded-sm">Lengua de uso</td>
+                            <td class="px-2 py-2">
+                                <select name="lengua" id="lengua" class="py-2 px-2 w-full bg-transparent focus:outline-none text-sm rounded-md">
+                                    {% for lengua in opciones_lengua %}
+                                        <option value="{{ lengua.0 }}" {% if anamnesis_estudiante.lengua == lengua.0 %}selected{% endif %}>{{ lengua.1 }}</option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="bg-blue-100 px-2 py-2 text-black font-semibold text-sm rounded-sm">Alumno trabajador</td>
+                            <td class="px-2 py-2" colspan="3">
+                                <div class="flex space-x-4 justify-center">
+                                    <label class="flex items-center">
+                                        <input type="radio" name="alumno_trabajador" id="alumno_trabajador_si" value="True" class="mr-2 text-sm rounded-md" {% if anamnesis_estudiante.alumno_trabajador %}checked{% endif %}>
+                                        <span>Sí</span>
+                                    </label>
+                                    <label class="flex items-center">
+                                        <input type="radio" name="alumno_trabajador" id="alumno_trabajador_no" value="False" class="mr-2 text-sm rounded-md" {% if not anamnesis_estudiante.alumno_trabajador %}checked{% endif %}>
+                                        <span>No</span>
+                                    </label>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+                        <!-- Sección 2: Identificación del Entrevistador -->
+            <div>
+                <h3 class="text-white text-xl font-semibold mb-4">2. IDENTIFICACIÓN DEL ENTREVISTADOR</h3>
+                <table class="w-full border-collapse bg-white rounded-md overflow-hidden">
+                    <tbody>
+                        <tr>
+                            <td class="bg-blue-100 px-2 py-2 text-black font-semibold text-sm rounded-sm">Fecha de la entrevista</td>
+                            <td class="px-2 py-2" colspan="3">
+                                <input type="date" name="fecha_entrevista" id="fecha_entrevista" 
+                                class="fecha-calendario w-full bg-transparent focus:outline-none text-sm rounded-md" value="{{ anamnesis_estudiante.fecha_entrevista|date:'Y-m-d' }}"/>
+                                {% if form.fecha_entrevista.errors %}
+                                    <div class="text-red-500 text-sm mt-1">
+                                        {{ form.fecha_entrevista.errors }}
+                                    </div>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="bg-blue-100 px-2 py-2 text-black font-semibold text-sm rounded-sm">Nombre</td>
+                            <td class="px-2 py-2 w-1/3">
+                                <input type="text" name="profesional" id="profesional" class="w-full bg-transparent focus:outline-none text-sm rounded-md" value="{{ usuario_logueado.first_name }} {{ usuario_logueado.last_name }}" readonly/>
+                            </td>
+                            <td class="bg-blue-100 px-2 py-2 text-black font-semibold text-sm rounded-sm">Cargo</td>
+                            <td class="px-2 py-2 w-1/3">
+                                <input type="text" name="cargo" id="cargo" class="w-full bg-transparent focus:outline-none text-sm rounded-md" value="{{ cargo }}" readonly/>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+                        <!-- Sección 3: DEFINICIÓN DEL PROBLEMA O SITUACIÓN QUE MOTIVA LA ENTREVISTA -->
+            <div>
+                <h3 class="text-white text-xl font-semibold mb-4">3. DEFINICIÓN DEL PROBLEMA O SITUACIÓN QUE MOTIVA LA ENTREVISTA</h3>
+                <table class="w-full border-collapse bg-white rounded-md overflow-hidden">
+                    <tbody>
+                        <tr>
+                            <td class="px-2 py-2" colspan="3">
+                                <textarea name="definicion_problema" id="definicion_problema" class="w-full p-2 px-2 h-40 bg-transparent focus:outline-none text-sm rounded-md" rows="4">{{ anamnesis_estudiante.definicion_problema }}</textarea>
+                                {% if form.definicion_problema.errors %}
+                                    <div class="text-red-500 text-sm mt-1">
+                                        {{ form.definicion_problema.errors }}
+                                    </div>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+                        <!-- Sección 4: ANTECEDENTES RELATIVOS AL DESARROLLO Y A LA SALUD DEL/LA ESTUDIANTE -->
+            <div>
+                <h3 class="text-white text-xl font-semibold mb-4">4. ANTECEDENTES RELATIVOS AL DESARROLLO Y A LA SALUD DEL/LA ESTUDIANTE</h3>
+                <table class="w-full border-collapse bg-white rounded-md overflow-hidden">
+                    <tbody>
+                        <tr>
+                            <td class="bg-blue-100 px-2 py-2 text-black font-semibold text-sm rounded-sm">Pediatría</td>
+                            <td class="px-2 py-2">
+                                <input type="radio" name="pediatria" id="pediatria_si" value="True" class="mr-2 text-sm rounded-md" {% if pediatria %}checked{% endif %}>
+                                <label for="pediatria_si" class="text-sm">Sí</label>
+                                <input type="radio" name="pediatria" id="pediatria_no" value="False" class="ml-4 mr-2 text-sm rounded-md" {% if not pediatria %}checked{% endif %}>
+                                <label for="pediatria_no" class="text-sm">No</label>
+                            </td>
+                            <td class="bg-blue-100 px-2 py-2 text-black font-semibold text-sm rounded-sm">Psicología</td>
+                            <td class="px-2 py-2">
+                                <input type="radio" name="psicologia" id="psicologia_si" value="True" class="mr-2 text-sm rounded-md" {% if psicologia %}checked{% endif %}>
+                                <label for="psicologia_si" class="text-sm">Sí</label>
+                                <input type="radio" name="psicologia" id="psicologia_no" value="False" class="ml-4 mr-2 text-sm rounded-md" {% if not psicologia %}checked{% endif %}>
+                                <label for="psicologia_no" class="text-sm">No</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="bg-blue-100 px-2 py-2 text-black font-semibold text-sm rounded-sm">Kinesiología</td>
+                            <td class="px-2 py-2">
+                                <input type="radio" name="kinesiologia" id="kinesiologia_si" value="True" class="mr-2 text-sm rounded-md" {% if kinesiologia %}checked{% endif %}>
+                                <label for="kinesiologia_si" class="text-sm">Sí</label>
+                                <input type="radio" name="kinesiologia" id="kinesiologia_no" value="False" class="ml-4 mr-2 text-sm rounded-md" {% if not kinesiologia %}checked{% endif %}>
+                                <label for="kinesiologia_no" class="text-sm">No</label>
+                            </td>
+                            <td class="bg-blue-100 px-2 py-2 text-black font-semibold text-sm rounded-sm">Psiquiatría</td>
+                            <td class="px-2 py-2">
+                                <input type="radio" name="psiquiatria" id="psiquiatria_si" value="True" class="mr-2 text-sm rounded-md" {% if psiquiatria %}checked{% endif %}>
+                                <label for="psiquiatria_si" class="text-sm">Sí</label>
+                                <input type="radio" name="psiquiatria" id="psiquiatria_no" value="False" class="ml-4 mr-2 text-sm rounded-md" {% if not psiquiatria %}checked{% endif %}>
+                                <label for="psiquiatria_no" class="text-sm">No</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="bg-blue-100 px-2 py-2 text-black font-semibold text-sm rounded-sm">Genético</td>
+                            <td class="px-2 py-2">
+                                <input type="radio" name="genetico" id="genetico_si" value="True" class="mr-2 text-sm rounded-md" {% if genetico %}checked{% endif %}>
+                                <label for="genetico_si" class="text-sm">Sí</label>
+                                <input type="radio" name="genetico" id="genetico_no" value="False" class="ml-4 mr-2 text-sm rounded-md" {% if not genetico %}checked{% endif %}>
+                                <label for="genetico_no" class="text-sm">No</label>
+                            </td>
+                            <td class="bg-blue-100 px-2 py-2 text-black font-semibold text-sm rounded-sm">Psicopedagogía</td>
+                            <td class="px-2 py-2">
+                                <input type="radio" name="psicopedagogia" id="psicopedagogia_si" value="True" class="mr-2 text-sm rounded-md" {% if psicopedagogia %}checked{% endif %}>
+                                <label for="psicopedagogia_si" class="text-sm">Sí</label>
+                                <input type="radio" name="psicopedagogia" id="psicopedagogia_no" value="False" class="ml-4 mr-2 text-sm rounded-md" {% if not psicopedagogia %}checked{% endif %}>
+                                <label for="psicopedagogia_no" class="text-sm">No</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="bg-blue-100 px-2 py-2 text-black font-semibold text-sm rounded-sm">Fonoaudiología</td>
+                            <td class="px-2 py-2">
+                                <input type="radio" name="fonoaudiologia" id="fonoaudiologia_si" value="True" class="mr-2 text-sm rounded-md" {% if fonoaudiologia %}checked{% endif %}>
+                                <label for="fonoaudiologia_si" class="text-sm">Sí</label>
+                                <input type="radio" name="fonoaudiologia" id="fonoaudiologia_no" value="False" class="ml-4 mr-2 text-sm rounded-md" {% if not fonoaudiologia %}checked{% endif %}>
+                                <label for="fonoaudiologia_no" class="text-sm">No</label>
+                            </td>
+                            <td class="bg-blue-100 px-2 py-2 text-black font-semibold text-sm rounded-sm">Terapia Ocupacional</td>
+                            <td class="px-2 py-2">
+                                <input type="radio" name="terapia_ocupacional" id="terapia_ocupacional_si" value="True" class="mr-2 text-sm rounded-md" {% if terapia_ocupacional %}checked{% endif %}>
+                                <label for="terapia_ocupacional_si" class="text-sm">Sí</label>
+                                <input type="radio" name="terapia_ocupacional" id="terapia_ocupacional_no" value="False" class="ml-4 mr-2 text-sm rounded-md" {% if not terapia_ocupacional %}checked{% endif %}>
+                                <label for="terapia_ocupacional_no" class="text-sm">No</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="bg-blue-100 px-2 py-2 text-black font-semibold text-sm rounded-sm">Neurología</td>
+                            <td class="px-2 py-2">
+                                <input type="radio" name="neurologia" id="neurologia_si" value="True" class="mr-2 text-sm rounded-md" {% if neurologia %}checked{% endif %}>
+                                <label for="neurologia_si" class="text-sm">Sí</label>
+                                <input type="radio" name="neurologia" id="neurologia_no" value="False" class="ml-4 mr-2 text-sm rounded-md" {% if not neurologia %}checked{% endif %}>
+                                <label for="neurologia_no" class="text-sm">No</label>
+                            </td>
+                            <td class="bg-blue-100 px-2 py-2 text-black font-semibold text-sm rounded-sm">Otro</td>
+                            <td class="px-2 py-2">
+                                <input type="radio" name="otro" id="otro_si" value="True" class="mr-2 text-sm rounded-md" {% if otro %}checked{% endif %}>
+                                <label for="otro_si" class="text-sm">Sí</label>
+                                <input type="radio" name="otro" id="otro_no" value="False" class="ml-4 mr-2 text-sm rounded-md" {% if not otro %}checked{% endif %}>
+                                <label for="otro_no" class="text-sm">No</label>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+                        <!-- Sección 5: SÍNTESIS DE LOS ANTECEDENTES DE SALUD, ESCOLARES Y SOCIALES DEL ESTUDIANTE -->
+            <div>
+                <h3 class="text-white text-xl font-semibold mb-4">5. SÍNTESIS DE LOS ANTECEDENTES DE SALUD, ESCOLARES Y SOCIALES DEL ESTUDIANTE</h3>
+                <table class="w-full border-collapse bg-white rounded-md overflow-hidden">
+                    <tbody>
+                        <tr>
+                            <td class="bg-blue-100 px-2 py-2 text-black font-semibold text-sm rounded-sm">Pérdida Auditiva</td>
+                            <td class="px-2 py-2">
+                                <input type="radio" name="perdida_auditiva" id="perdida_auditiva_si" value="True" class="mr-2 text-sm rounded-md" {% if perdida_auditiva %}checked{% endif %}>
+                                <label for="perdida_auditiva_si" class="text-sm">Sí</label>
+                                <input type="radio" name="perdida_auditiva" id="perdida_auditiva_no" value="False" class="ml-4 mr-2 text-sm rounded-md" {% if not perdida_auditiva %}checked{% endif %}>
+                                <label for="perdida_auditiva_no" class="text-sm">No</label>
+                            </td>
+                            <td class="bg-blue-100 px-2 py-2 text-black font-semibold text-sm rounded-sm">Paraplejia</td>
+                            <td class="px-2 py-2">
+                                <input type="radio" name="paraplejia" id="paraplejia_si" value="True" class="mr-2 text-sm rounded-md" {% if paraplejia %}checked{% endif %}>
+                                <label for="paraplejia_si" class="text-sm">Sí</label>
+                                <input type="radio" name="paraplejia" id="paraplejia_no" value="False" class="ml-4 mr-2 text-sm rounded-md" {% if not paraplejia %}checked{% endif %}>
+                                <label for="paraplejia_no" class="text-sm">No</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="bg-blue-100 px-2 py-2 text-black font-semibold text-sm rounded-sm">Pérdida Visual</td>
+                            <td class="px-2 py-2">
+                                <input type="radio" name="perdida_visual" id="perdida_visual_si" value="True" class="mr-2 text-sm rounded-md" {% if perdida_visual %}checked{% endif %}>
+                                <label for="perdida_visual_si" class="text-sm">Sí</label>
+                                <input type="radio" name="perdida_visual" id="perdida_visual_no" value="False" class="ml-4 mr-2 text-sm rounded-md" {% if not perdida_visual %}checked{% endif %}>
+                                <label for="perdida_visual_no" class="text-sm">No</label>
+                            </td>
+                            <td class="bg-blue-100 px-2 py-2 text-black font-semibold text-sm rounded-sm">Trastorno Conductual</td>
+                            <td class="px-2 py-2">
+                                <input type="radio" name="trastorno_conductual" id="trastorno_conductual_si" value="True" class="mr-2 text-sm rounded-md" {% if trastorno_conductual %}checked{% endif %}>
+                                <label for="trastorno_conductual_si" class="text-sm">Sí</label>
+                                <input type="radio" name="trastorno_conductual" id="trastorno_conductual_no" value="False" class="ml-4 mr-2 text-sm rounded-md" {% if not trastorno_conductual %}checked{% endif %}>
+                                <label for="trastorno_conductual_no" class="text-sm">No</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="bg-blue-100 px-2 py-2 text-black font-semibold text-sm rounded-sm">Motor</td>
+                            <td class="px-2 py-2">
+                                <input type="radio" name="motor" id="motor_si" value="True" class="mr-2 text-sm rounded-md" {% if motor %}checked{% endif %}>
+                                <label for="motor_si" class="text-sm">Sí</label>
+                                <input type="radio" name="motor" id="motor_no" value="False" class="ml-4 mr-2 text-sm rounded-md" {% if not motor %}checked{% endif %}>
+                                <label for="motor_no" class="text-sm">No</label>
+                            </td>
+                            <td class="bg-blue-100 px-2 py-2 text-black font-semibold text-sm rounded-sm">Otros</td>
+                            <td class="px-2 py-2">
+                                <textarea name="otros" id="otros" class="w-full px-2 py-2 bg-transparent focus:outline-none text-sm rounded-md">{{ otros }}</textarea>
+                                {% if form.otros.errors %}
+                                    <div class="text-red-500 text-sm mt-1 px-2 py-2">
+                                        {{ form.otros.errors }}
+                                    </div>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Sección 6: ANTECEDENTES FAMILIARES -->
+            <div>
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-white text-xl font-semibold">6. ANTECEDENTES FAMILIARES</h3>
+                                        <div class="flex gap-2 mt-2">
+                        <!-- Botón Agregar Fila con ícono "+" -->
+                        <button type="button" class="bg-gradient-to-b from-amber-200 via-amber-300 to-amber-300 hover:from-amber-600 hover:to-amber-500 text-blue-900 px-4 py-2 rounded-md text-sm font-semibold flex items-center justify-center" onclick="addRow()" aria-label="Agregar Fila">
+                            <!-- Ícono de "+" -->
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                    
+                        <!-- Botón Eliminar Fila con ícono "-" -->
+                        <button type="button" class="bg-gradient-to-b from-blue-400 via-blue-500 to-blue-400 hover:from-blue-600 hover:to-blue-500 text-white px-4 py-2 rounded-md text-sm font-semibold flex items-center justify-center" onclick="removeLastRow()" aria-label="Eliminar Fila">
+                            <!-- Ícono de "-" -->
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M5 10a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <table class="w-full border-collapse bg-white rounded-md overflow-hidden">
+                    <thead>
+                        <tr>
+                            <th class="bg-blue-100 px-2 py-2 text-start text-black font-semibold text-sm">Nombre</th>
+                            <th class="bg-blue-100 px-2 py-2 text-start text-black font-semibold text-sm">Parentesco</th>
+                            <th class="bg-blue-100 px-2 py-2 text-start text-black font-semibold text-sm">Edad</th>
+                            <th class="bg-blue-100 px-2 py-2 text-start text-black font-semibold text-sm">Escolaridad</th>
+                            <th class="bg-blue-100 px-2 py-2 text-start text-black font-semibold text-sm">Ocupación Actual</th>
+                            <th class="bg-blue-100 px-2 py-2 text-center text-black font-semibold text-sm">Eliminar</th>
+                        </tr>
+                    </thead>
+                    <tbody id="familiar-formset">
+                        {{ familiar_formset.management_form }}
+                        {% for form in familiar_formset %}
+                        {% if form.instance.pk %}
+                        <tr class="text-center">
+                            <td class="px-2 py-2 w-2/5 text-sm">
+                                {{ form.nombre }}
+                                {% if form.nombre.errors %}
+                                    <div class="text-red-500 text-sm mt-1">
+                                        {{ form.nombre.errors }}
+                                    </div>
+                                {% endif %}
+                            </td>
+                            <td class="px-2 py-2 w-1/6">
+                                {{ form.parentesco }}
+                                {% if form.parentesco.errors %}
+                                    <div class="text-red-500 text-sm mt-1">
+                                        {{ form.parentesco.errors }}
+                                    </div>
+                                {% endif %}
+                            </td>
+                            <td class="px-2 py-2 w-1/12">
+                                {{ form.edad }}
+                                {% if form.edad.errors %}
+                                    <div class="text-red-500 text-sm mt-1">
+                                        {{ form.edad.errors }}
+                                    </div>
+                                {% endif %}
+                            </td>
+                            <td class="px-2 py-2 w-1/6">
+                                {{ form.escolaridad }}
+                                {% if form.escolaridad.errors %}
+                                    <div class="text-red-500 text-sm mt-1">
+                                        {{ form.escolaridad.errors }}
+                                    </div>
+                                {% endif %}
+                            </td>
+                            <td class="px-2 py-2 w-2/5">
+                                {{ form.ocupacion_actual }}
+                                {% if form.ocupacion_actual.errors %}
+                                    <div class="text-red-500 text-sm mt-1">
+                                        {{ form.ocupacion_actual.errors }}
+                                    </div>
+                                {% endif %}
+                            </td>
+                            <td class="px-2 py-2 w-1/12">
+                                {{ form.DELETE }}
+                            </td>
+                            {{ form.id }}
+                        </tr>
+                        {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+                </div>
+
+            <!-- Sección 7. OBSERVACIONES -->
+            <div>
+                <h3 class="text-white text-xl font-semibold mb-4">7. OBSERVACIONES</h3>
+                <table class="w-full border-collapse bg-white rounded-md overflow-hidden">
+                    <tbody>
+                        <tr>
+                            <td class="px-2 py-2" colspan="3">
+                                <textarea name="observaciones" id="observaciones" class="w-full p-2 px-2 h-40 bg-transparent focus:outline-none text-sm rounded-md" rows="4">{{ anamnesis_estudiante.observaciones }}</textarea>
+                                {% if form.observaciones.errors %}
+                                    <div class="text-red-500 text-sm mt-1">
+                                        {{ form.observaciones.errors }}
+                                    </div>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                </div>            
+
+            <script>
+                function addRow() {
+                    const formset = document.getElementById("familiar-formset");
+                    const totalForms = document.getElementById("id_familiares-TOTAL_FORMS"); // Input oculto con el total de formularios
+                    const newFormIndex = totalForms.value;
+                    const emptyFormTemplate = document.getElementById("empty-form-template").innerHTML;
+                    const newFormHtml = emptyFormTemplate.replace(/__prefix__/g, newFormIndex);
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = newFormHtml;
+                    tr.classList.add('text-center'); // Agregar clase para centrar el texto
+                    formset.appendChild(tr);
+                    totalForms.value = parseInt(totalForms.value) + 1;
+                    }
+
+                function removeLastRow() {
+                    const formset = document.getElementById("familiar-formset");
+                    const totalForms = document.getElementById("id_familiares-TOTAL_FORMS");
+                    const rows = Array.from(formset.getElementsByTagName('tr')).filter(row => {
+                        const idField = row.querySelector('input[name*="-id"]');
+                        return !idField || !idField.value; // Solo eliminar filas nuevas
+                    });
+                    if (rows.length > 0) {
+                        const lastRow = rows[rows.length - 1];
+                        formset.removeChild(lastRow);
+                        totalForms.value = parseInt(totalForms.value) - 1;
+                    }
+                }
+                </script>
+
+            <script type="text/template" id="empty-form-template">
+                <tr class="text-center">
+                    <td class="px-2 py-2 w-2/5">
+                        {{ familiar_formset.empty_form.nombre }}
+                    </td>
+                    <td class="px-2 py-2 w-1/6">
+                        {{ familiar_formset.empty_form.parentesco }}
+                    </td>
+                    <td class="px-2 py-2 w-1/12">
+                        {{ familiar_formset.empty_form.edad }}
+                    </td>
+                    <td class="px-2 py-2 w-1/6">
+                        {{ familiar_formset.empty_form.escolaridad }}
+                    </td>
+                    <td class="px-2 py-2 w-2/5">
+                        {{ familiar_formset.empty_form.ocupacion_actual }}
+                    </td>
+                    <td class="px-2 py-2 w-1/12">
+                        {{ familiar_formset.empty_form.DELETE }}
+                    </td>
+                </tr>
+                </script>
+
+                        
+                        <!-- Botones -->
+                        <div class="flex space-x-4 justify-end">
+                            <button type="submit" 
+                            class="bg-gradient-to-b from-amber-200 via-amber-300 to-amber-300 
+                            hover:from-amber-600 hover:to-amber-500 text-blue-900 px-6 py-2 font-bold rounded-md">
+                                GUARDAR FORMULARIO ANAMNESIS
+                            </button>
+                            <a href="{% url 'estudiante' estudiante.id %}" 
+                            class="bg-gradient-to-b from-blue-400 via-blue-500 to-blue-400 
+                            hover:from-blue-600 hover:to-blue-500 text-white px-6 py-2 rounded-md text-center">
+                                REGRESAR
+                            </a>
+                            
+                            </div>
+
+                        </body>
+                        {% endblock %}

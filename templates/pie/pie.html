@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %} PIE {% endblock %}
+
+{% block content %}
+<!-- Incluir el archivo funciones.js -->
+<script src="{% static 'js/funciones.js' %}"></script>
+
+<body class="">
+   
+    {% include 'componentes/navbar.html' %}
+    {% include 'componentes/sidebar.html' %}
+
+    <div class="flex flex-col ml-64 mt-2 w-4/5 px-4"> 
+        
+    <!-- FILTRO PARA VISUALIZAR SOLO UN ÁREA ACADÉMICA Y AÑO -->
+    <form method="get" action="" class="flex justify-between mt-4 mb-4" id="filter-form">
+        <div class="flex space-x-4">
+            <div>
+                <label class="text-blue-900 font-bold text-sm" for="area-filter">Filtrar por Área Académica:</label>
+                <select class="rounded-md pl-2 py-1 px-5 text-sm md:py-1 w-40" name="area_filtro" id="area-filter">
+                    <option value="">Todas</option>
+                    {% for area in areas_academicas %}
+                        <option value="{{ area.id }}" {% if area.id == area_filtro %}selected{% endif %}>{{ area.nombre }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="flex items-end">
+                <button class="bg-gradient-to-r from-blue-800 to-blue-700 
+                hover:from-blue-700 hover:to-blue-900 hover:text-white text-white text-sm py-1 px-2 rounded-md" 
+                type="submit">Filtrar</button>
+            </div>
+        </div>
+        <div class="flex space-x-4">
+            <div>
+                <label class="text-blue-900 font-bold text-sm" for="year-filter">Filtrar por Año:</label>
+                <select class="rounded-md pl-2 py-1 px-5 text-sm md:py-1 w-40" name="año_filtro" id="year-filter">
+                    {% for año in años_matricula %}
+                        <option value="{{ año }}" {% if año|stringformat:"s" == año_filtro|stringformat:"s" %}selected{% endif %}>{{ año }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="flex items-end">
+                <button class="bg-gradient-to-r from-blue-800 to-blue-700 
+                hover:from-blue-700 hover:to-blue-900 hover:text-white text-white text-sm py-1 px-2 rounded-md" 
+                type="submit">Filtrar</button>
+            </div>
+        </div>
+    </form>
+
+    <div class="overflow-x-auto">
+        <table class="w-full text-center">
+            <thead class="border-b bg-blue-800 ">
+                <tr>
+                    <th scope="col" class="font-semibold font-sans text-xs text-start text-white px-2 py-1 min-w-1/4">ÁREA ACADÉMICA</th>
+                    <th scope="col" class="font-semibold font-sans text-xs text-start text-white px-2 py-1 min-w-1/4">CURSO</th>
+                    <th scope="col" class="font-semibold font-sans text-xs text-start text-white px-2 py-1 min-w-1/4">ESTUDIANTE</th>
+                    <th scope="col" class="font-semibold font-sans text-xs text-start text-white px-2 py-1 min-w-1/4">NEE</th>
+                    <th scope="col" class="font-semibold font-sans text-xs text-start text-white px-2 py-1 min-w-1/4">APODERADO TITULAR</th>
+                    <th scope="col" class="font-semibold font-sans text-xs text-start text-white px-8 py-1 min-w-1/4">INFO</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for pie in pies %}
+                <tr class="border-b border-neutral-400 {% cycle 'bg-white' 'bg-blue-100' %}">
+                    <td class="text-start text-gray-900 px-2 py-1 text-sm font-sans whitespace-no-wrap">{{ pie.estudiante.cursos.area_academica.nombre }}</td>
+                    <td class="text-start text-gray-900 px-2 py-1 text-sm font-sans whitespace-no-wrap">{{ pie.curso.nombre }}</td>                 
+                    <td class="text-start text-gray-900 px-2 py-1 text-sm font-sans whitespace-no-wrap">{{ pie.estudiante|capfirst }}</td>
+                    <td class="text-start text-gray-900 px-2 py-1 text-sm font-sans whitespace-no-wrap">{{ pie.estudiante.nee }}</td>
+                    <td class="text-start text-gray-900 px-2 py-1 text-sm font-sans whitespace-no-wrap">{{ pie.apoderado_titular|capfirst }}</td>
+                    <td class="text-start text-blue-900 px-2 py-1 text-sm font-sans font-bold whitespace-no-wrap">
+                        <a href="{% url 'estudiante' pie.estudiante.id %}" class="hover:bg-gray-300 px-6 py-1">VER</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Enlaces de paginación -->
+    <div class="flex justify-center mt-4">
+        <ul class="flex space-x-2">
+            {% if pies.has_previous %}
+                <li><a href="?page=1{% if request.GET.area_filtro %}&area_filtro={{ request.GET.area_filtro }}{% endif %}{% if request.GET.año_filtro %}&año_filtro={{ request.GET.año_filtro }}{% endif %}" 
+                    class="bg-gradient-to-r from-blue-900 to-blue-700 
+                    hover:from-blue-600 hover:to-blue-600
+                    font-sans text-white text-sm px-2 py-1 rounded-md">
+                    PRIMERA PÁGINA</a></li>
+                <li><a href="?page={{ pies.previous_page_number }}{% if request.GET.area_filtro %}&area_filtro={{ request.GET.area_filtro }}{% endif %}{% if request.GET.año_filtro %}&año_filtro={{ request.GET.año_filtro }}{% endif %}" 
+                    class="bg-gradient-to-r from-blue-900 to-blue-700 
+                    hover:from-blue-600 hover:to-blue-600 
+                    font-sans text-white text-sm px-2 py-1 rounde-sm">
+                    ANTERIOR</a></li>
+            {% endif %}
+            
+            <li class="bg-gradient-to-r from-blue-900 to-blue-700 
+            hover:from-blue-600 hover:to-blue-600
+            font-sans text-white text-sm px-3 py-1 -my-1 rounded-md">
+            {{ pies.number }}</li>
+            
+            {% if pies.has_next %}
+                <li><a href="?page={{ pies.next_page_number }}{% if request.GET.area_filtro %}&area_filtro={{ request.GET.area_filtro }}{% endif %}{% if request.GET.año_filtro %}&año_filtro={{ request.GET.año_filtro }}{% endif %}" 
+                    class="bg-gradient-to-r from-blue-900 to-blue-700 
+                    hover:from-blue-600 hover:to-blue-600
+                    font-sans text-white text-sm px-2 py-1 rounded-md">
+                    SIGUIENTE</a></li>
+                <li><a href="?page={{ pies.paginator.num_pages }}{% if request.GET.area_filtro %}&area_filtro={{ request.GET.area_filtro }}{% endif %}{% if request.GET.año_filtro %}&año_filtro={{ request.GET.año_filtro }}{% endif %}" 
+                    class="bg-gradient-to-r from-blue-900 to-blue-700 
+                    hover:from-blue-600 hover:to-blue-600  
+                    font-sans text-white text-sm px-2 py-1 rounded-md">
+                    ÚLTIMA</a></li>
+            {% endif %}
+        </ul>
+    </div>
+    </div>
+    <div class="flex flex-col ml-64 mt-2 px-4">
+        <button onclick="document.getElementById('add_estudiante_modal').showModal()" id="btn"
+                    class="py-2 px-4 mt-1 mb-1 bg-gradient-to-b from-amber-200 via-amber-300 to-amber-300 
+                    hover:from-amber-600 hover:to-amber-500 text-blue-900 font-semibold rounded-md shadow-xl block w-1/6">
+                        AGREGAR ESTUDIANTE
+        </button> 
+    </div>
+
+    {% include 'pie/add_estudiante.html' %}
+</body>
+
+{% endblock content %}

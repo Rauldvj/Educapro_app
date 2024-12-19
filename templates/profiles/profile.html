@@ -1,0 +1,255 @@
+{% extends 'base.html' %}
+
+{% block title %}Perfil{% endblock %}
+
+{% block content %}
+
+
+{% load tailwind_filters %}
+{% load static %}
+<!-- Incluir el archivo funciones.js -->
+<script src="{% static 'js/funciones.js' %}"></script>
+{% include 'componentes/navbar.html' %}
+
+<!-- Contenedor principal -->
+<div class="container h-full">
+    <div class="grid grid-cols-1 xl:grid-cols-4 gap-8 h-full">
+        <!-- Tarjeta de datos de perfil -->
+        <!-- Navegación lateral -->
+        <aside class="bg-gradient-to-b from-blue-950 to-blue-900 p-3  text-white w-64 h-full fixed">
+            <div>
+                <!-- Imagen de perfil -->
+                <!-- <img class="mx-auto w-20 h-20 rounded-xl mb-2" src="{{ user.profile.image.url }}" alt="{{ user.username }}"> -->
+                <!-- Nombre y apellido del usuario -->
+                <h2 class="mt-1 text-xl font-sans font-semibold text-white uppercase">{{ user.first_name }}</h2>
+                <h2 class="text-md font-sans font-semibold text-white uppercase">{{ user.profile.apellido_paterno }} {{ user.profile.apellido_materno }}</h2>
+                <!-- Grupo al que pertenece el usuario -->
+                <h4 class="mt-1">
+                    <span class="{{ color }} text-white text-sm font-semibold italic py-1 px-2 rounded-lg">
+                        {{ group_name_singular | capfirst }}
+                    </span>
+                </h4>
+            </div>
+
+            <hr class="my-5">
+            <!-- Datos personales del usuario -->
+            <div class="space-y-1">
+                <img src="/static/Imagenes/LOGO LICEO TECNICO ADULTOS.jpg" alt="" class="w-40 ml-8 mb-6">
+            </div>
+
+            <hr>
+            <div class="space-y-1">
+                <p class="text-white text-sm mt-2"><strong>Email: </strong>{{ user.email }}</p>
+            </div>
+
+            <hr class="my-3">
+            <div class="mt-1 flex flex-col items-stretch text-center">
+                {% if group_name_singular == 'Coordinador' %}
+                <a href="{% url 'profile_password_change' %}"
+                    class="bg-gradient-to-b from-amber-200 via-amber-300 to-amber-300 
+                    hover:from-amber-600 hover:to-amber-500 text-blue-900 font-semibold mb-1 py-2 px-2 rounded-xl block w-full">
+                    CAMBIAR CONTRASEÑA
+                </a>
+                {% endif %}
+                <hr class="my-2">
+                <button onclick="document.getElementById('editarPerfil').showModal()" id="btn"
+                    class="py-2 px-4 mt-1 mb-1 bg-gradient-to-b from-amber-300 via-amber-500 to-amber-400 
+                    hover:from-amber-600 hover:to-amber-500 text-blue-900 font-semibold rounded-xl shadow-xl block w-full">
+                    EDITAR PERFIL
+                </button>
+                <hr class="my-2">
+                <a href="{% url 'home' %}"
+                    class="bg-gradient-to-b from-blue-400 via-blue-500 to-blue-400 
+                    hover:from-blue-600 hover:to-blue-500 text-white mt-1 py-2 px-4 rounded-xl block w-full">
+                    HOME
+                </a>
+            </div>
+        </aside>
+
+        <!-- Contenido Derecho -->
+        <div class="xl:col-span-4 col-span-1 h-full flex flex-col ml-72 ">
+            <div class="rounded mt-5 flex-grow">
+                {% if group_name_singular == 'Funcionario' %}
+                {% include 'profiles/funcionarios.html' %}
+                {% elif group_name_singular == 'Administrador' %}
+                {% include 'profiles/coordinador.html.html' %}
+                {% elif group_name_singular == 'Coordinador' %}
+                {% include 'profiles/coordinador.html' %}
+                {% elif group_name_singular == 'Coordinador Suplente' %}
+                {% include 'profiles/coordinador.html' %}
+                {% elif group_name_singular == 'Psicopedagógo' %}
+                {% include 'profiles/psicopedagogo.html' %}
+                {% elif group_name_singular == 'Psicólogo' %}
+                {% include 'profiles/psicologo.html' %}
+                {% elif group_name_singular == 'Terapeuta Ocupacional' %}
+                {% include 'profiles/terapeutaocu.html' %}
+                {% elif group_name_singular == 'Fonoaudiologo' %}
+                {% include 'profiles/fonoaudiologo.html' %}
+                {% elif group_name_singular == 'Técnico Diferencial' %}
+                {% include 'profiles/tecnicodiferen.html' %}
+                {% elif group_name_singular == 'Técnico Parvulario' %}
+                {% include 'profiles/tecnicoparvulo.html' %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal centrado verticalmente -->
+<dialog id="editarPerfil"
+class="h-auto w-[95%] md:w-2/5 p-1 rounded-xl bg-gradient-to-b from-blue-950 to-blue-900">
+    <div class="flex flex-col w-full h-auto">
+        <!-- Header -->
+        <h2 class="flex w-full h-auto justify-center items-center text-xl font-semibold text-white">EDITAR PERFIL</h2>
+        <hr>
+        <div class="flex justify-center items-center">
+            <div class="flex py-2 justify-center items-center">
+                <img class="mx-auto w-14 h-14 justify-center items-center rounded-xl"
+                    src="{{ user.profile.image.url }}" alt="{{ user.username }}">
+            </div>
+        </div>
+        <!-- Modal Content-->
+        <div class="flex w-full h-auto py-0 px-4 justify-center items-center rounded-xl text-center text-white">
+            <form action="" method="post" id="profile_form" class="" enctype="multipart/form-data">
+
+                {% csrf_token %}
+
+                <div class="mb-2 flex space-x-2">
+                    <div class="w-full text-start">
+                        <label for="image" class="form-label text-white text-xs italic mb-1 block">Foto
+                            de Perfil</label>
+                        <input class="form-control" type="file" name="image" id="image" value="{{ user.profile.image }}"
+                            class="bg-white text-gray-900 rounded-xl pl-2 py-1 md:py-2 text-sm focus:outline-none w-full" />
+                    </div>
+                </div>
+
+                <!-- ----FILA 2--- -->
+                <div class="mb-2 flex space-x-2 mt-2">
+                    <div class="w-full text-start">
+                        <label for="rut" class="form-label text-white text-sm italic mb-0">Rut</label>
+                        <input type="text" name="rut" id="profile_rut" value="{{ user.profile.rut }}"
+                            class="rut-input bg-white text-gray-900 rounded-xl pl-2 py-1 md:py-2 text-sm focus:outline-none w-full"
+                            placeholder="Ejemplo: 11111111-1" maxlength="12" disabled />
+                        <span class="error-message text-white text-sm italic"></span>
+                    </div>
+                </div>
+                <!-- <---------FILA 3----->
+                <div class="flex items-center mb-4 md:mb-2 text-start">
+                    <div class="w-1/3">
+                        <label for="first_name" class="form-label text-white text-sm italic mb-0">Nombres</label>
+                        <input type="text" name="first_name" id="first_name"
+                            class="bg-white text-gray-900 rounded-xl pl-2 py-1 md:py-2 text-sm focus:outline-none w-full"
+                            value="{{ user.first_name }}" placeholder="Nombres" />
+                    </div>
+                    <div class="w-1/3 ml-2">
+                        <label for="apellido_paterno" class="form-label text-white text-sm italic mb-0">Apellido Paterno</label>
+                        <input type="text" name="apellido_paterno" id="apellido_paterno"
+                            class="bg-white text-gray-900 rounded-xl pl-2 py-1 md:py-2 text-sm focus:outline-none w-full"
+                            value="{{ user.profile.apellido_paterno }}" placeholder="Apellido Paterno" />
+                    </div>
+                    <div class="w-1/3 ml-2">
+                        <label for="apellido_materno" class="form-label text-white text-sm italic mb-0">Apellido Materno</label>
+                        <input type="text" name="apellido_materno" id="apellido_materno"
+                            class="bg-white text-gray-900 rounded-xl pl-2 py-1 md:py-2 text-sm focus:outline-none w-full"
+                            value="{{ user.profile.apellido_materno }}" placeholder="Apellido Materno" />
+                    </div>
+                </div>
+                <!-- ----FILA 4 ---- -->
+                <div class="mb-2 flex space-x-2">
+                    <div class="w-full text-start">
+                        <label for="direccion" class="form-label text-white text-sm italic mb-0">Dirección</label>
+                        <input type="text" name="direccion" id="profile.direccion" value="{{ user.profile.direccion }}"
+                            class="bg-white text-gray-900 rounded-xl pl-2 py-1 md:py-2 text-sm focus:outline-none w-full"
+                            placeholder="Ejemplo: Calle 123" />
+                    </div>
+                </div>
+
+                <!-- ------------FILA 5----------- -->
+                <div class="flex items-center mb-4 md:mb-2 text-start">
+                    <div class="w-1/2 mr-2">
+                        <label for="telefono" class="form-label text-white text-sm italic mb-0">Teléfono: +56</label>
+                        <input type="text" name="telefono" id="profile.telefono" value="{{ user.profile.telefono }}"
+                            class="bg-white text-gray-900 rounded-xl pl-2 py-1 md:py-2 text-sm focus:outline-none w-full"
+                            placeholder="Ejemplo: 987654321" maxlength="9" />
+                    </div>
+                    <div class="w-1/2 ml-2">
+                        <label for="email" class="form-label text-white text-sm italic mb-0">Correo</label>
+                        <input type="email" name="email" id="email" required
+                            class="bg-white text-gray-900 rounded-xl pl-2 py-1 md:py-2 text-sm focus:outline-none w-full"
+                            value="{{ user.email }}" placeholder="ejemplo@mail.com" />
+                    </div>
+                </div>
+                <!-- ----FILA 6 ----- -->
+
+                <div class="flex space-x-2 text-start">
+                    <div class="w-1/2">
+                        <label for="region" class="form-label text-white text-sm italic mb-0">Región</label>
+                        <select name="region" id="region_profile"
+                            class="region-select bg-white text-gray-900 rounded-xl pl-2 py-1 md:py-2 text-sm focus:outline-none w-full">
+                            <!-- Opciones de región -->
+                            {% for region in regiones %}
+                                <option value="{{ region.id }}" {% if user.profile.region_id == region.id %}selected{% endif %}>{{ region.region }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="w-1/2 text-start">
+                        <label for="comuna" class="form-label text-white text-sm italic mb-0">Comuna</label>
+                        <select name="comuna" data-region-select="region_profile"
+                            class="comuna-select bg-white text-gray-900 rounded-xl pl-2 py-1 md:py-2 text-sm focus:outline-none w-full">
+                            <option value="">Seleccione comuna</option>
+                            {% for comuna in comunas %}
+                                <option value="{{ comuna.id }}" data-region="{{ comuna.region_id }}" {% if user.profile.comuna_id == comuna.id %}selected{% endif %}>{{ comuna.comuna }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                </div>
+
+                <!-- Modal Footer -->
+                <div class="modal-footer flex flex-col justify-end mt-8 w-full">
+                    
+                    <button type="submit" style="background: linear-gradient(to bottom, #ffeb3b, #ffc107, #ff9800); color: #0d47a1; text-transform: uppercase; padding: 0.5rem 1rem; width: 100%; border-radius: 0.75rem; margin-bottom: 0.5rem; transition: background 0.3s ease; font-weight: 600;"
+                        onmouseover="this.style.background='linear-gradient(to bottom, #ffc107, #ff9800, #ff5722)';"
+                        onmouseout="this.style.background='linear-gradient(to bottom, #ffeb3b, #ffc107, #ff9800)';">
+                        GUARDAR CAMBIOS
+                    </button>
+                
+                    <button type="button" style="background: linear-gradient(to bottom, #42a5f5, #1e88e5, #1976d2); color: white; padding: 0.5rem 1rem; width: 100%; border-radius: 0.75rem; transition: background 0.3s ease; font-weight: 600;"
+                        onmouseover="this.style.background='linear-gradient(to bottom, #1e88e5, #1976d2, #1565c0)';"
+                        onmouseout="this.style.background='linear-gradient(to bottom, #42a5f5, #1e88e5, #1976d2)';"
+                        onclick="document.getElementById('editarPerfil').close()"> CERRAR
+                    </button>
+                </div>
+
+            </form>
+
+        </div>
+        <!-- End of Modal Content-->
+    </div>
+</dialog>
+
+<!-- Estilos personalizados del Modal -->
+<style>
+    dialog[open] {
+        animation: appear 0.3s cubic-bezier(0, 1.8, 1, 1);
+    }
+    dialog::backdrop {
+        background: linear-gradient(45deg, rgba(0, 0, 0, 0.5), rgba(54, 54, 54, 0.5));
+        backdrop-filter: blur(3px);
+    }
+   
+    @keyframes appear {
+        from {
+            opacity: 0;
+            transform: scale(0.5);
+        }
+   
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+</style>
+
+{% endblock %}

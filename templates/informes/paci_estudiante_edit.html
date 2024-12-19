@@ -1,0 +1,2175 @@
+{% extends 'base.html' %}
+
+{% block title %} Editar PACI Estudiante {% endblock %}
+
+{% block content %}
+
+{% load tailwind_filters %}
+{% load static %}
+
+<!-- Incluir el archivo funciones.js -->
+<script src="{% static 'js/funciones.js' %}"></script>
+
+<body class="p-8">
+    {% include 'componentes/navbar.html' %}
+
+    <div class="max-w-6xl mx-auto bg-gradient-to-b from-blue-950 to-blue-900 rounded-md shadow-xl p-6">
+        <!-- Encabezado con logos -->
+        <div class="flex justify-between items-center mb-6">
+            <img src="{% static 'Imagenes/LOGO LICEO TECNICO ADULTOS.jpg' %}" alt="Logo Liceo Técnico" class="h-20 object-contain"/>
+            <img src="{% static 'Imagenes/Servicio_local.jpg' %}" class="h-20" alt="">
+            <img src="{% static 'Imagenes/Imagen_PIE.jpg' %}" alt="Logo PIE" class="h-20 object-contain"/>
+        </div>
+
+        <h2 class="text-white text-2xl text-center font-bold mb-8">PLAN DE ADECUACIÓN CURRICULAR INDIVIDUAL / PACI</h2>
+
+        <form action="" method="post" class="space-y-6">
+            {% csrf_token %}
+
+            <!-- Sección 1: Identificación del Estudiante -->
+            <div>
+                <h3 class="text-white text-xl font-semibold mb-4">1. IDENTIFICACIÓN DEL ESTUDIANTE</h3>
+                <table class="w-full border-collapse bg-white rounded-md overflow-hidden">
+                    <tbody class="divide-y divide-gray-200">
+                        <tr>
+                            <td class="bg-blue-100 px-2 py-2 w-1/4 text-black font-semibold text-sm rounded-sm">Nombre completo</td>
+                            <td class="px-2 py-2" colspan="3">
+                                <input type="text" name="estudiante_nombre" id="estudiante_nombre" class="w-full bg-transparent focus:outline-none text-sm rounded-md" value="{{ estudiante.nombres }} {{ estudiante.apellido_paterno }} {{ estudiante.apellido_materno }}" readonly/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="bg-blue-100 px-2 py-2 text-black font-semibold text-sm rounded-sm">Rut</td>
+                            <td class="px-2 py-2">
+                                <input type="text" name="rut" id="rut" class="w-full bg-transparent focus:outline-none text-sm rounded-md" value="{{ estudiante.rut }}" readonly/>
+                            </td>
+                            <td class="bg-blue-100 px-2 py-2 text-black font-semibold text-sm rounded-sm">Fecha de nacimiento</td>
+                            <td class="px-2 py-2">
+                                <input type="text" name="fecha_nacimiento" id="fecha_nacimiento" class="w-full bg-transparent focus:outline-none text-sm rounded-md" value="{{ estudiante.fecha_nacimiento }}" readonly/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="bg-blue-100 px-2 py-2 text-black font-semibold text-sm rounded-sm">Curso</td>
+                            <td class="px-2 py-2">
+                                <input type="text" name="curso" id="curso" class="w-full bg-transparent focus:outline-none text-sm rounded-md" value="{{ estudiante.cursos.nombre }}" readonly/>
+                            </td>
+                            <td class="bg-blue-100 px-2 py-2 text-black font-semibold text-sm rounded-sm">Diagnóstico NEE: </td>
+                            <td class="px-2 py-2">
+                                <input type="text" name="diagnostico_nee" id="diagnostico_nee" class="w-full bg-transparent focus:outline-none text-sm rounded-md" value="{{ estudiante.nee }}" readonly/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="bg-blue-100 px-2 py-2 text-black font-semibold text-sm rounded-sm">Edad</td>
+                            <td class="px-2 py-2">
+                                <input type="text" name="edad" id="edad" class="w-full bg-transparent focus:outline-none text-sm rounded-md" value="{{ paci.edad }}" readonly/>
+                            </td>
+                            <td class="bg-blue-100 px-2 py-2 text-black font-semibold text-sm rounded-sm">Sexo</td>
+                            <td class="px-2 py-2">
+                                <div class="flex space-x-4">
+                                    <label class="flex items-center">
+                                        <input type="radio" name="sexo" id="sexo_masculino" value="Masculino" class="mr-2 text-sm rounded-md" {% if paci.sexo == 'Masculino' %}checked{% endif %}>
+                                        <span>Masculino</span>
+                                    </label>
+                                    <label class="flex items-center">
+                                        <input type="radio" name="sexo" id="sexo_femenino" value="Femenino" class="mr-2 text-sm rounded-md" {% if paci.sexo == 'Femenino' %}checked{% endif %}>
+                                        <span>Femenino</span>
+                                    </label>
+                                    <label class="flex items-center">
+                                        <input type="radio" name="sexo" id="sexo_otro" value="Otro" class="mr-2 text-sm rounded-md" {% if paci.sexo == 'Otro' %}checked{% endif %}>
+                                        <span>Otro</span>
+                                    </label>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="bg-blue-100 px-2 py-2 text-black font-semibold text-sm rounded-sm">Fecha de Elaboración: </td>
+                            <td class="px-2 py-2">
+                                <input type="date" name="fecha_elaboracion" id="fecha_elaboracion" 
+                                class="fecha-calendario w-full bg-transparent focus:outline-none text-sm rounded-md" value="{{ paci.fecha_elaboracion|date:'Y-m-d' }}"/>
+                            </td>
+                            <td class="bg-blue-100 px-2 py-2 text-black font-semibold text-sm rounded-sm">Fecha de Revisión:  </td>
+                            <td class="px-2 py-2">
+                                <input type="date" name="fecha_revision" id="fecha_revision" 
+                                class="fecha-calendario w-full bg-transparent focus:outline-none text-sm rounded-md" value="{{ paci.fecha_revision|date:'Y-m-d' }}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="bg-blue-100 px-2 py-2 w-1/4 text-black font-semibold text-sm rounded-sm">Duración: </td>
+                            <td class="px-2 py-2" colspan="3">
+                                <input type="number" name="duracion" id="duracion" class="w-full bg-transparent focus:outline-none text-sm rounded-md" value="{{ paci.duracion }}" min="1" max="99"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="bg-blue-100 px-2 py-2 w-1/4 text-black font-semibold text-sm rounded-sm">Nombre Apoderado:</td>
+                            <td class="px-2 py-2" colspan="3">
+                                <input type="text" name="apoderado" id="apoderado" class="w-full px-2 py-2 bg-transparent focus:outline-none text-sm rounded-md" value="{{ apoderado }}" readonly/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="bg-blue-100 px-2 py-2 w-1/4 text-black font-semibold text-sm rounded-sm">Antecedentes Relevantes de Salud: </td>
+                            <td class="px-2 py-2" colspan="3">
+                                <textarea name="antecedentes_salud" id="antecedentes_salud" class="w-full px-2 py-2 h-20 bg-transparent focus:outline-none text-sm rounded-md">{{ paci.antecedentes_salud }}</textarea>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="bg-blue-100 px-2 py-2 w-1/4 text-black font-semibold text-sm rounded-sm">Antecedentes Escolares:</td>
+                            <td class="px-2 py-2" colspan="3">
+                                <textarea name="antecedentes_escolares" id="antecedentes_escolares" class="w-full px-2 py-2 h-20 bg-transparent focus:outline-none text-sm rounded-md">{{ paci.antecedentes_escolares }}</textarea>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="bg-blue-100 px-2 py-2 w-1/4 text-black font-semibold text-sm rounded-sm">Antecedentes Familiares (Con quien vive): </td>
+                            <td class="px-2 py-2" colspan="3">
+                                <textarea name="antecedentes_familiares" id="antecedentes_familiares" class="w-full px-2 py-2 h-20 bg-transparent focus:outline-none text-sm rounded-md">{{ paci.antecedentes_familiares }}</textarea>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="bg-blue-100 px-2 py-2 w-1/4 text-black font-semibold text-sm rounded-sm">Expectativas, Sueños y Prioridades de la Familia: </td>
+                            <td class="px-2 py-2" colspan="3">
+                                <textarea name="expectativas" id="expectativas" class="w-full px-2 py-2 h-20 bg-transparent focus:outline-none text-sm rounded-md">{{ paci.expectativas }}</textarea>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="bg-blue-100 px-2 py-2 w-1/4 text-black font-semibold text-sm rounded-sm">Apoyos que se requieren para lograrlo: </td>
+                            <td class="px-2 py-2" colspan="3">
+                                <textarea name="apoyos" id="apoyos" class="w-full px-2 py-2 h-20 bg-transparent focus:outline-none text-sm rounded-md">{{ paci.apoyos }}</textarea>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+             <!-- Sección 2: IDENTIFICACIÓN DEL ESTABLECIMIENTO -->
+             <div>
+                <h3 class="text-white text-xl font-semibold mb-4">2. IDENTIFICACIÓN DEL ESTABLECIMIENTO</h3>
+                <table class="w-full border-collapse bg-white rounded-md overflow-hidden">
+                    <tbody>
+                        <tr>
+                            <td class="bg-blue-100 px-2 py-2 w-1/4 text-black font-semibold text-sm rounded-sm">RBD</td>
+                            <td class="px-2 py-2" colspan="3">
+                                <input type="text" name="rbd" id="rbd" class="w-full bg-transparent focus:outline-none text-sm rounded-md" value="{{ paci.rbd }}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="bg-blue-100 px-2 py-2 w-1/4 text-black font-semibold text-sm rounded-sm">Nombre del Establecimiento: </td>
+                            <td class="px-2 py-2" colspan="3">
+                                <input type="text" name="nombre_establecimiento" id="nombre_establecimiento" class="w-full bg-transparent focus:outline-none text-sm rounded-md" value="{{ paci.nombre_establecimiento }}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="bg-blue-100 px-2 py-2 text-black font-semibold text-sm rounded-sm">Región</td>
+                            <td class="px-2 py-2 w-1/3" colspan="1">
+                                <select name="region" id="region_paci" class="region-select w-full px-2 bg-transparent focus:outline-none text-sm rounded-md py-2" required>
+                                    {% for region in regiones %}
+                                        <option value="{{ region.id }}" {% if paci.region_id == region.id %}selected{% endif %}>{{ region.region }}</option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                            <td class="bg-blue-100 px-2 py-2  text-black font-semibold text-sm rounded-sm">Comuna</td>
+                            <td class="px-2 py-2 w-1/3" colspan="1">
+                                <select name="comuna" id="comuna_paci" class="comuna-select w-full px-2 bg-transparent focus:outline-none text-sm rounded-md py-2" required>
+                                    <option value="">Seleccione comuna</option>
+                                    {% for comuna in comunas %}
+                                        <option value="{{ comuna.id }}" data-region="{{ comuna.region_id }}" {% if paci.comuna_id == comuna.id %}selected{% endif %}>{{ comuna.comuna }}</option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="bg-blue-100 px-2 py-2 w-1/4 text-black font-semibold text-sm rounded-sm">Coordinador(a) PIE: </td>
+                            <td class="px-2 py-2" colspan="3">
+                                <select name="coordinador_pie" id="coordinador_pie" class="w-full py-2 px-2 bg-transparent focus:outline-none text-sm rounded-md">
+                                    {% for coordinador in coordinadores %}
+                                        <option value="{{ coordinador.id }}" {% if paci.coordinador_pie_id == coordinador.id %}selected{% endif %}>
+                                            {{ coordinador.user.get_full_name }} {{ coordinador.apellido_paterno }} {{ coordinador.apellido_materno }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="bg-blue-100 px-2 py-2 w-1/4 text-black font-semibold text-sm rounded-sm">Jefe UTP: </td>
+                            <td class="px-2 py-2" colspan="3">
+                                <input type="text" name="jefe_utp" id="jefe_utp" class="w-full bg-transparent focus:outline-none text-sm rounded-md" value="{{ paci.jefe_utp }}"/>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+                        <!-- Sección 3: EQUIPO RESPONSABLE -->
+            <div>
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-white text-xl font-semibold">3. EQUIPO RESPONSABLE</h3>
+                    <div class="flex gap-2 mt-2">
+                        <!-- Botón Agregar con ícono "+" -->
+                        <button type="button" 
+                            class="bg-gradient-to-b from-amber-200 via-amber-300 to-amber-300 hover:from-amber-600 hover:to-amber-500 text-blue-900 px-4 py-2 rounded-md text-sm font-semibold flex items-center justify-center" 
+                            onclick="addRow()" 
+                            aria-label="Agregar Fila">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                
+                        <!-- Botón Eliminar con ícono "-" -->
+                        <button type="button" 
+                            class="bg-gradient-to-b from-blue-400 via-blue-500 to-blue-400 hover:from-blue-600 hover:to-blue-500 text-white px-4 py-2 rounded-md text-sm font-semibold flex items-center justify-center" 
+                            onclick="removeLastRow()" 
+                            aria-label="Eliminar Fila">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M5 10a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <table class="w-full border-collapse bg-white rounded-md overflow-hidden">
+                    <thead>
+                        <tr>
+                            <th class="bg-blue-100 px-2 py-2 text-start text-black font-semibold text-sm rounded-sm">Nombre Profesional</th>
+                            <th class="bg-blue-100 px-2 py-2 text-start text-black font-semibold text-sm rounded-sm">Profesión</th>
+                            <th class="bg-blue-100 px-2 py-2 text-start text-black font-semibold text-sm rounded-sm" style="width: 40%;">Función</th>
+                            <th class="bg-blue-100 px-2 py-2 text-start text-black font-semibold text-sm rounded-sm">N° Registro</th>
+                            <th class="bg-blue-100 px-2 py-2 text-center text-black font-semibold text-sm rounded-sm">Eliminar</th>
+                        </tr>
+                    </thead>
+                    <tbody id="equipo-responsable-formset">
+                        {{ equipo_responsable_formset.management_form }}
+                        {% for form in equipo_responsable_formset %}
+                        {% if form.instance.pk %}
+                        <tr class="text-center">
+                            <td class="px-2 py-2 w-1/5 text-sm align-top">
+                                {{ form.nombre }}
+                                {% if form.nombre.errors %}
+                                    <div class="text-red-500 text-sm mt-1">
+                                        {{ form.nombre.errors }}
+                                    </div>
+                                {% endif %}
+                            </td>
+                            <td class="px-2 py-2 w-1/6 align-top">
+                                {{ form.profesion }}
+                                {% if form.profesion.errors %}
+                                    <div class="text-red-500 text-sm mt-1">
+                                        {{ form.profesion.errors }}
+                                    </div>
+                                {% endif %}
+                            </td>
+                            <td class="px-2 py-2 w-2/5 align-top">
+                                {{ form.funcion }}
+                                {% if form.funcion.errors %}
+                                    <div class="text-red-500 text-sm mt-1">
+                                        {{ form.funcion.errors }}
+                                    </div>
+                                {% endif %}
+                            </td>
+                            <td class="px-2 py-2 w-1/6 align-top">
+                                {{ form.n_registro }}
+                                {% if form.n_registro.errors %}
+                                    <div class="text-red-500 text-sm mt-1">
+                                        {{ form.n_registro.errors }}
+                                    </div>
+                                {% endif %}
+                            </td>
+                            <td class="px-2 py-2 w-1/12 align-top">
+                                {{ form.DELETE }}
+                            </td>
+                            {{ form.id }}
+                        </tr>
+                        {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            
+            <script>
+            function addRow() {
+                const formset = document.getElementById("equipo-responsable-formset");
+                const totalForms = document.getElementById("id_equipo_responsable-TOTAL_FORMS"); // Input oculto con el total de formularios
+                const newFormIndex = totalForms.value;
+                const emptyFormTemplate = document.getElementById("empty-form-template").innerHTML;
+                const newFormHtml = emptyFormTemplate.replace(/__prefix__/g, newFormIndex);
+                const tr = document.createElement('tr');
+                tr.innerHTML = newFormHtml;
+                tr.classList.add('text-center'); // Agregar clase para centrar el texto
+                formset.appendChild(tr);
+                totalForms.value = parseInt(totalForms.value) + 1;
+            }
+            
+            function removeLastRow() {
+                const formset = document.getElementById("equipo-responsable-formset");
+                const totalForms = document.getElementById("id_equipo_responsable-TOTAL_FORMS");
+                const rows = Array.from(formset.getElementsByTagName('tr')).filter(row => {
+                    const idField = row.querySelector('input[name*="-id"]');
+                    return !idField || !idField.value; // Solo eliminar filas nuevas
+                });
+                if (rows.length > 0) {
+                    const lastRow = rows[rows.length - 1];
+                    formset.removeChild(lastRow);
+                    totalForms.value = parseInt(totalForms.value) - 1;
+                }
+            }
+            </script>
+            
+            <script type="text/template" id="empty-form-template">
+            <tr class="text-center">
+                <td class="px-2 py-2 w-1/5 align-top">
+                    {{ equipo_responsable_formset.empty_form.nombre }}
+                </td>
+                <td class="px-2 py-2 w-1/6 align-top">
+                    {{ equipo_responsable_formset.empty_form.profesion }}
+                </td>
+                <td class="px-2 py-2 w-2/5 align-top">
+                    {{ equipo_responsable_formset.empty_form.funcion }}
+                </td>
+                <td class="px-2 py-2 w-1/6 align-top">
+                    {{ equipo_responsable_formset.empty_form.n_registro }}
+                </td>
+                <td class="px-2 py-2 w-1/12">
+                    {{ equipo_responsable_formset.empty_form.DELETE }}
+                </td>
+            </tr>
+            </script>
+
+            <!-- Sección 4: RECURSOS Y MODALIDAD DE APOYO -->
+            <div>
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-white text-xl font-semibold">4. RECURSOS Y MODALIDAD DE APOYO</h3>
+                    <div class="flex gap-2 mt-2">
+                        <!-- Botón Agregar con ícono "+" -->
+                        <button type="button" 
+                            class="bg-gradient-to-b from-amber-200 via-amber-300 to-amber-300 hover:from-amber-600 hover:to-amber-500 text-blue-900 px-4 py-2 rounded-md text-sm font-semibold flex items-center justify-center" 
+                            onclick="addRowAulaRecursos()" 
+                            aria-label="Agregar Recursos">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                
+                        <!-- Botón Eliminar con ícono "-" -->
+                        <button type="button" 
+                            class="bg-gradient-to-b from-blue-400 via-blue-500 to-blue-400 hover:from-blue-600 hover:to-blue-500 text-white px-4 py-2 rounded-md text-sm font-semibold flex items-center justify-center" 
+                            onclick="removeLastRowAulaRecursos()" 
+                            aria-label="Eliminar Recursos">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M5 10a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <table class="w-full border-collapse bg-white rounded-md overflow-hidden">
+                    <thead>
+                        <tr>
+                            <th class="bg-blue-100 px-2 py-2 text-start text-black font-semibold text-sm rounded-sm">Aula de Recursos</th>
+                            <th class="bg-blue-100 px-2 py-2 text-center text-black font-semibold text-sm rounded-sm">Eliminar</th>
+                        </tr>
+                    </thead>
+                    <tbody id="aula-recursos-formset">
+                        {{ aula_recursos_formset.management_form }}
+                        {% for form in aula_recursos_formset %}
+                        {% if form.instance.pk %}
+                        <tr class="text-center">
+                            <td class="px-2 py-2 w-4/5 text-sm align-top">
+                                {{ form.aula_de_recursos }}
+                                {% if form.aula_de_recursos.errors %}
+                                    <div class="text-red-500 text-sm mt-1">
+                                        {{ form.aula_de_recursos.errors }}
+                                    </div>
+                                {% endif %}
+                            </td>
+                            <td class="px-2 py-2 w-1/5 align-top">
+                                {{ form.DELETE }}
+                            </td>
+                            {{ form.id }}
+                        </tr>
+                        {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            
+            <script>
+            function addRowAulaRecursos() {
+                const formset = document.getElementById("aula-recursos-formset");
+                const totalForms = document.getElementById("id_aula_recursos-TOTAL_FORMS"); // Input oculto con el total de formularios
+                const newFormIndex = totalForms.value;
+                const emptyFormTemplate = document.getElementById("empty-form-template-aula-recursos").innerHTML;
+                const newFormHtml = emptyFormTemplate.replace(/__prefix__/g, newFormIndex);
+                const tr = document.createElement('tr');
+                tr.innerHTML = newFormHtml;
+                tr.classList.add('text-center'); // Agregar clase para centrar el texto
+                formset.appendChild(tr);
+                totalForms.value = parseInt(totalForms.value) + 1;
+            }
+            
+            function removeLastRowAulaRecursos() {
+                const formset = document.getElementById("aula-recursos-formset");
+                const totalForms = document.getElementById("id_aula_recursos-TOTAL_FORMS");
+                const rows = Array.from(formset.getElementsByTagName('tr')).filter(row => {
+                    const idField = row.querySelector('input[name*="-id"]');
+                    return !idField || !idField.value; // Solo eliminar filas nuevas
+                });
+                if (rows.length > 0) {
+                    const lastRow = rows[rows.length - 1];
+                    formset.removeChild(lastRow);
+                    totalForms.value = parseInt(totalForms.value) - 1;
+                }
+            }
+            </script>
+            
+            <script type="text/template" id="empty-form-template-aula-recursos">
+            <tr class="text-center">
+                <td class="px-2 py-2 w-4/5 align-top">
+                    {{ aula_recursos_formset.empty_form.aula_de_recursos }}
+                </td>
+                <td class="px-2 py-2 w-1/5 align-top">
+                    {{ aula_recursos_formset.empty_form.DELETE }}
+                </td>
+            </tr>
+            </script>
+
+                         <!-- Sección 4.1: AULA REGULAR -->
+            <div>
+                <div class="flex justify-end items-center mb-4">
+                    <div class="flex gap-2 mt-2">
+                        <!-- Botón Agregar con ícono "+" -->
+                        <button type="button" 
+                            class="bg-gradient-to-b from-amber-200 via-amber-300 to-amber-300 hover:from-amber-600 hover:to-amber-500 text-blue-900 px-4 py-2 rounded-md text-sm font-semibold flex items-center justify-center" 
+                            onclick="addRowAulaRegular()" 
+                            aria-label="Agregar Fila">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                
+                        <!-- Botón Eliminar con ícono "-" -->
+                        <button type="button" 
+                            class="bg-gradient-to-b from-blue-400 via-blue-500 to-blue-400 hover:from-blue-600 hover:to-blue-500 text-white px-4 py-2 rounded-md text-sm font-semibold flex items-center justify-center" 
+                            onclick="removeLastRowAulaRegular()" 
+                            aria-label="Eliminar Fila">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M5 10a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <table class="w-full border-collapse bg-white rounded-md overflow-hidden">
+                    <thead>
+                        <tr>
+                            <th class="bg-blue-100 px-2 py-2 text-start text-black font-semibold text-sm rounded-sm">Aula Regular</th>
+                            <th class="bg-blue-100 px-2 py-2 text-center text-black font-semibold text-sm rounded-sm">Eliminar</th>
+                        </tr>
+                    </thead>
+                    <tbody id="aula-regular-formset">
+                        {{ aula_regular_formset.management_form }}
+                        {% for form in aula_regular_formset %}
+                        {% if form.instance.pk %}
+                        <tr class="text-center">
+                            <td class="px-2 py-2 w-4/5 text-sm align-top">
+                                {{ form.aula_regular }}
+                                {% if form.aula_regular.errors %}
+                                    <div class="text-red-500 text-sm mt-1">
+                                        {{ form.aula_regular.errors }}
+                                    </div>
+                                {% endif %}
+                            </td>
+                            <td class="px-2 py-2 w-1/5 align-top">
+                                {{ form.DELETE }}
+                            </td>
+                            {{ form.id }}
+                        </tr>
+                        {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            
+            <script>
+            function addRowAulaRegular() {
+                const formset = document.getElementById("aula-regular-formset");
+                const totalForms = document.getElementById("id_aula_regular-TOTAL_FORMS"); // Input oculto con el total de formularios
+                const newFormIndex = totalForms.value;
+                const emptyFormTemplate = document.getElementById("empty-form-template-aula-regular").innerHTML;
+                const newFormHtml = emptyFormTemplate.replace(/__prefix__/g, newFormIndex);
+                const tr = document.createElement('tr');
+                tr.innerHTML = newFormHtml;
+                tr.classList.add('text-center'); // Agregar clase para centrar el texto
+                formset.appendChild(tr);
+                totalForms.value = parseInt(totalForms.value) + 1;
+            }
+            
+            function removeLastRowAulaRegular() {
+                const formset = document.getElementById("aula-regular-formset");
+                const totalForms = document.getElementById("id_aula_regular-TOTAL_FORMS");
+                const rows = Array.from(formset.getElementsByTagName('tr')).filter(row => {
+                    const idField = row.querySelector('input[name*="-id"]');
+                    return !idField || !idField.value; // Solo eliminar filas nuevas
+                });
+                if (rows.length > 0) {
+                    const lastRow = rows[rows.length - 1];
+                    formset.removeChild(lastRow);
+                    totalForms.value = parseInt(totalForms.value) - 1;
+                }
+            }
+            </script>
+            
+            <script type="text/template" id="empty-form-template-aula-regular">
+            <tr class="text-center">
+                <td class="px-2 py-2 w-4/5 align-top">
+                    {{ aula_regular_formset.empty_form.aula_regular }}
+                </td>
+                <td class="px-2 py-2 w-1/5 align-top">
+                    {{ aula_regular_formset.empty_form.DELETE }}
+                </td>
+            </tr>
+            </script>
+
+            <!-- Sección 5: ADECUACIÓN DE ACCESO -->
+            <div>
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-white text-xl font-semibold">5. ADECUACIÓN DE ACCESO</h3>
+                    <div class="flex gap-2 mt-2 justify-end">
+                        <!-- Botón Agregar con ícono + -->
+                        <button type="button" 
+                            class="bg-gradient-to-b from-amber-200 via-amber-300 to-amber-300 hover:from-amber-600 hover:to-amber-500 text-blue-900 px-4 py-2 rounded-md text-sm font-semibold flex items-center justify-center" 
+                            onclick="addRowPresentacionRepresentacion()" 
+                            aria-label="Agregar Fila">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                    
+                        <!-- Botón Eliminar con ícono - -->
+                        <button type="button" 
+                            class="bg-gradient-to-b from-blue-400 via-blue-500 to-blue-400 hover:from-blue-600 hover:to-blue-500 text-white px-4 py-2 rounded-md text-sm font-semibold flex items-center justify-center" 
+                            onclick="removeLastRowPresentacionRepresentacion()" 
+                            aria-label="Eliminar Fila">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M5 10a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <table class="w-full border-collapse bg-white rounded-md overflow-hidden">
+                    <thead>
+                        <tr>
+                            <th class="bg-blue-100 px-2 py-2 text-start text-black font-semibold text-sm rounded-sm">Presentación y Representación de la Información</th>
+                            <th class="bg-blue-100 px-2 py-2 text-center text-black font-semibold text-sm rounded-sm">Eliminar</th>
+                        </tr>
+                    </thead>
+                    <tbody id="presentacion-representacion-formset">
+                        {{ presentacion_representacion_formset.management_form }}
+                        {% for form in presentacion_representacion_formset %}
+                        {% if form.instance.pk %}
+                        <tr class="text-center">
+                            <td class="px-2 py-2 w-4/5 text-sm align-top">
+                                {{ form.presentacion_representacion }}
+                                {% if form.presentacion_representacion.errors %}
+                                    <div class="text-red-500 text-sm mt-1">
+                                        {{ form.presentacion_representacion.errors }}
+                                    </div>
+                                {% endif %}
+                            </td>
+                            <td class="px-2 py-2 w-1/5 align-top">
+                                {{ form.DELETE }}
+                            </td>
+                            {{ form.id }}
+                        </tr>
+                        {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            
+            <script>
+            function addRowPresentacionRepresentacion() {
+                const formset = document.getElementById("presentacion-representacion-formset");
+                const totalForms = document.getElementById("id_presentacion_representacion-TOTAL_FORMS"); // Input oculto con el total de formularios
+                const newFormIndex = totalForms.value;
+                const emptyFormTemplate = document.getElementById("empty-form-template-presentacion-representacion").innerHTML;
+                const newFormHtml = emptyFormTemplate.replace(/__prefix__/g, newFormIndex);
+                const tr = document.createElement('tr');
+                tr.innerHTML = newFormHtml;
+                tr.classList.add('text-center'); // Agregar clase para centrar el texto
+                formset.appendChild(tr);
+                totalForms.value = parseInt(totalForms.value) + 1;
+            }
+            
+            function removeLastRowPresentacionRepresentacion() {
+                const formset = document.getElementById("presentacion-representacion-formset");
+                const totalForms = document.getElementById("id_presentacion_representacion-TOTAL_FORMS");
+                const rows = Array.from(formset.getElementsByTagName('tr')).filter(row => {
+                    const idField = row.querySelector('input[name*="-id"]');
+                    return !idField || !idField.value; // Solo eliminar filas nuevas
+                });
+                if (rows.length > 0) {
+                    const lastRow = rows[rows.length - 1];
+                    formset.removeChild(lastRow);
+                    totalForms.value = parseInt(totalForms.value) - 1;
+                }
+            }
+            </script>
+            
+            <script type="text/template" id="empty-form-template-presentacion-representacion">
+            <tr class="text-center">
+                <td class="px-2 py-2 w-4/5 align-top">
+                    {{ presentacion_representacion_formset.empty_form.presentacion_representacion }}
+                </td>
+                <td class="px-2 py-2 w-1/5 align-top">
+                    {{ presentacion_representacion_formset.empty_form.DELETE }}
+                </td>
+            </tr>
+            </script>
+
+                <!-- Medios de Ejecución y Expresión -->
+            <div>
+                <div class="flex justify-end items-center mb-4">
+                    <div class="flex gap-2 mt-2">
+                        <!-- Botón Agregar con ícono "+" -->
+                        <button type="button" 
+                            class="bg-gradient-to-b from-amber-200 via-amber-300 to-amber-300 hover:from-amber-600 hover:to-amber-500 text-blue-900 px-4 py-2 rounded-md text-sm font-semibold flex items-center justify-center" 
+                            onclick="addRowMediosEjecucionExpresion()" 
+                            aria-label="Agregar Fila">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                
+                        <!-- Botón Eliminar con ícono "-" -->
+                        <button type="button" 
+                            class="bg-gradient-to-b from-blue-400 via-blue-500 to-blue-400 hover:from-blue-600 hover:to-blue-500 text-white px-4 py-2 rounded-md text-sm font-semibold flex items-center justify-center" 
+                            onclick="removeLastRowMediosEjecucionExpresion()" 
+                            aria-label="Eliminar Fila">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M5 10a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <table class="w-full border-collapse bg-white rounded-md overflow-hidden">
+                    <thead>
+                        <tr>
+                            <th class="bg-blue-100 px-2 py-2 text-start text-black font-semibold text-sm rounded-sm">Medios de Ejecución y Expresión</th>
+                            <th class="bg-blue-100 px-2 py-2 text-center text-black font-semibold text-sm rounded-sm">Eliminar</th>
+                        </tr>
+                    </thead>
+                    <tbody id="medios-ejecucion-expresion-formset">
+                        {{ medios_ejecucion_expresion_formset.management_form }}
+                        {% for form in medios_ejecucion_expresion_formset %}
+                        {% if form.instance.pk %}
+                        <tr class="text-center">
+                            <td class="px-2 py-2 w-4/5 text-sm align-top">
+                                {{ form.medios_ejecucion_expresion }}
+                                {% if form.medios_ejecucion_expresion.errors %}
+                                    <div class="text-red-500 text-sm mt-1">
+                                        {{ form.medios_ejecucion_expresion.errors }}
+                                    </div>
+                                {% endif %}
+                            </td>
+                            <td class="px-2 py-2 w-1/5 align-top">
+                                {{ form.DELETE }}
+                            </td>
+                            {{ form.id }}
+                        </tr>
+                        {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            
+            <script>
+            function addRowMediosEjecucionExpresion() {
+                const formset = document.getElementById("medios-ejecucion-expresion-formset");
+                const totalForms = document.getElementById("id_medios_ejecucion_expresion-TOTAL_FORMS"); // Input oculto con el total de formularios
+                const newFormIndex = totalForms.value;
+                const emptyFormTemplate = document.getElementById("empty-form-template-medios-ejecucion-expresion").innerHTML;
+                const newFormHtml = emptyFormTemplate.replace(/__prefix__/g, newFormIndex);
+                const tr = document.createElement('tr');
+                tr.innerHTML = newFormHtml;
+                tr.classList.add('text-center'); // Agregar clase para centrar el texto
+                formset.appendChild(tr);
+                totalForms.value = parseInt(totalForms.value) + 1;
+            }
+            
+            function removeLastRowMediosEjecucionExpresion() {
+                const formset = document.getElementById("medios-ejecucion-expresion-formset");
+                const totalForms = document.getElementById("id_medios_ejecucion_expresion-TOTAL_FORMS");
+                const rows = Array.from(formset.getElementsByTagName('tr')).filter(row => {
+                    const idField = row.querySelector('input[name*="-id"]');
+                    return !idField || !idField.value; // Solo eliminar filas nuevas
+                });
+                if (rows.length > 0) {
+                    const lastRow = rows[rows.length - 1];
+                    formset.removeChild(lastRow);
+                    totalForms.value = parseInt(totalForms.value) - 1;
+                }
+            }
+            </script>
+            
+            <script type="text/template" id="empty-form-template-medios-ejecucion-expresion">
+            <tr class="text-center">
+                <td class="px-2 py-2 w-4/5 align-top">
+                    {{ medios_ejecucion_expresion_formset.empty_form.medios_ejecucion_expresion }}
+                </td>
+                <td class="px-2 py-2 w-1/5 align-top">
+                    {{ medios_ejecucion_expresion_formset.empty_form.DELETE }}
+                </td>
+            </tr>
+            </script>
+
+                <!-- Proporcionar múltiples medios de participación y compromiso -->
+            <div>
+                <div class="flex justify-end items-center mb-4">
+                    <div class="flex gap-2 mt-2">
+                        <!-- Botón Agregar con ícono "+" -->
+                        <button type="button" 
+                            class="bg-gradient-to-b from-amber-200 via-amber-300 to-amber-300 hover:from-amber-600 hover:to-amber-500 text-blue-900 px-4 py-2 rounded-md text-sm font-semibold flex items-center justify-center" 
+                            onclick="addRowMultiplesMedios()" 
+                            aria-label="Agregar Fila">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                
+                        <!-- Botón Eliminar con ícono "-" -->
+                        <button type="button" 
+                            class="bg-gradient-to-b from-blue-400 via-blue-500 to-blue-400 hover:from-blue-600 hover:to-blue-500 text-white px-4 py-2 rounded-md text-sm font-semibold flex items-center justify-center" 
+                            onclick="removeLastRowMultiplesMedios()" 
+                            aria-label="Eliminar Fila">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M5 10a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <table class="w-full border-collapse bg-white rounded-md overflow-hidden">
+                    <thead>
+                        <tr>
+                            <th class="bg-blue-100 px-2 py-2 text-start text-black font-semibold text-sm rounded-sm">Proporcionar múltiples medios de participación y compromiso</th>
+                            <th class="bg-blue-100 px-2 py-2 text-center text-black font-semibold text-sm rounded-sm">Eliminar</th>
+                        </tr>
+                    </thead>
+                    <tbody id="multiples-medios-formset">
+                        {{ multiples_medios_formset.management_form }}
+                        {% for form in multiples_medios_formset %}
+                        {% if form.instance.pk %}
+                        <tr class="text-center">
+                            <td class="px-2 py-2 w-4/5 text-sm align-top">
+                                {{ form.multiples_medios }}
+                                {% if form.multiples_medios.errors %}
+                                    <div class="text-red-500 text-sm mt-1">
+                                        {{ form.multiples_medios.errors }}
+                                    </div>
+                                {% endif %}
+                            </td>
+                            <td class="px-2 py-2 w-1/5 align-top">
+                                {{ form.DELETE }}
+                            </td>
+                            {{ form.id }}
+                        </tr>
+                        {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            
+            <script>
+            function addRowMultiplesMedios() {
+                const formset = document.getElementById("multiples-medios-formset");
+                const totalForms = document.getElementById("id_multiples_medios-TOTAL_FORMS"); // Input oculto con el total de formularios
+                const newFormIndex = totalForms.value;
+                const emptyFormTemplate = document.getElementById("empty-form-template-multiples-medios").innerHTML;
+                const newFormHtml = emptyFormTemplate.replace(/__prefix__/g, newFormIndex);
+                const tr = document.createElement('tr');
+                tr.innerHTML = newFormHtml;
+                tr.classList.add('text-center'); // Agregar clase para centrar el texto
+                formset.appendChild(tr);
+                totalForms.value = parseInt(totalForms.value) + 1;
+            }
+            
+            function removeLastRowMultiplesMedios() {
+                const formset = document.getElementById("multiples-medios-formset");
+                const totalForms = document.getElementById("id_multiples_medios-TOTAL_FORMS");
+                const rows = Array.from(formset.getElementsByTagName('tr')).filter(row => {
+                    const idField = row.querySelector('input[name*="-id"]');
+                    return !idField || !idField.value; // Solo eliminar filas nuevas
+                });
+                if (rows.length > 0) {
+                    const lastRow = rows[rows.length - 1];
+                    formset.removeChild(lastRow);
+                    totalForms.value = parseInt(totalForms.value) - 1;
+                }
+            }
+            </script>
+            
+            <script type="text/template" id="empty-form-template-multiples-medios">
+            <tr class="text-center">
+                <td class="px-2 py-2 w-4/5 align-top">
+                    {{ multiples_medios_formset.empty_form.multiples_medios }}
+                </td>
+                <td class="px-2 py-2 w-1/5 align-top">
+                    {{ multiples_medios_formset.empty_form.DELETE }}
+                </td>
+            </tr>
+            </script>
+
+                        <!-- Entorno (Adecuación en los espacios, ubicación y condiciones) -->
+            <div>
+                <div class="flex justify-end items-center mb-4">
+                    <div class="flex gap-2 mt-2">
+                        <!-- Botón Agregar con ícono "+" -->
+                        <button type="button" 
+                            class="bg-gradient-to-b from-amber-200 via-amber-300 to-amber-300 hover:from-amber-600 hover:to-amber-500 text-blue-900 px-4 py-2 rounded-md text-sm font-semibold flex items-center justify-center" 
+                            onclick="addRowEntorno()" 
+                            aria-label="Agregar Fila">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                
+                        <!-- Botón Eliminar con ícono "-" -->
+                        <button type="button" 
+                            class="bg-gradient-to-b from-blue-400 via-blue-500 to-blue-400 hover:from-blue-600 hover:to-blue-500 text-white px-4 py-2 rounded-md text-sm font-semibold flex items-center justify-center" 
+                            onclick="removeLastRowEntorno()" 
+                            aria-label="Eliminar Fila">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M5 10a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <table class="w-full border-collapse bg-white rounded-md overflow-hidden">
+                    <thead>
+                        <tr>
+                            <th class="bg-blue-100 px-2 py-2 text-start text-black font-semibold text-sm rounded-sm">Entorno (Adecuación en los espacios, ubicación y condiciones)</th>
+                            <th class="bg-blue-100 px-2 py-2 text-center text-black font-semibold text-sm rounded-sm">Eliminar</th>
+                        </tr>
+                    </thead>
+                    <tbody id="entorno-formset">
+                        {{ entorno_formset.management_form }}
+                        {% for form in entorno_formset %}
+                        {% if form.instance.pk %}
+                        <tr class="text-center">
+                            <td class="px-2 py-2 w-4/5 text-sm align-top">
+                                {{ form.entorno }}
+                                {% if form.entorno.errors %}
+                                    <div class="text-red-500 text-sm mt-1">
+                                        {{ form.entorno.errors }}
+                                    </div>
+                                {% endif %}
+                            </td>
+                            <td class="px-2 py-2 w-1/5 align-top">
+                                {{ form.DELETE }}
+                            </td>
+                            {{ form.id }}
+                        </tr>
+                        {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            
+            <script>
+            function addRowEntorno() {
+                const formset = document.getElementById("entorno-formset");
+                const totalForms = document.getElementById("id_entorno-TOTAL_FORMS"); // Input oculto con el total de formularios
+                const newFormIndex = totalForms.value;
+                const emptyFormTemplate = document.getElementById("empty-form-template-entorno").innerHTML;
+                const newFormHtml = emptyFormTemplate.replace(/__prefix__/g, newFormIndex);
+                const tr = document.createElement('tr');
+                tr.innerHTML = newFormHtml;
+                tr.classList.add('text-center'); // Agregar clase para centrar el texto
+                formset.appendChild(tr);
+                totalForms.value = parseInt(totalForms.value) + 1;
+            }
+            
+            function removeLastRowEntorno() {
+                const formset = document.getElementById("entorno-formset");
+                const totalForms = document.getElementById("id_entorno-TOTAL_FORMS");
+                const rows = Array.from(formset.getElementsByTagName('tr')).filter(row => {
+                    const idField = row.querySelector('input[name*="-id"]');
+                    return !idField || !idField.value; // Solo eliminar filas nuevas
+                });
+                if (rows.length > 0) {
+                    const lastRow = rows[rows.length - 1];
+                    formset.removeChild(lastRow);
+                    totalForms.value = parseInt(totalForms.value) - 1;
+                }
+            }
+            </script>
+            
+            <script type="text/template" id="empty-form-template-entorno">
+            <tr class="text-center">
+                <td class="px-2 py-2 w-4/5 align-top">
+                    {{ entorno_formset.empty_form.entorno }}
+                </td>
+                <td class="px-2 py-2 w-1/5 align-top">
+                    {{ entorno_formset.empty_form.DELETE }}
+                </td>
+            </tr>
+            </script>
+
+                        <!-- Organización del tiempo y el horario -->
+            <div>
+                <div class="flex justify-end items-center mb-4">
+                    <div class="flex gap-2 mt-2">
+                        <!-- Botón Agregar con ícono "+" -->
+                        <button type="button" 
+                            class="bg-gradient-to-b from-amber-200 via-amber-300 to-amber-300 hover:from-amber-600 hover:to-amber-500 text-blue-900 px-4 py-2 rounded-md text-sm font-semibold flex items-center justify-center" 
+                            onclick="addRowOrganizacionTiempo()" 
+                            aria-label="Agregar Fila">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                
+                        <!-- Botón Eliminar con ícono "-" -->
+                        <button type="button" 
+                            class="bg-gradient-to-b from-blue-400 via-blue-500 to-blue-400 hover:from-blue-600 hover:to-blue-500 text-white px-4 py-2 rounded-md text-sm font-semibold flex items-center justify-center" 
+                            onclick="removeLastRowOrganizacionTiempo()" 
+                            aria-label="Eliminar Fila">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M5 10a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <table class="w-full border-collapse bg-white rounded-md overflow-hidden">
+                    <thead>
+                        <tr>
+                            <th class="bg-blue-100 px-2 py-2 text-start text-black font-semibold text-sm rounded-sm">Organización del tiempo y el horario</th>
+                            <th class="bg-blue-100 px-2 py-2 text-center text-black font-semibold text-sm rounded-sm">Eliminar</th>
+                        </tr>
+                    </thead>
+                    <tbody id="organizacion-tiempo-formset">
+                        {{ organizacion_tiempo_formset.management_form }}
+                        {% for form in organizacion_tiempo_formset %}
+                        {% if form.instance.pk %}
+                        <tr class="text-center">
+                            <td class="px-2 py-2 w-4/5 text-sm align-top">
+                                {{ form.organizacion_tiempo }}
+                                {% if form.organizacion_tiempo.errors %}
+                                    <div class="text-red-500 text-sm mt-1">
+                                        {{ form.organizacion_tiempo.errors }}
+                                    </div>
+                                {% endif %}
+                            </td>
+                            <td class="px-2 py-2 w-1/5 align-top">
+                                {{ form.DELETE }}
+                            </td>
+                            {{ form.id }}
+                        </tr>
+                        {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            
+            <script>
+            function addRowOrganizacionTiempo() {
+                const formset = document.getElementById("organizacion-tiempo-formset");
+                const totalForms = document.getElementById("id_organizacion_tiempo-TOTAL_FORMS"); // Input oculto con el total de formularios
+                const newFormIndex = totalForms.value;
+                const emptyFormTemplate = document.getElementById("empty-form-template-organizacion-tiempo").innerHTML;
+                const newFormHtml = emptyFormTemplate.replace(/__prefix__/g, newFormIndex);
+                const tr = document.createElement('tr');
+                tr.innerHTML = newFormHtml;
+                tr.classList.add('text-center'); // Agregar clase para centrar el texto
+                formset.appendChild(tr);
+                totalForms.value = parseInt(totalForms.value) + 1;
+            }
+            
+            function removeLastRowOrganizacionTiempo() {
+                const formset = document.getElementById("organizacion-tiempo-formset");
+                const totalForms = document.getElementById("id_organizacion_tiempo-TOTAL_FORMS");
+                const rows = Array.from(formset.getElementsByTagName('tr')).filter(row => {
+                    const idField = row.querySelector('input[name*="-id"]');
+                    return !idField || !idField.value; // Solo eliminar filas nuevas
+                });
+                if (rows.length > 0) {
+                    const lastRow = rows[rows.length - 1];
+                    formset.removeChild(lastRow);
+                    totalForms.value = parseInt(totalForms.value) - 1;
+                }
+            }
+            </script>
+            
+            <script type="text/template" id="empty-form-template-organizacion-tiempo">
+            <tr class="text-center">
+                <td class="px-2 py-2 w-4/5 align-top">
+                    {{ organizacion_tiempo_formset.empty_form.organizacion_tiempo }}
+                </td>
+                <td class="px-2 py-2 w-1/5 align-top">
+                    {{ organizacion_tiempo_formset.empty_form.DELETE }}
+                </td>
+            </tr>
+            </script>
+
+            <!-- Sección 6: ADECUACIÓN DE OBJETIVOS -->
+            <div>
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-white text-xl font-semibold">6. ADECUACIÓN DE OBJETIVOS</h3>
+                    <div class="flex gap-2 mt-2 justify-end">
+                        <!-- Botón Agregar con ícono "+" -->
+                        <button type="button" 
+                            class="bg-gradient-to-b from-amber-200 via-amber-300 to-amber-300 hover:from-amber-600 hover:to-amber-500 text-blue-900 px-4 py-2 rounded-md text-sm font-semibold flex items-center justify-center" 
+                            onclick="addRowGraduacionComplejidad()" 
+                            aria-label="Agregar Fila">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                
+                        <!-- Botón Eliminar con ícono "-" -->
+                        <button type="button" 
+                            class="bg-gradient-to-b from-blue-400 via-blue-500 to-blue-400 hover:from-blue-600 hover:to-blue-500 text-white px-4 py-2 rounded-md text-sm font-semibold flex items-center justify-center" 
+                            onclick="removeLastRowGraduacionComplejidad()" 
+                            aria-label="Eliminar Fila">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M5 10a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <table class="w-full border-collapse bg-white rounded-md overflow-hidden">
+                    <thead>
+                        <tr>
+                            <th class="bg-blue-100 px-2 py-2 text-start text-black font-semibold text-sm rounded-sm">Graduación del nivel de complejidad</th>
+                            <th class="bg-blue-100 px-2 py-2 text-center text-black font-semibold text-sm rounded-sm">Eliminar</th>
+                        </tr>
+                    </thead>
+                    <tbody id="graduacion-complejidad-formset">
+                        {{ graduacion_complejidad_formset.management_form }}
+                        {% for form in graduacion_complejidad_formset %}
+                        {% if form.instance.pk %}
+                        <tr class="text-center">
+                            <td class="px-2 py-2 w-4/5 text-sm align-top">
+                                {{ form.graduacion_complejidad }}
+                                {% if form.graduacion_complejidad.errors %}
+                                    <div class="text-red-500 text-sm mt-1">
+                                        {{ form.graduacion_complejidad.errors }}
+                                    </div>
+                                {% endif %}
+                            </td>
+                            <td class="px-2 py-2 w-1/5 align-top">
+                                {{ form.DELETE }}
+                            </td>
+                            {{ form.id }}
+                        </tr>
+                        {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            
+            <script>
+            function addRowGraduacionComplejidad() {
+                const formset = document.getElementById("graduacion-complejidad-formset");
+                const totalForms = document.getElementById("id_graduacion_complejidad-TOTAL_FORMS"); // Input oculto con el total de formularios
+                const newFormIndex = totalForms.value;
+                const emptyFormTemplate = document.getElementById("empty-form-template-graduacion-complejidad").innerHTML;
+                const newFormHtml = emptyFormTemplate.replace(/__prefix__/g, newFormIndex);
+                const tr = document.createElement('tr');
+                tr.innerHTML = newFormHtml;
+                tr.classList.add('text-center'); // Agregar clase para centrar el texto
+                formset.appendChild(tr);
+                totalForms.value = parseInt(totalForms.value) + 1;
+            }
+            
+            function removeLastRowGraduacionComplejidad() {
+                const formset = document.getElementById("graduacion-complejidad-formset");
+                const totalForms = document.getElementById("id_graduacion_complejidad-TOTAL_FORMS");
+                const rows = Array.from(formset.getElementsByTagName('tr')).filter(row => {
+                    const idField = row.querySelector('input[name*="-id"]');
+                    return !idField || !idField.value; // Solo eliminar filas nuevas
+                });
+                if (rows.length > 0) {
+                    const lastRow = rows[rows.length - 1];
+                    formset.removeChild(lastRow);
+                    totalForms.value = parseInt(totalForms.value) - 1;
+                }
+            }
+            </script>
+            
+            <script type="text/template" id="empty-form-template-graduacion-complejidad">
+            <tr class="text-center">
+                <td class="px-2 py-2 w-4/5 align-top">
+                    {{ graduacion_complejidad_formset.empty_form.graduacion_complejidad }}
+                </td>
+                <td class="px-2 py-2 w-1/5 align-top">
+                    {{ graduacion_complejidad_formset.empty_form.DELETE }}
+                </td>
+            </tr>
+            </script>
+
+                        <!-- Priorización de OA y contenidos -->
+            <div>
+                <div class="flex justify-end items-center mb-4">
+                    <div class="flex gap-2 mt-2">
+                        <!-- Botón Agregar con ícono "+" -->
+                        <button type="button" 
+                            class="bg-gradient-to-b from-amber-200 via-amber-300 to-amber-300 hover:from-amber-600 hover:to-amber-500 text-blue-900 px-4 py-2 rounded-md text-sm font-semibold flex items-center justify-center" 
+                            onclick="addRowPriorizacionOA()" 
+                            aria-label="Agregar Fila">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                
+                        <!-- Botón Eliminar con ícono "-" -->
+                        <button type="button" 
+                            class="bg-gradient-to-b from-blue-400 via-blue-500 to-blue-400 hover:from-blue-600 hover:to-blue-500 text-white px-4 py-2 rounded-md text-sm font-semibold flex items-center justify-center" 
+                            onclick="removeLastRowPriorizacionOA()" 
+                            aria-label="Eliminar Fila">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M5 10a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <table class="w-full border-collapse bg-white rounded-md overflow-hidden">
+                    <thead>
+                        <tr>
+                            <th class="bg-blue-100 px-2 py-2 text-start text-black font-semibold text-sm rounded-sm">Priorización de OA y contenidos</th>
+                            <th class="bg-blue-100 px-2 py-2 text-center text-black font-semibold text-sm rounded-sm">Eliminar</th>
+                        </tr>
+                    </thead>
+                    <tbody id="priorizacion-oa-formset">
+                        {{ priorizacion_oa_formset.management_form }}
+                        {% for form in priorizacion_oa_formset %}
+                        {% if form.instance.pk %}
+                        <tr class="text-center">
+                            <td class="px-2 py-2 w-4/5 text-sm align-top">
+                                {{ form.priorizacion_oa }}
+                                {% if form.priorizacion_oa.errors %}
+                                    <div class="text-red-500 text-sm mt-1">
+                                        {{ form.priorizacion_oa.errors }}
+                                    </div>
+                                {% endif %}
+                            </td>
+                            <td class="px-2 py-2 w-1/5 align-top">
+                                {{ form.DELETE }}
+                            </td>
+                            {{ form.id }}
+                        </tr>
+                        {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            
+            <script>
+            function addRowPriorizacionOA() {
+                const formset = document.getElementById("priorizacion-oa-formset");
+                const totalForms = document.getElementById("id_priorizacion_oa-TOTAL_FORMS"); // Input oculto con el total de formularios
+                const newFormIndex = totalForms.value;
+                const emptyFormTemplate = document.getElementById("empty-form-template-priorizacion-oa").innerHTML;
+                const newFormHtml = emptyFormTemplate.replace(/__prefix__/g, newFormIndex);
+                const tr = document.createElement('tr');
+                tr.innerHTML = newFormHtml;
+                tr.classList.add('text-center'); // Agregar clase para centrar el texto
+                formset.appendChild(tr);
+                totalForms.value = parseInt(totalForms.value) + 1;
+            }
+            
+            function removeLastRowPriorizacionOA() {
+                const formset = document.getElementById("priorizacion-oa-formset");
+                const totalForms = document.getElementById("id_priorizacion_oa-TOTAL_FORMS");
+                const rows = Array.from(formset.getElementsByTagName('tr')).filter(row => {
+                    const idField = row.querySelector('input[name*="-id"]');
+                    return !idField || !idField.value; // Solo eliminar filas nuevas
+                });
+                if (rows.length > 0) {
+                    const lastRow = rows[rows.length - 1];
+                    formset.removeChild(lastRow);
+                    totalForms.value = parseInt(totalForms.value) - 1;
+                }
+            }
+            </script>
+            
+            <script type="text/template" id="empty-form-template-priorizacion-oa">
+            <tr class="text-center">
+                <td class="px-2 py-2 w-4/5 align-top">
+                    {{ priorizacion_oa_formset.empty_form.priorizacion_oa }}
+                </td>
+                <td class="px-2 py-2 w-1/5 align-top">
+                    {{ priorizacion_oa_formset.empty_form.DELETE }}
+                </td>
+            </tr>
+            </script>
+
+                        <!-- Temporalización -->
+            <div>
+                <div class="flex justify-end items-center mb-4">
+                    <div class="flex gap-2 mt-2">
+                        <!-- Botón Agregar con ícono "+" -->
+                        <button type="button" 
+                            class="bg-gradient-to-b from-amber-200 via-amber-300 to-amber-300 hover:from-amber-600 hover:to-amber-500 text-blue-900 px-4 py-2 rounded-md text-sm font-semibold flex items-center justify-center" 
+                            onclick="addRowTemporalizacion()" 
+                            aria-label="Agregar Fila">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                
+                        <!-- Botón Eliminar con ícono "-" -->
+                        <button type="button" 
+                            class="bg-gradient-to-b from-blue-400 via-blue-500 to-blue-400 hover:from-blue-600 hover:to-blue-500 text-white px-4 py-2 rounded-md text-sm font-semibold flex items-center justify-center" 
+                            onclick="removeLastRowTemporalizacion()" 
+                            aria-label="Eliminar Fila">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M5 10a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <table class="w-full border-collapse bg-white rounded-md overflow-hidden">
+                    <thead>
+                        <tr>
+                            <th class="bg-blue-100 px-2 py-2 text-start text-black font-semibold text-sm rounded-sm">Temporalización</th>
+                            <th class="bg-blue-100 px-2 py-2 text-center text-black font-semibold text-sm rounded-sm">Eliminar</th>
+                        </tr>
+                    </thead>
+                    <tbody id="temporalizacion-formset">
+                        {{ temporalizacion_formset.management_form }}
+                        {% for form in temporalizacion_formset %}
+                        {% if form.instance.pk %}
+                        <tr class="text-center">
+                            <td class="px-2 py-2 w-4/5 text-sm align-top">
+                                {{ form.temporalizacion }}
+                                {% if form.temporalizacion.errors %}
+                                    <div class="text-red-500 text-sm mt-1">
+                                        {{ form.temporalizacion.errors }}
+                                    </div>
+                                {% endif %}
+                            </td>
+                            <td class="px-2 py-2 w-1/5 align-top">
+                                {{ form.DELETE }}
+                            </td>
+                            {{ form.id }}
+                        </tr>
+                        {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            
+            <script>
+            function addRowTemporalizacion() {
+                const formset = document.getElementById("temporalizacion-formset");
+                const totalForms = document.getElementById("id_temporalizacion-TOTAL_FORMS"); // Input oculto con el total de formularios
+                const newFormIndex = totalForms.value;
+                const emptyFormTemplate = document.getElementById("empty-form-template-temporalizacion").innerHTML;
+                const newFormHtml = emptyFormTemplate.replace(/__prefix__/g, newFormIndex);
+                const tr = document.createElement('tr');
+                tr.innerHTML = newFormHtml;
+                tr.classList.add('text-center'); // Agregar clase para centrar el texto
+                formset.appendChild(tr);
+                totalForms.value = parseInt(totalForms.value) + 1;
+            }
+            
+            function removeLastRowTemporalizacion() { // Eliminar la última fila
+                const formset = document.getElementById("temporalizacion-formset"); // Contenedor de las filas
+                const totalForms = document.getElementById("id_temporalizacion-TOTAL_FORMS"); // Input oculto con el total de formularios
+                const rows = Array.from(formset.getElementsByTagName('tr')).filter(row => { // Filtrar solo las filas nuevas
+                    const idField = row.querySelector('input[name*="-id"]'); // Campo oculto con el ID del objeto
+                    return !idField || !idField.value; // Solo eliminar filas nuevas 
+                }); 
+                if (rows.length > 0) { // Si hay filas nuevas
+                    const lastRow = rows[rows.length - 1]; // Obtener la última fila
+                    formset.removeChild(lastRow); // Eliminar la última fila 
+                    totalForms.value = parseInt(totalForms.value) - 1; // Restar 1 al total de formularios
+                } 
+            }
+            </script>
+            
+            <script type="text/template" id="empty-form-template-temporalizacion">
+            <tr class="text-center">
+                <td class="px-2 py-2 w-4/5 align-top">
+                    {{ temporalizacion_formset.empty_form.temporalizacion }}
+                </td>
+                <td class="px-2 py-2 w-1/5 align-top">
+                    {{ temporalizacion_formset.empty_form.DELETE }}
+                </td>
+            </tr>
+            </script>
+
+                        <!-- Enriquecimiento del Curriculum -->
+            <div>
+                <div class="flex justify-end items-center mb-4">
+                    <div class="flex gap-2 mt-2">
+                        <!-- Botón Agregar con ícono "+" -->
+                        <button type="button" 
+                            class="bg-gradient-to-b from-amber-200 via-amber-300 to-amber-300 hover:from-amber-600 hover:to-amber-500 text-blue-900 px-4 py-2 rounded-md text-sm font-semibold flex items-center justify-center" 
+                            onclick="addRowEnriquecimientoCurriculum()" 
+                            aria-label="Agregar Fila">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                
+                        <!-- Botón Eliminar con ícono "-" -->
+                        <button type="button" 
+                            class="bg-gradient-to-b from-blue-400 via-blue-500 to-blue-400 hover:from-blue-600 hover:to-blue-500 text-white px-4 py-2 rounded-md text-sm font-semibold flex items-center justify-center" 
+                            onclick="removeLastRowEnriquecimientoCurriculum()" 
+                            aria-label="Eliminar Fila">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M5 10a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <table class="w-full border-collapse bg-white rounded-md overflow-hidden">
+                    <thead>
+                        <tr>
+                            <th class="bg-blue-100 px-2 py-2 text-start text-black font-semibold text-sm rounded-sm">Enriquecimiento del Curriculum</th>
+                            <th class="bg-blue-100 px-2 py-2 text-center text-black font-semibold text-sm rounded-sm">Eliminar</th>
+                        </tr>
+                    </thead>
+                    <tbody id="enriquecimiento-curriculum-formset">
+                        {{ enriquecimiento_curriculum_formset.management_form }}
+                        {% for form in enriquecimiento_curriculum_formset %}
+                        {% if form.instance.pk %}
+                        <tr class="text-center">
+                            <td class="px-2 py-2 w-4/5 text-sm align-top">
+                                {{ form.enriquecimiento_curriculum }}
+                                {% if form.enriquecimiento_curriculum.errors %}
+                                    <div class="text-red-500 text-sm mt-1">
+                                        {{ form.enriquecimiento_curriculum.errors }}
+                                    </div>
+                                {% endif %}
+                            </td>
+                            <td class="px-2 py-2 w-1/5 align-top">
+                                {{ form.DELETE }}
+                            </td>
+                            {{ form.id }}
+                        </tr>
+                        {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            
+            <script>
+            function addRowEnriquecimientoCurriculum() {
+                const formset = document.getElementById("enriquecimiento-curriculum-formset");
+                const totalForms = document.getElementById("id_enriquecimiento_curriculum-TOTAL_FORMS"); // Input oculto con el total de formularios
+                const newFormIndex = totalForms.value;
+                const emptyFormTemplate = document.getElementById("empty-form-template-enriquecimiento-curriculum").innerHTML;
+                const newFormHtml = emptyFormTemplate.replace(/__prefix__/g, newFormIndex);
+                const tr = document.createElement('tr');
+                tr.innerHTML = newFormHtml;
+                tr.classList.add('text-center'); // Agregar clase para centrar el texto
+                formset.appendChild(tr);
+                totalForms.value = parseInt(totalForms.value) + 1;
+            }
+            
+            function removeLastRowEnriquecimientoCurriculum() {
+                const formset = document.getElementById("enriquecimiento-curriculum-formset");
+                const totalForms = document.getElementById("id_enriquecimiento_curriculum-TOTAL_FORMS");
+                const rows = Array.from(formset.getElementsByTagName('tr')).filter(row => {
+                    const idField = row.querySelector('input[name*="-id"]');
+                    return !idField || !idField.value; // Solo eliminar filas nuevas
+                });
+                if (rows.length > 0) {
+                    const lastRow = rows[rows.length - 1];
+                    formset.removeChild(lastRow);
+                    totalForms.value = parseInt(totalForms.value) - 1;
+                }
+            }
+            </script>
+            
+            <script type="text/template" id="empty-form-template-enriquecimiento-curriculum">
+            <tr class="text-center">
+                <td class="px-2 py-2 w-4/5 align-top">
+                    {{ enriquecimiento_curriculum_formset.empty_form.enriquecimiento_curriculum }}
+                </td>
+                <td class="px-2 py-2 w-1/5 align-top">
+                    {{ enriquecimiento_curriculum_formset.empty_form.DELETE }}
+                </td>
+            </tr>
+            </script>
+
+                        <!-- Sección 7: OBJETIVOS DE APRENDIZAJE -->
+            <div>
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-white text-xl font-semibold">7. OBJETIVOS DE APRENDIZAJE</h3>
+                    <div class="flex gap-2 mt-2 justify-end">
+                        <!-- Botón Agregar con ícono "+" -->
+                        <button type="button" 
+                            class="bg-gradient-to-b from-amber-200 via-amber-300 to-amber-300 hover:from-amber-600 hover:to-amber-500 text-blue-900 px-4 py-2 rounded-md text-sm font-semibold flex items-center justify-center" 
+                            onclick="addRowObjetivosAprendizaje()" 
+                            aria-label="Agregar Fila">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                
+                        <!-- Botón Eliminar con ícono "-" -->
+                        <button type="button" 
+                            class="bg-gradient-to-b from-blue-400 via-blue-500 to-blue-400 hover:from-blue-600 hover:to-blue-500 text-white px-4 py-2 rounded-md text-sm font-semibold flex items-center justify-center" 
+                            onclick="removeLastRowObjetivosAprendizaje()" 
+                            aria-label="Eliminar Fila">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M5 10a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <div id="objetivos-aprendizaje-formset">
+                    {{ objetivos_aprendizaje_formset.management_form }}
+                    {% for form in objetivos_aprendizaje_formset %}
+                    {% if form.instance.pk %}
+                    <table class="w-full border-collapse bg-white rounded-md overflow-hidden mb-4">
+                        <thead>
+                            <tr>
+                                <th class="bg-blue-100 px-2 py-2 text-start text-black font-semibold text-sm rounded-sm">Descripción</th>
+                                <th class="bg-blue-100 px-2 py-2 text-center text-black font-semibold text-sm rounded-sm">Eliminar</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="text-left">
+                                <td class="px-2 py-2 w-4/5 text-sm align-top">
+                                    <table class="w-full">
+                                        <tbody>
+                                            <tr>
+                                                <td class="bg-blue-100 px-2 py-2 w-1/4 text-black font-semibold text-sm rounded-sm">Nivel de Enseñanza</td>
+                                                <td class="px-2 py-2">
+                                                    {{ form.nivel_ensenanza }}
+                                                    {% if form.nivel_ensenanza.errors %}
+                                                        <div class="text-red-500 text-sm mt-1">
+                                                            {{ form.nivel_ensenanza.errors }}
+                                                        </div>
+                                                    {% endif %}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="bg-blue-100 px-2 py-2 w-1/4 text-black font-semibold text-sm rounded-sm">Curso</td>
+                                                <td class="px-2 py-2">
+                                                    {{ form.curso }}
+                                                    {% if form.curso.errors %}
+                                                        <div class="text-red-500 text-sm mt-1">
+                                                            {{ form.curso.errors }}
+                                                        </div>
+                                                    {% endif %}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="bg-blue-100 px-2 py-2 w-1/4 text-black font-semibold text-sm rounded-sm">Asignatura o Núcleo</td>
+                                                <td class="px-2 py-2">
+                                                    {{ form.asignatura_o_nucleo }}
+                                                    {% if form.asignatura_o_nucleo.errors %}
+                                                        <div class="text-red-500 text-sm mt-1">
+                                                            {{ form.asignatura_o_nucleo.errors }}
+                                                        </div>
+                                                    {% endif %}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="bg-blue-100 px-2 py-2 w-1/4 text-black font-semibold text-sm rounded-sm">Eje o Ámbito</td>
+                                                <td class="px-2 py-2">
+                                                    {{ form.eje_o_ambito }}
+                                                    {% if form.eje_o_ambito.errors %}
+                                                        <div class="text-red-500 text-sm mt-1">
+                                                            {{ form.eje_o_ambito.errors }}
+                                                        </div>
+                                                    {% endif %}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="bg-blue-100 px-2 py-2 w-1/4 text-black font-semibold text-sm rounded-sm">Contexto o Espacio Educativo</td>
+                                                <td class="px-2 py-2">
+                                                    {{ form.espacio_educativo }}
+                                                    {% if form.espacio_educativo.errors %}
+                                                        <div class="text-red-500 text-sm mt-1">
+                                                            {{ form.espacio_educativo.errors }}
+                                                        </div>
+                                                    {% endif %}
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                                <td class="px-2 py-2 w-1/5 align-middle text-center">
+                                    {{ form.DELETE }}
+                                </td>
+                                {{ form.id }}
+                            </tr>
+                        </tbody>
+                    </table>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <script>
+            function addRowObjetivosAprendizaje() {
+                const formset = document.getElementById("objetivos-aprendizaje-formset");
+                const totalForms = document.getElementById("id_objetivos_aprendizaje-TOTAL_FORMS"); // Input oculto con el total de formularios
+                const newFormIndex = totalForms.value;
+                const emptyFormTemplate = document.getElementById("empty-form-template-objetivos-aprendizaje").innerHTML;
+                const newFormHtml = emptyFormTemplate.replace(/__prefix__/g, newFormIndex);
+                const div = document.createElement('div');
+                div.innerHTML = newFormHtml;
+                formset.appendChild(div);
+                totalForms.value = parseInt(totalForms.value) + 1;
+            }
+            
+            function removeLastRowObjetivosAprendizaje() {
+                const formset = document.getElementById("objetivos-aprendizaje-formset");
+                const totalForms = document.getElementById("id_objetivos_aprendizaje-TOTAL_FORMS");
+                    
+                // Seleccionar todas las tablas dentro del formset
+                const tables = Array.from(formset.getElementsByTagName('table'));
+                    
+                // Filtrar solo las tablas de filas nuevas (sin ID existente)
+                const newTables = tables.filter(table => {
+                    const idInput = table.querySelector('input[name*="-id"]');
+                    const inputs = table.querySelectorAll('input[type="text"], textarea');
+                    const hasValues = Array.from(inputs).some(input => input.value.trim() !== '');
+                    return !idInput || !idInput.value && !hasValues; // Solo eliminar tablas de filas nuevas sin valores
+                });
+                
+                if (newTables.length > 1) { // Asegurarse de no eliminar la última tabla
+                    // Eliminar la última tabla de filas nuevas
+                    const lastTable = newTables[newTables.length - 1];
+                    lastTable.closest('div').remove(); // Eliminar el div contenedor de la tabla
+                    
+                    // Decrementar el contador de formularios
+                    totalForms.value = parseInt(totalForms.value) - 1;
+                }
+            }
+            </script>
+            
+            <script type="text/template" id="empty-form-template-objetivos-aprendizaje">
+            <div>
+                <table class="w-full border-collapse bg-white rounded-md overflow-hidden mb-4">
+                    <thead>
+                        <tr>
+                            <th class="bg-blue-100 px-2 py-2 text-start text-black font-semibold text-sm rounded-sm">Descripción</th>
+                            <th class="bg-blue-100 px-2 py-2 text-center text-black font-semibold text-sm rounded-sm">Eliminar</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="text-left">
+                            <td class="px-2 py-2 w-4/5 align-top">
+                                <table class="w-full">
+                                    <tbody>
+                                        <tr>
+                                            <td class="bg-blue-100 px-2 py-2 w-1/4 text-black font-semibold text-sm rounded-sm">Nivel de Enseñanza</td>
+                                            <td class="px-2 py-2">
+                                                {{ objetivos_aprendizaje_formset.empty_form.nivel_ensenanza }}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="bg-blue-100 px-2 py-2 w-1/4 text-black font-semibold text-sm rounded-sm">Curso</td>
+                                            <td class="px-2 py-2">
+                                                {{ objetivos_aprendizaje_formset.empty_form.curso }}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="bg-blue-100 px-2 py-2 w-1/4 text-black font-semibold text-sm rounded-sm">Asignatura o Núcleo</td>
+                                            <td class="px-2 py-2">
+                                                {{ objetivos_aprendizaje_formset.empty_form.asignatura_o_nucleo }}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="bg-blue-100 px-2 py-2 w-1/4 text-black font-semibold text-sm rounded-sm">Eje o Ámbito</td>
+                                            <td class="px-2 py-2">
+                                                {{ objetivos_aprendizaje_formset.empty_form.eje_o_ambito }}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="bg-blue-100 px-2 py-2 w-1/4 text-black font-semibold text-sm rounded-sm">Contexto o Espacio Educativo</td>
+                                            <td class="px-2 py-2">
+                                                {{ objetivos_aprendizaje_formset.empty_form.espacio_educativo }}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                            <td class="px-2 py-2 w-1/5 align-middle text-center">
+                                {{ objetivos_aprendizaje_formset.empty_form.DELETE }}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            </script>
+
+                        <!-- Columnas de Objetivos de Aprendizaje -->
+            <div>
+                <div class="flex justify-end items-center mb-4">
+                    <div class="flex gap-2 mt-2">
+                        <!-- Botón Agregar con ícono "+" -->
+                        <button type="button" 
+                            class="bg-gradient-to-b from-amber-200 via-amber-300 to-amber-300 hover:from-amber-600 hover:to-amber-500 text-blue-900 px-4 py-2 rounded-md text-sm font-semibold flex items-center justify-center" 
+                            onclick="addRowColumnasObjetivosAprendizaje()" 
+                            aria-label="Agregar Columnas">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                
+                        <!-- Botón Eliminar con ícono "-" -->
+                        <button type="button" 
+                            class="bg-gradient-to-b from-blue-400 via-blue-500 to-blue-400 hover:from-blue-600 hover:to-blue-500 text-white px-4 py-2 rounded-md text-sm font-semibold flex items-center justify-center" 
+                            onclick="removeLastRowColumnasObjetivosAprendizaje()" 
+                            aria-label="Eliminar Columnas">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M5 10a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <table class="w-full border-collapse bg-white rounded-md overflow-hidden">
+                    <thead>
+                        <tr>
+                            <th class="bg-blue-100 px-2 py-2 text-start text-black font-semibold text-sm rounded-sm">Código</th>
+                            <th class="bg-blue-100 px-2 py-2 text-start text-black font-semibold text-sm rounded-sm">Objetivos de Aprendizaje Priorizados</th>
+                            <th class="bg-blue-100 px-2 py-2 text-start text-black font-semibold text-sm rounded-sm">Adaptación de OA</th>
+                            <th class="bg-blue-100 px-2 py-2 text-start text-black font-semibold text-sm rounded-sm">Estrategias Metodológicas</th>
+                            <th class="bg-blue-100 px-2 py-2 text-start text-black font-semibold text-sm rounded-sm">Evaluación de OA</th>
+                            <th class="bg-blue-100 px-2 py-2 text-center text-black font-semibold text-sm rounded-sm">Eliminar</th>
+                        </tr>
+                    </thead>
+                    <tbody id="columnas-objetivos-aprendizaje-formset">
+                        {{ columnas_objetivos_aprendizaje_formset.management_form }}
+                        {% for form in columnas_objetivos_aprendizaje_formset %}
+                        {% if form.instance.pk %}
+                        <tr class="text-left">
+                            <td class="px-2 py-2 w-1/6 text-sm align-top">
+                                {{ form.codigo }}
+                                {% if form.codigo.errors %}
+                                    <div class="text-red-500 text-sm mt-1">
+                                        {{ form.codigo.errors }}
+                                    </div>
+                                {% endif %}
+                            </td>
+                            <td class="px-2 py-2 w-1/6 text-sm align-top">
+                                {{ form.objetivos_aprendizaje }}
+                                {% if form.objetivos_aprendizaje.errors %}
+                                    <div class="text-red-500 text-sm mt-1">
+                                        {{ form.objetivos_aprendizaje.errors }}
+                                    </div>
+                                {% endif %}
+                            </td>
+                            <td class="px-2 py-2 w-1/6 text-sm align-top">
+                                {{ form.adaptacion_de_oa }}
+                                {% if form.adaptacion_de_oa.errors %}
+                                    <div class="text-red-500 text-sm mt-1">
+                                        {{ form.adaptacion_de_oa.errors }}
+                                    </div>
+                                {% endif %}
+                            </td>
+                            <td class="px-2 py-2 w-1/6 text-sm align-top">
+                                {{ form.estrategias_metodologicas }}
+                                {% if form.estrategias_metodologicas.errors %}
+                                    <div class="text-red-500 text-sm mt-1">
+                                        {{ form.estrategias_metodologicas.errors }}
+                                    </div>
+                                {% endif %}
+                            </td>
+                            <td class="px-2 py-2 w-1/6 text-sm align-top">
+                                {{ form.evaluacion_de_oa }}
+                                {% if form.evaluacion_de_oa.errors %}
+                                    <div class="text-red-500 text-sm mt-1">
+                                        {{ form.evaluacion_de_oa.errors }}
+                                    </div>
+                                {% endif %}
+                            </td>
+                            <td class="px-2 py-2 w-1/12 align-middle text-center">
+                                {{ form.DELETE }}
+                            </td>
+                            {{ form.id }}
+                        </tr>
+                        {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            
+            <script>
+                function addRowColumnasObjetivosAprendizaje() {
+                const formset = document.getElementById("columnas-objetivos-aprendizaje-formset");
+                const totalForms = document.getElementById("id_columnas_objetivos_aprendizaje-TOTAL_FORMS"); // Input oculto con el total de formularios
+                const newFormIndex = totalForms.value;
+                const emptyFormTemplate = document.getElementById("empty-form-template-columnas-objetivos-aprendizaje").innerHTML;
+                const newFormHtml = emptyFormTemplate.replace(/__prefix__/g, newFormIndex);
+
+                // Crear nueva fila usando el template vacío
+                const tr = document.createElement('tr');
+                tr.innerHTML = newFormHtml;
+
+                // Añadir la nueva fila al formset
+                formset.appendChild(tr);
+
+                // Incrementar el total de formularios
+                totalForms.value = parseInt(totalForms.value) + 1;
+            }
+
+                function removeLastRowColumnasObjetivosAprendizaje() {
+                    const formset = document.getElementById("columnas-objetivos-aprendizaje-formset");
+                    const totalForms = document.getElementById("id_columnas_objetivos_aprendizaje-TOTAL_FORMS");
+                
+                    // Obtener filas que no tienen un ID asociado y que están vacías
+                    const rows = Array.from(formset.getElementsByTagName('tr')).filter(row => {
+                        const idField = row.querySelector('input[name*="-id"]');
+                        const inputs = row.querySelectorAll('input[type="text"], textarea');
+                        const hasValues = Array.from(inputs).some(input => input.value.trim() !== '');
+                    
+                        // Filtrar filas que no tienen un ID y no tienen valores en sus campos
+                        return (!idField || !idField.value) && !hasValues;
+                    });
+                
+                    // Asegurarse de no eliminar filas existentes ni la última fila
+                    if (rows.length > 0) {
+                        const lastRow = rows[rows.length - 1];
+                        formset.removeChild(lastRow);
+                        totalForms.value = parseInt(totalForms.value) - 1;
+                    }
+                }
+            
+            </script>
+            
+            <script type="text/template" id="empty-form-template-columnas-objetivos-aprendizaje">
+            <tr class="text-left">
+                <td class="px-2 py-2 w-1/6 align-top">
+                    {{ columnas_objetivos_aprendizaje_formset.empty_form.codigo }}
+                </td>
+                <td class="px-2 py-2 w-1/6 align-top">
+                    {{ columnas_objetivos_aprendizaje_formset.empty_form.objetivos_aprendizaje }}
+                </td>
+                <td class="px-2 py-2 w-1/6 align-top">
+                    {{ columnas_objetivos_aprendizaje_formset.empty_form.adaptacion_de_oa }}
+                </td>
+                <td class="px-2 py-2 w-1/6 align-top">
+                    {{ columnas_objetivos_aprendizaje_formset.empty_form.estrategias_metodologicas }}
+                </td>
+                <td class="px-2 py-2 w-1/6 align-top">
+                    {{ columnas_objetivos_aprendizaje_formset.empty_form.evaluacion_de_oa }}
+                </td>
+                <td class="px-2 py-2 w-1/12 align-middle text-center">
+                    {{ columnas_objetivos_aprendizaje_formset.empty_form.DELETE }}
+                </td>
+            </tr>
+            </script>
+
+
+
+
+
+
+                        <!-- Sección 8: COLABORACIÓN DE LA FAMILIA -->
+            <div>
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-white text-xl font-semibold">8. COLABORACIÓN DE LA FAMILIA</h3>
+                    <div class="flex gap-2 mt-2 justify-end">
+                        <!-- Botón Agregar con ícono "+" -->
+                        <button type="button" 
+                            class="bg-gradient-to-b from-amber-200 via-amber-300 to-amber-300 hover:from-amber-600 hover:to-amber-500 text-blue-900 px-4 py-2 rounded-md text-sm font-semibold flex items-center justify-center" 
+                            onclick="addRowColaboracionFamilia()" 
+                            aria-label="Agregar Fila">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                
+                        <!-- Botón Eliminar con ícono "-" -->
+                        <button type="button" 
+                            class="bg-gradient-to-b from-blue-400 via-blue-500 to-blue-400 hover:from-blue-600 hover:to-blue-500 text-white px-4 py-2 rounded-md text-sm font-semibold flex items-center justify-center" 
+                            onclick="removeLastRowColaboracionFamilia()" 
+                            aria-label="Eliminar Fila">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M5 10a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <table class="w-full border-collapse bg-white rounded-md overflow-hidden">
+                    <thead>
+                        <tr>
+                            <th class="bg-blue-100 px-2 py-2 text-start text-black font-semibold text-sm rounded-sm">Aspectos a Considerar</th>
+                            <th class="bg-blue-100 px-2 py-2 text-center text-black font-semibold text-sm rounded-sm">Eliminar</th>
+                        </tr>
+                    </thead>
+                    <tbody id="colaboracion-familia-formset">
+                        {{ colaboracion_familia_formset.management_form }}
+                        {% for form in colaboracion_familia_formset %}
+                        {% if form.instance.pk %}
+                        <tr class="text-center">
+                            <td class="px-2 py-2 w-4/5 text-sm align-top">
+                                {{ form.aspectos_familia }}
+                                {% if form.aspectos_familia.errors %}
+                                    <div class="text-red-500 text-sm mt-1">
+                                        {{ form.aspectos_familia.errors }}
+                                    </div>
+                                {% endif %}
+                            </td>
+                            <td class="px-2 py-2 w-1/5 align-top">
+                                {{ form.DELETE }}
+                            </td>
+                            {{ form.id }}
+                        </tr>
+                        {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            
+            <script>
+            function addRowColaboracionFamilia() {
+                const formset = document.getElementById("colaboracion-familia-formset");
+                const totalForms = document.getElementById("id_colaboracion_familia-TOTAL_FORMS"); // Input oculto con el total de formularios
+                const newFormIndex = totalForms.value;
+                const emptyFormTemplate = document.getElementById("empty-form-template-colaboracion-familia").innerHTML;
+                const newFormHtml = emptyFormTemplate.replace(/__prefix__/g, newFormIndex);
+                const tr = document.createElement('tr');
+                tr.innerHTML = newFormHtml;
+                tr.classList.add('text-center'); // Agregar clase para centrar el texto
+                formset.appendChild(tr);
+                totalForms.value = parseInt(totalForms.value) + 1;
+            }
+            
+            function removeLastRowColaboracionFamilia() {
+                const formset = document.getElementById("colaboracion-familia-formset");
+                const totalForms = document.getElementById("id_colaboracion_familia-TOTAL_FORMS");
+                const rows = Array.from(formset.getElementsByTagName('tr')).filter(row => {
+                    const idField = row.querySelector('input[name*="-id"]');
+                    return !idField || !idField.value; // Solo eliminar filas nuevas
+                });
+                if (rows.length > 0) {
+                    const lastRow = rows[rows.length - 1];
+                    formset.removeChild(lastRow);
+                    totalForms.value = parseInt(totalForms.value) - 1;
+                }
+            }
+            </script>
+            
+            <script type="text/template" id="empty-form-template-colaboracion-familia">
+            <tr class="text-center">
+                <td class="px-2 py-2 w-4/5 align-top">
+                    {{ colaboracion_familia_formset.empty_form.aspectos_familia }}
+                </td>
+                <td class="px-2 py-2 w-1/5 align-top">
+                    {{ colaboracion_familia_formset.empty_form.DELETE }}
+                </td>
+            </tr>
+            </script>
+
+                        <!-- Sección 9: CRITERIOS DE EVALUACIÓN Y PROMOCIÓN -->
+            <div>
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-white text-xl font-semibold">9. CRITERIOS DE EVALUACIÓN Y PROMOCIÓN</h3>
+                    <div class="flex gap-2 mt-2 justify-end">
+                        <!-- Botón Agregar con ícono "+" -->
+                        <button type="button" 
+                            class="bg-gradient-to-b from-amber-200 via-amber-300 to-amber-300 hover:from-amber-600 hover:to-amber-500 text-blue-900 px-4 py-2 rounded-md text-sm font-semibold flex items-center justify-center" 
+                            onclick="addRowCritEvaluacionPromocion()" 
+                            aria-label="Agregar Fila">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                
+                        <!-- Botón Eliminar con ícono "-" -->
+                        <button type="button" 
+                            class="bg-gradient-to-b from-blue-400 via-blue-500 to-blue-400 hover:from-blue-600 hover:to-blue-500 text-white px-4 py-2 rounded-md text-sm font-semibold flex items-center justify-center" 
+                            onclick="removeLastRowCritEvaluacionPromocion()" 
+                            aria-label="Eliminar Fila">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M5 10a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <table class="w-full border-collapse bg-white rounded-md overflow-hidden">
+                    <thead>
+                        <tr>
+                            <th class="bg-blue-100 px-2 py-2 text-start text-black font-semibold text-sm rounded-sm">Aspectos a Considerar</th>
+                            <th class="bg-blue-100 px-2 py-2 text-center text-black font-semibold text-sm rounded-sm">Eliminar</th>
+                        </tr>
+                    </thead>
+                    <tbody id="crit-evaluacion-promocion-formset">
+                        {{ crit_evaluacion_promocion_formset.management_form }}
+                        {% for form in crit_evaluacion_promocion_formset %}
+                        {% if form.instance.pk %}
+                        <tr class="text-center">
+                            <td class="px-2 py-2 w-4/5 text-sm align-top">
+                                {{ form.criterios }}
+                                {% if form.criterios.errors %}
+                                    <div class="text-red-500 text-sm mt-1">
+                                        {{ form.criterios.errors }}
+                                    </div>
+                                {% endif %}
+                            </td>
+                            <td class="px-2 py-2 w-1/5 align-top">
+                                {{ form.DELETE }}
+                            </td>
+                            {{ form.id }}
+                        </tr>
+                        {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            
+            <script>
+            function addRowCritEvaluacionPromocion() {
+                const formset = document.getElementById("crit-evaluacion-promocion-formset");
+                const totalForms = document.getElementById("id_crit_evaluacion_promocion-TOTAL_FORMS"); // Input oculto con el total de formularios
+                const newFormIndex = totalForms.value;
+                const emptyFormTemplate = document.getElementById("empty-form-template-crit-evaluacion-promocion").innerHTML;
+                const newFormHtml = emptyFormTemplate.replace(/__prefix__/g, newFormIndex);
+                const tr = document.createElement('tr');
+                tr.innerHTML = newFormHtml;
+                tr.classList.add('text-center'); // Agregar clase para centrar el texto
+                formset.appendChild(tr);
+                totalForms.value = parseInt(totalForms.value) + 1;
+            }
+            
+            function removeLastRowCritEvaluacionPromocion() {
+                const formset = document.getElementById("crit-evaluacion-promocion-formset");
+                const totalForms = document.getElementById("id_crit_evaluacion_promocion-TOTAL_FORMS");
+                const rows = Array.from(formset.getElementsByTagName('tr')).filter(row => {
+                    const idField = row.querySelector('input[name*="-id"]');
+                    return !idField || !idField.value; // Solo eliminar filas nuevas
+                });
+                if (rows.length > 0) {
+                    const lastRow = rows[rows.length - 1];
+                    formset.removeChild(lastRow);
+                    totalForms.value = parseInt(totalForms.value) - 1;
+                }
+            }
+            </script>
+            
+            <script type="text/template" id="empty-form-template-crit-evaluacion-promocion">
+            <tr class="text-center">
+                <td class="px-2 py-2 w-4/5 align-top">
+                    {{ crit_evaluacion_promocion_formset.empty_form.criterios }}
+                </td>
+                <td class="px-2 py-2 w-1/5 align-top">
+                    {{ crit_evaluacion_promocion_formset.empty_form.DELETE }}
+                </td>
+            </tr>
+            </script>
+
+                        <!-- Sección 10: SEGUIMIENTO DE PACI -->
+            <div>
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-white text-xl font-semibold">10. SEGUIMIENTO DE PACI</h3>
+                    <div class="flex gap-2 mt-2 justify-end">
+                        <!-- Botón Agregar con ícono "+" -->
+                        <button type="button" 
+                            class="bg-gradient-to-b from-amber-200 via-amber-300 to-amber-300 hover:from-amber-600 hover:to-amber-500 text-blue-900 px-4 py-2 rounded-md text-sm font-semibold flex items-center justify-center" 
+                            onclick="addRowSeguimientoPaci()" 
+                            aria-label="Agregar Fila">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                
+                        <!-- Botón Eliminar con ícono "-" -->
+                        <button type="button" 
+                            class="bg-gradient-to-b from-blue-400 via-blue-500 to-blue-400 hover:from-blue-600 hover:to-blue-500 text-white px-4 py-2 rounded-md text-sm font-semibold flex items-center justify-center" 
+                            onclick="removeLastRowSeguimientoPaci()" 
+                            aria-label="Eliminar Fila">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M5 10a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <table class="w-full border-collapse bg-white rounded-md overflow-hidden">
+                    <thead>
+                        <tr>
+                            <th class="bg-blue-100 px-2 py-2 text-start text-black font-semibold text-sm rounded-sm">Aspectos a Considerar</th>
+                            <th class="bg-blue-100 px-2 py-2 text-center text-black font-semibold text-sm rounded-sm">Eliminar</th>
+                        </tr>
+                    </thead>
+                    <tbody id="seguimiento-paci-formset">
+                        {{ seguimiento_paci_formset.management_form }}
+                        {% for form in seguimiento_paci_formset %}
+                        {% if form.instance.pk %}
+                        <tr class="text-center">
+                            <td class="px-2 py-2 w-4/5 text-sm align-top">
+                                {{ form.seguimiento }}
+                                {% if form.seguimiento.errors %}
+                                    <div class="text-red-500 text-sm mt-1">
+                                        {{ form.seguimiento.errors }}
+                                    </div>
+                                {% endif %}
+                            </td>
+                            <td class="px-2 py-2 w-1/5 align-top">
+                                {{ form.DELETE }}
+                            </td>
+                            {{ form.id }}
+                        </tr>
+                        {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            
+            <script>
+            function addRowSeguimientoPaci() {
+                const formset = document.getElementById("seguimiento-paci-formset");
+                const totalForms = document.getElementById("id_seguimiento_paci-TOTAL_FORMS"); // Input oculto con el total de formularios
+                const newFormIndex = totalForms.value;
+                const emptyFormTemplate = document.getElementById("empty-form-template-seguimiento-paci").innerHTML;
+                const newFormHtml = emptyFormTemplate.replace(/__prefix__/g, newFormIndex);
+                const tr = document.createElement('tr');
+                tr.innerHTML = newFormHtml;
+                tr.classList.add('text-center'); // Agregar clase para centrar el texto
+                formset.appendChild(tr);
+                totalForms.value = parseInt(totalForms.value) + 1;
+            }
+            
+            function removeLastRowSeguimientoPaci() {
+                const formset = document.getElementById("seguimiento-paci-formset");
+                const totalForms = document.getElementById("id_seguimiento_paci-TOTAL_FORMS");
+                const rows = Array.from(formset.getElementsByTagName('tr')).filter(row => {
+                    const idField = row.querySelector('input[name*="-id"]');
+                    return !idField || !idField.value; // Solo eliminar filas nuevas
+                });
+                if (rows.length > 0) {
+                    const lastRow = rows[rows.length - 1];
+                    formset.removeChild(lastRow);
+                    totalForms.value = parseInt(totalForms.value) - 1;
+                }
+            }
+            </script>
+            
+            <script type="text/template" id="empty-form-template-seguimiento-paci">
+            <tr class="text-center">
+                <td class="px-2 py-2 w-4/5 align-top">
+                    {{ seguimiento_paci_formset.empty_form.seguimiento }}
+                </td>
+                <td class="px-2 py-2 w-1/5 align-top">
+                    {{ seguimiento_paci_formset.empty_form.DELETE }}
+                </td>
+            </tr>
+            </script>
+
+                        <!-- Firma Equipo Responsable PACI -->
+            <div>
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-white text-xl font-semibold">11. FIRMA EQUIPO RESPONSABLE PACI</h3>
+                    <div class="flex gap-2 mt-2">
+                        <!-- Botón Agregar con ícono "+" -->
+                        <button type="button" 
+                            class="bg-gradient-to-b from-amber-200 via-amber-300 to-amber-300 hover:from-amber-600 hover:to-amber-500 text-blue-900 px-4 py-2 rounded-md text-sm font-semibold flex items-center justify-center" 
+                            onclick="addRowFirmaPaci()" 
+                            aria-label="Agregar Fila">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                
+                        <!-- Botón Eliminar con ícono "-" -->
+                        <button type="button" 
+                            class="bg-gradient-to-b from-blue-400 via-blue-500 to-blue-400 hover:from-blue-600 hover:to-blue-500 text-white px-4 py-2 rounded-md text-sm font-semibold flex items-center justify-center" 
+                            onclick="removeLastRowFirmaPaci()" 
+                            aria-label="Eliminar Fila">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M5 10a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <table class="w-full border-collapse bg-white rounded-md overflow-hidden">
+                    <thead>
+                        <tr>
+                            <th class="bg-blue-100 px-2 py-2 text-start text-black font-semibold text-sm rounded-sm">Nombre</th>
+                            <th class="bg-blue-100 px-2 py-2 text-start text-black font-semibold text-sm rounded-sm">Cargo</th>
+                            <th class="bg-blue-100 px-2 py-2 text-center text-black font-semibold text-sm rounded-sm">Eliminar</th>
+                        </tr>
+                    </thead>
+                    <tbody id="firma-paci-formset">
+                        {{ firma_paci_formset.management_form }}
+                        {% for form in firma_paci_formset %}
+                        {% if form.instance.pk %}
+                        <tr class="text-center">
+                            <td class="px-2 py-2 w-2/5 text-sm align-top">
+                                {{ form.nombre }}
+                                {% if form.nombre.errors %}
+                                    <div class="text-red-500 text-sm mt-1">
+                                        {{ form.nombre.errors }}
+                                    </div>
+                                {% endif %}
+                            </td>
+                            <td class="px-2 py-2 w-2/5 align-top">
+                                {{ form.cargo }}
+                                {% if form.cargo.errors %}
+                                    <div class="text-red-500 text-sm mt-1">
+                                        {{ form.cargo.errors }}
+                                    </div>
+                                {% endif %}
+                            </td>
+                            <td class="px-2 py-2 w-1/5 align-top">
+                                {{ form.DELETE }}
+                            </td>
+                            {{ form.id }}
+                        </tr>
+                        {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            
+            <script>
+            function addRowFirmaPaci() {
+                const formset = document.getElementById("firma-paci-formset");
+                const totalForms = document.getElementById("id_firma_paci-TOTAL_FORMS"); // Input oculto con el total de formularios
+                const newFormIndex = totalForms.value;
+                const emptyFormTemplate = document.getElementById("empty-form-template-firma-paci").innerHTML;
+                const newFormHtml = emptyFormTemplate.replace(/__prefix__/g, newFormIndex);
+                const tr = document.createElement('tr');
+                tr.innerHTML = newFormHtml;
+                tr.classList.add('text-center'); // Agregar clase para centrar el texto
+                formset.appendChild(tr);
+                totalForms.value = parseInt(totalForms.value) + 1;
+            }
+            
+            function removeLastRowFirmaPaci() {
+                const formset = document.getElementById("firma-paci-formset");
+                const totalForms = document.getElementById("id_firma_paci-TOTAL_FORMS");
+                const rows = Array.from(formset.getElementsByTagName('tr')).filter(row => {
+                    const idField = row.querySelector('input[name*="-id"]');
+                    return !idField || !idField.value; // Solo eliminar filas nuevas
+                });
+                if (rows.length > 0) {
+                    const lastRow = rows[rows.length - 1];
+                    formset.removeChild(lastRow);
+                    totalForms.value = parseInt(totalForms.value) - 1;
+                }
+            }
+            </script>
+            
+            <script type="text/template" id="empty-form-template-firma-paci">
+            <tr class="text-center">
+                <td class="px-2 py-2 w-2/5 align-top">
+                    {{ firma_paci_formset.empty_form.nombre }}
+                </td>
+                <td class="px-2 py-2 w-2/5 align-top">
+                    {{ firma_paci_formset.empty_form.cargo }}
+                </td>
+                <td class="px-2 py-2 w-1/5 align-top">
+                    {{ firma_paci_formset.empty_form.DELETE }}
+                </td>
+            </tr>
+            </script>
+
+            <!-- Botones -->
+            <div class="flex space-x-4 justify-end">
+                <button type="submit" class="bg-gradient-to-b from-amber-200 via-amber-300 to-amber-300 
+                hover:from-amber-600 hover:to-amber-500 text-blue-900 font-semibold px-6 py-2 rounded-md mt-4">
+                    GUARDAR FORMULARIO PACI
+                </button>
+                <a href="{% url 'estudiante' estudiante.id %}" class="bg-gradient-to-b from-blue-400 via-blue-500 to-blue-400 
+                hover:from-blue-600 hover:to-blue-500 text-white font-semibold px-6 py-2 rounded-md text-center mt-4">
+                    REGRESAR
+                </a>
+            </div>
+        </form>
+    </div>
+</body>
+{% endblock %}

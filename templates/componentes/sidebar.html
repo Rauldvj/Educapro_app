@@ -1,0 +1,98 @@
+<!-- Agregar el enlace al archivo de estilos de Tailwind CSS -->
+<link
+  href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+  rel="stylesheet"
+/>
+<!-- Agregar el enlace al archivo de la biblioteca FontAwesome -->
+<link
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+  rel="stylesheet"
+/>
+
+<!-- Navegación lateral -->
+<aside
+  class="bg-gradient-to-b from-blue-950 to-blue-900 p-3 mb-3 text-white w-64 h-full fixed overflow-y-auto">
+  <!-- <img class="w-14 h-14 rounded-full mt-1" src="{{ user.profile.image.url }}" alt="{{ user.username }}">
+      <span class="text-md italic text-amber-300">En línea:  </span>{{ user.username }} -->
+  <nav>
+    <ul class="space-y-2 mt-4">
+      <li class="opcion-con-desplegable">
+        <div class="flex items-center justify-between p-2 hover:bg-blue-900">
+          <div class="flex items-center uppercase text-sm hover:bg-blue-900">
+            <i class="fas fa-user mr-2"></i>
+            <span>Gestión funcionarios</span>
+          </div>
+          <i class="fas fa-chevron-down text-xs"></i>
+        </div>
+        <ul class="desplegable ml-4 hidden">
+          <li>
+            <a href="{% url 'profile' %}" class="block p-2 hover:bg-blue-800 items-center">
+              <i class="fas fa-chevron-right mr-2"></i>
+              Perfiles
+            </a>
+          </li>
+        </ul>
+      </li>
+      <li class="opcion-con-desplegable">
+        <div class="flex items-center justify-between p-2 hover:bg-blue-900">
+          <div class="flex items-center uppercase text-md ">
+            <i class="fas fa-graduation-cap mr-2 "></i>
+            <span>PIE</span>
+          </div>
+          <i class="fas fa-chevron-down text-sm"></i>
+        </div>
+
+        <ul class="desplegable ml-4 hidden">
+          <li>
+            <a href="{% url 'pie' %}" class="block p-2 hover:bg-blue-800 items-center">
+              <i class="fas fa-chevron-right mr-2 text-xs"></i>
+              Estudiantes
+            </a>
+          </li>
+        </ul>
+      </li>
+
+    </ul>
+  </nav>
+
+  <!-- Enlace al Home -->
+  <div class="mt-72">
+    <a href="{% url 'home' %}" class="block p-2 items-center uppercase text-sm hover:bg-blue-800">
+      <i class="fas fa-home mr-2"></i>
+      Home
+    </a>
+  </div>
+
+  <!-- Logout al final de la barra lateral -->
+  {% if request.user.is_authenticated %}
+  <div class="mt-32">
+    <form method="POST" action="{% url 'logout' %}">
+        {% csrf_token %}
+        <button type="submit" class="block p-2 items-center uppercase text-sm hover:bg-blue-700 w-full text-start">
+          <i class="fas fa-sign-out-alt mr-2"></i>
+          Logout
+        </button>
+    </form>
+  </div>
+  {% endif %}
+</aside>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    // Obtener todas las opciones principales con desplegables
+    const opcionesConDesplegable = document.querySelectorAll(
+      ".opcion-con-desplegable"
+    );
+
+    // Agregar evento de clic a cada opción principal
+    opcionesConDesplegable.forEach(function (opcion) {
+      opcion.addEventListener("click", function () {
+        // Obtener el desplegable asociado a la opción
+        const desplegable = opcion.querySelector(".desplegable");
+
+        // Alternar la clase "hidden" para mostrar u ocultar el desplegable
+        desplegable.classList.toggle("hidden");
+      });
+    });
+  });
+</script>

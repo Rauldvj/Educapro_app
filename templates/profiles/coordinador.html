@@ -1,0 +1,46 @@
+<div class="w-full">
+    <div class="relative right-0 w-full">
+        <div class="p-5 w-full">
+            <div class="block opacity-100" id="perfiles" role="tabpanel">
+                <div class="flex justify-between items-center mb-4">
+                    <form method="get" action="{% url 'profile' %}" class="flex items-center">
+                        <label class="text-blue-950 text-sm mr-2" for="group-filter">Filtrar por Profesional:</label>
+                        <select class="rounded-lg pl-2 py-1 px-2 text-sm md:py-1 mr-2" name="group" id="group-filter">
+                            <option value="">Todos</option>
+                            {% for group in all_groups %}
+                                {% if group.name != 'Administradores' %}
+                                    <option value="{{ group.name }}">{{ group.name }}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                        <button style="background: linear-gradient(to right, #1e40af, #1d4ed8); color: white; padding: 0.25rem 0.5rem; border-radius: 0.400rem; transition: background 0.3s, color 0.3s;" 
+                        onmouseover="this.style.background='linear-gradient(to right, #1d4ed8, #1e40af)'; this.style.color='white';" 
+                        onmouseout="this.style.background='linear-gradient(to right, #1e40af, #1d4ed8)'; this.style.color='white';" 
+                        type="submit">Filtrar</button>
+                    </form>
+
+                    <!-- Interruptor para mostrar usuarios activos/desactivados -->
+                    <div class="flex items-center">
+                        <p class="mr-4 text-sm font-medium text-blue-950 dark:text-blue-950">
+                            {% if show_inactive %}
+                                USUARIOS DESACTIVADOS
+                            {% else %}
+                                USUARIOS ACTIVOS
+                            {% endif %}
+                        </p>
+                        <label class="relative cursor-pointer">
+                            <input type="checkbox" class="sr-only peer" onchange="window.location.href='?show_inactive=' + !this.checked" {% if not show_inactive %}checked{% endif %} />
+                            <div class="w-[53px] h-7 flex items-center bg-gradient-to-r from-blue-700 to-blue-600 rounded-full text-[9px] peer-checked:text-[#007bff] text-gray-300 font-extrabold after:flex after:items-center 
+                            after:justify-center peer after:content-['Off'] peer-checked:after:content-['On'] peer-checked:after:translate-x-full 
+                            after:absolute after:left-[2px] peer-checked:after:border-white after:bg-white after:border after:border-gray-300 
+                            after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-[#007bff]"></div>
+                        </label>
+                    </div>
+                </div>
+                <div>
+                    {% include 'profiles/admin-usuarios.html' %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

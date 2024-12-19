@@ -1,0 +1,505 @@
+<!-- Modal centrado verticalmente -->
+<dialog id="paci_estudiante_modal" class="w-4/6 mx-auto rounded-md bg-gradient-to-b from-blue-950 to-blue-900 z shadow-xl p-6">
+    <div class="max-w-6xl h-auto">
+        <!-- Encabezado con logos -->
+        <div class="flex justify-between items-center mb-6">
+            <img src="/static/Imagenes/LOGO LICEO TECNICO ADULTOS.jpg" alt="Logo Liceo Técnico" class="h-20 object-contain"/>
+            <img src="/static/Imagenes/Servicio_local.jpg" class="h-20" alt="">
+            <img src="/static/Imagenes/Imagen_PIE.jpg" alt="Logo PIE" class="h-20 object-contain"/>
+        </div>
+        <!-- Header -->
+        <h2 class="text-white text-2xl text-center font-bold mb-">PLAN DE ADECUACIÓN CURRICULAR INDIVIDUAL / PACI</h2>
+        <hr>
+
+        <!-- Modal Content-->
+        <div class="flex w-full py-0 px-2 mt-5 justify-center items-center rounded-sm text-center text-gray-500">
+            <form action="" method="post" class="space-y-6 w-full">
+                {% csrf_token %}
+
+                <!-- Sección 1: Identificación del Estudiante -->
+                <div>
+                    <h3 class="text-white text-start text-xl font-semibold mb-4">1. IDENTIFICACIÓN DEL ESTUDIANTE</h3>
+                    <table class="w-full border-collapse bg-white rounded-md overflow-hidden">
+                        <tbody class="divide-y divide-gray-200 text-start">
+                            <tr>
+                                <td class="bg-blue-100 px-2 py-2 w-1/4 text-black font-semibold text-sm rounded-sm">Nombre completo</td>
+                                <td class="px-2 py-2" colspan="3">
+                                    <input type="text" name="estudiante_nombre" id="estudiante_nombre" class="w-full bg-transparent focus:outline-none text-sm rounded-md" value="{{ estudiante.nombres }} {{ estudiante.apellido_paterno }} {{ estudiante.apellido_materno }}" readonly/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="bg-blue-100 px-2 py-2 text-black font-semibold text-sm rounded-sm">Rut</td>
+                                <td class="px-2 py-2">
+                                    <input type="text" name="rut" id="rut" class="w-full bg-transparent focus:outline-none text-sm rounded-md" value="{{ estudiante.rut }}" readonly/>
+                                </td>
+                                <td class="bg-blue-100 px-2 py-2 text-black font-semibold text-sm rounded-sm">Fecha de nacimiento</td>
+                                <td class="px-2 py-2">
+                                    <input type="text" name="fecha_nacimiento" id="fecha_nacimiento" class="w-full bg-transparent focus:outline-none text-sm rounded-md" value="{{ estudiante.fecha_nacimiento }}" readonly/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="bg-blue-100 px-2 py-2 text-black font-semibold text-sm rounded-sm">Dirección</td>
+                                <td class="px-2 py-2" colspan="3">
+                                    <input type="text" name="direccion" id="direccion" class="w-full bg-transparent focus:outline-none text-sm rounded-md" value="{{ estudiante.direccion }}" readonly/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="bg-blue-100 px-2 py-2 text-black font-semibold text-sm rounded-sm">Curso actual</td>
+                                <td class="px-2 py-2">
+                                    <input type="text" name="curso" id="curso" class="w-full bg-transparent focus:outline-none text-sm rounded-md" value="{{ estudiante.cursos.nombre }}" readonly/>
+                                </td>
+                                <td class="bg-blue-100 px-2 py-2 text-black font-semibold text-sm rounded-sm">Edad</td>
+                                <td class="px-2 py-2">
+                                    <input type="text" name="edad" id="edad" class="w-full bg-transparent focus:outline-none text-sm rounded-md" value="{{ paci.edad }}" readonly/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="bg-blue-100 px-2 py-2 text-black font-semibold text-sm rounded-sm">Diagnóstico NEE</td>
+                                <td class="px-2 py-2">
+                                    <input type="text" name="nee" id="nee" class="w-full bg-transparent focus:outline-none text-sm rounded-md" value="{{ estudiante.nee }}" readonly/>
+                                </td>
+                                <td class="bg-blue-100 px-2 py-2 text-black font-semibold text-sm rounded-sm">Sexo</td>
+                                <td class="px-2 py-2">
+                                    <input type="text" name="sexo" id="sexo" class="w-full bg-transparent focus:outline-none text-sm rounded-md" value="{{ paci.sexo }}" readonly/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="bg-blue-100 px-2 py-2 text-black font-semibold text-sm rounded-sm">Fecha elaboración</td>
+                                <td class="px-2 py-2" colspan="3">
+                                    <input type="text" name="fecha_elaboracion" id="fecha_elaboracion" class="w-full bg-transparent focus:outline-none text-sm rounded-md" value="{{ paci.fecha_elaboracion|date:'Y-m-d' }}" readonly/>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Sección 2: Identificación del Establecimiento -->
+                <div>
+                    <h3 class="text-white text-xl text-start font-semibold mb-4">2. IDENTIFICACIÓN DEL ESTABLECIMIENTO</h3>
+                    <table class="w-full border-collapse bg-white text-start rounded-md overflow-hidden">
+                        <tbody>
+                            <tr>
+                                <td class="bg-blue-100 px-2 py-2 w-1/4 text-black font-semibold text-sm rounded-sm">RBD</td>
+                                <td class="px-2 py-2" colspan="3">
+                                    <input type="text" name="rbd" id="rbd" class="w-full bg-transparent focus:outline-none text-sm rounded-md" value="{{ paci.rbd }}" readonly/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="bg-blue-100 px-2 py-2 w-1/4 text-black font-semibold text-sm rounded-sm">Nombre del Establecimiento</td>
+                                <td class="px-2 py-2" colspan="3">
+                                    <input type="text" name="nombre_establecimiento" id="nombre_establecimiento" class="w-full bg-transparent focus:outline-none text-sm rounded-md" value="{{ paci.nombre_establecimiento }}" readonly/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="bg-blue-100 px-2 py-2 text-black font-semibold text-sm rounded-sm">Región</td>
+                                <td class="px-2 py-2 w-1/3" colspan="1">
+                                    <input type="text" name="region" id="region" class="w-full bg-transparent focus:outline-none text-sm rounded-md" value="{{ paci.region }}" readonly/>
+                                </td>
+                                <td class="bg-blue-100 px-2 py-2 text-black font-semibold text-sm rounded-sm">Comuna</td>
+                                <td class="px-2 py-2 w-1/3" colspan="1">
+                                    <input type="text" name="comuna" id="comuna" class="w-full bg-transparent focus:outline-none text-sm rounded-md" value="{{ paci.comuna }}" readonly/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="bg-blue-100 px-2 py-2 w-1/4 text-black font-semibold text-sm rounded-sm">Coordinador(a) PIE</td>
+                                <td class="px-2 py-2" colspan="3">
+                                    <input type="text" name="coordinador_pie" id="coordinador_pie" class="w-full bg-transparent focus:outline-none text-sm rounded-md" value="{{ paci.coordinador_pie }}" readonly/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="bg-blue-100 px-2 py-2 w-1/4 text-black font-semibold text-sm rounded-sm">Jefe UTP</td>
+                                <td class="px-2 py-2" colspan="3">
+                                    <input type="text" name="jefe_utp" id="jefe_utp" class="w-full bg-transparent focus:outline-none text-sm rounded-md" value="{{ paci.jefe_utp }}" readonly/>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Sección 3: Equipo Responsable -->
+                <div>
+                    <h3 class="text-white text-xl text-start font-semibold mb-4">3. EQUIPO RESPONSABLE</h3>
+                    <table class="w-full text-start border-collapse bg-white rounded-md overflow-hidden">
+                        <thead>
+                            <tr>
+                                <th class="bg-blue-100 px-2 py-2 text-start text-black font-semibold text-sm rounded-sm">Nombre Profesional</th>
+                                <th class="bg-blue-100 px-2 py-2 text-start text-black font-semibold text-sm rounded-sm">Profesión</th>
+                                <th class="bg-blue-100 px-2 py-2 text-start text-black font-semibold text-sm rounded-sm" style="width: 40%;">Función</th>
+                                <th class="bg-blue-100 px-2 py-2 text-start text-black font-semibold text-sm rounded-sm">N° Registro</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for equipo in paci.equipo_responsable.all %}
+                            <tr class="text-start">
+                                <td class="px-2 py-2 w-1/5 text-sm align-top">{{ equipo.nombre }}</td>
+                                <td class="px-2 py-2 w-1/6 align-top">{{ equipo.profesion }}</td>
+                                <td class="px-2 py-2 w-2/5 align-top">{{ equipo.funcion }}</td>
+                                <td class="px-2 py-2 w-1/6 align-top">{{ equipo.n_registro }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Sección 4: Recursos y Modalidad de Apoyo -->
+                <div>
+                    <h3 class="text-white text-start text-xl font-semibold mb-4">4. RECURSOS Y MODALIDAD DE APOYO</h3>
+                    <table class="w-full border-collapse bg-white rounded-md overflow-hidden">
+                        <thead>
+                            <tr>
+                                <th class="bg-blue-100 px-2 py-2 text-start text-black font-semibold text-sm rounded-sm">Aula de Recursos</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for recurso in paci.aula_recursos.all %}
+                            <tr class="text-start">
+                                <td class="px-2 py-2 w-4/5 text-sm align-top">{{ recurso.aula_de_recursos }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Sección 4.1: Aula Regular -->
+                <div>
+                    <table class="w-fulltext-start border-collapse bg-white rounded-md overflow-hidden">
+                        <thead>
+                            <tr>
+                                <th class="bg-blue-100 px-2 py-2 text-start text-black font-semibold text-sm rounded-sm">Aula Regular</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for aula in paci.aula_regular.all %}
+                            <tr class="text-start">
+                                <td class="px-2 py-2 w-4/5 text-sm align-top">{{ aula.aula_regular }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Sección 5: Adecuación de Acceso -->
+                <div>
+                    <h3 class="text-white text-start text-xl font-semibold mb-4">5. ADECUACIÓN DE ACCESO</h3>
+                    <table class="w-full text-start border-collapse bg-white rounded-md overflow-hidden">
+                        <thead>
+                            <tr>
+                                <th class="bg-blue-100 px-2 py-2 text-start text-black font-semibold text-sm rounded-sm">Presentación y Representación de la Información</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for presentacion in paci.presentacion_representacion.all %}
+                            <tr class="text-start">
+                                <td class="px-2 py-2 w-4/5 text-sm align-top">{{ presentacion.presentacion_representacion }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Sección 5.1: Medios de Ejecución y Expresión -->
+                <div>
+                    <table class="w-full border-collapse bg-white rounded-md overflow-hidden">
+                        <thead>
+                            <tr>
+                                <th class="bg-blue-100 px-2 py-2 text-start text-black font-semibold text-sm rounded-sm">Medios de Ejecución y Expresión</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for medio in paci.medios_ejecucion_expresion.all %}
+                            <tr class="text-start">
+                                <td class="px-2 py-2 w-4/5 text-sm align-top">{{ medio.medios_ejecucion_expresion }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Sección 5.2: Proporcionar múltiples medios de participación y compromiso -->
+                <div>
+                    <table class="w-full text-start border-collapse bg-white rounded-md overflow-hidden">
+                        <thead>
+                            <tr>
+                                <th class="bg-blue-100 px-2 py-2 text-start text-black font-semibold text-sm rounded-sm">Proporcionar múltiples medios de participación y compromiso</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for medio in paci.multiples_medios.all %}
+                            <tr class="text-start">
+                                <td class="px-2 py-2 w-4/5 text-sm align-top">{{ medio.multiples_medios }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Sección 5.3: Entorno (Adecuación en los espacios, ubicación y condiciones) -->
+                <div>
+                    <table class="w-full border-collapse bg-white rounded-md overflow-hidden">
+                        <thead>
+                            <tr>
+                                <th class="bg-blue-100 px-2 py-2 text-start text-black font-semibold text-sm rounded-sm">Entorno (Adecuación en los espacios, ubicación y condiciones)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for entorno in paci.entorno.all %}
+                            <tr class="text-start">
+                                <td class="px-2 py-2 w-4/5 text-sm align-top">{{ entorno.entorno }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Sección 5.4: Organización del tiempo y el horario -->
+                <div>
+                    <table class="w-full text-start border-collapse bg-white rounded-md overflow-hidden">
+                        <thead>
+                            <tr>
+                                <th class="bg-blue-100 px-2 py-2 text-start text-black font-semibold text-sm rounded-sm">Organización del tiempo y el horario</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for organizacion in paci.organizacion_tiempo.all %}
+                            <tr class="text-start">
+                                <td class="px-2 py-2 w-4/5 text-sm align-top">{{ organizacion.organizacion_tiempo }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Sección 6: Adecuación de Objetivos -->
+                <div>
+                    <h3 class="text-white text-start text-xl font-semibold mb-4">6. ADECUACIÓN DE OBJETIVOS</h3>
+                    <table class="w-full border-collapse bg-white rounded-md overflow-hidden">
+                        <thead>
+                            <tr>
+                                <th class="bg-blue-100 px-2 py-2 text-start text-black font-semibold text-sm rounded-sm">Graduación del nivel de complejidad</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for graduacion in paci.graduacion_complejidad.all %}
+                            <tr class="text-start">
+                                <td class="px-2 py-2 w-4/5 text-sm align-top">{{ graduacion.graduacion_complejidad }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <!-- Sección 6.1: Priorización de OA y contenidos -->
+                <div>
+                    <table class="w-full text-start border-collapse bg-white rounded-md overflow-hidden">
+                        <thead>
+                            <tr>
+                                <th class="bg-blue-100 px-2 py-2 text-start text-black font-semibold text-sm rounded-sm">Priorización de OA y contenidos</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for priorizacion in paci.priorizacion_oa.all %}
+                            <tr class="text-start">
+                                <td class="px-2 py-2 w-4/5 text-sm align-top">{{ priorizacion.priorizacion_oa }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Sección 6.2: Temporalización -->
+                <div>
+                    <table class="w-full text-start border-collapse bg-white rounded-md overflow-hidden">
+                        <thead>
+                            <tr>
+                                <th class="bg-blue-100 px-2 py-2 text-start text-black font-semibold text-sm rounded-sm">Temporalización</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for temporalizacion in paci.temporalizacion.all %}
+                            <tr class="text-start">
+                                <td class="px-2 py-2 w-4/5 text-sm align-top">{{ temporalizacion.temporalizacion }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Sección 6.3: Enriquecimiento del Curriculum -->
+                <div>
+                    <table class="w-full text-start border-collapse bg-white rounded-md overflow-hidden">
+                        <thead>
+                            <tr>
+                                <th class="bg-blue-100 px-2 py-2 text-start text-black font-semibold text-sm rounded-sm">Enriquecimiento del Curriculum</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for enriquecimiento in paci.enriquecimiento_curriculum.all %}
+                            <tr class="text-start">
+                                <td class="px-2 py-2 w-4/5 text-sm align-top">{{ enriquecimiento.enriquecimiento_curriculum }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Sección 7: Objetivos de Aprendizaje -->
+                <div>
+                    <h3 class="text-white text-start text-xl font-semibold mb-4">7. OBJETIVOS DE APRENDIZAJE</h3>
+                    <div id="objetivos-aprendizaje-formset">
+                        {% for objetivo in paci.objetivos_aprendizaje.all %}
+                        <table class="w-full border-collapse bg-white rounded-md overflow-hidden mb-4">
+                            <thead>
+                                <tr>
+                                    <th class="bg-blue-100 px-2 py-2 text-start text-black font-semibold text-sm rounded-sm">Descripción</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="text-start">
+                                    <td class="px-2 py-2 w-4/5 text-sm align-top">
+                                        <table class="w-full">
+                                            <tbody>
+                                                <tr>
+                                                    <td class="bg-blue-100 px-2 py-2 w-1/4 text-black font-semibold text-sm rounded-sm">Nivel de Enseñanza</td>
+                                                    <td class="px-2 py-2">{{ objetivo.nivel_ensenanza }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="bg-blue-100 px-2 py-2 w-1/4 text-black font-semibold text-sm rounded-sm">Curso</td>
+                                                    <td class="px-2 py-2">{{ objetivo.curso }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="bg-blue-100 px-2 py-2 w-1/4 text-black font-semibold text-sm rounded-sm">Asignatura o Núcleo</td>
+                                                    <td class="px-2 py-2">{{ objetivo.asignatura_o_nucleo }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="bg-blue-100 px-2 py-2 w-1/4 text-black font-semibold text-sm rounded-sm">Eje o Ámbito</td>
+                                                    <td class="px-2 py-2">{{ objetivo.eje_o_ambito }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="bg-blue-100 px-2 py-2 w-1/4 text-black font-semibold text-sm rounded-sm">Contexto o Espacio Educativo</td>
+                                                    <td class="px-2 py-2">{{ objetivo.espacio_educativo }}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Sección 7.1: Columnas de Objetivos de Aprendizaje -->
+                <div>
+                    <table class="w-full text-start border-collapse bg-white rounded-md overflow-hidden">
+                        <thead>
+                            <tr>
+                                <th class="bg-blue-100 px-2 py-2 text-start text-black font-semibold text-sm rounded-sm">Código</th>
+                                <th class="bg-blue-100 px-2 py-2 text-start text-black font-semibold text-sm rounded-sm">Objetivos de Aprendizaje Priorizados</th>
+                                <th class="bg-blue-100 px-2 py-2 text-start text-black font-semibold text-sm rounded-sm">Adaptación de OA</th>
+                                <th class="bg-blue-100 px-2 py-2 text-start text-black font-semibold text-sm rounded-sm">Estrategias Metodológicas</th>
+                                <th class="bg-blue-100 px-2 py-2 text-start text-black font-semibold text-sm rounded-sm">Evaluación de OA</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for columna in paci.columnas_objetivos_aprendizaje.all %}
+                            <tr class="text-start">
+                                <td class="px-2 py-2 w-1/6 text-sm align-top">{{ columna.codigo }}</td>
+                                <td class="px-2 py-2 w-1/6 text-sm align-top">{{ columna.objetivos_aprendizaje }}</td>
+                                <td class="px-2 py-2 w-1/6 text-sm align-top">{{ columna.adaptacion_de_oa }}</td>
+                                <td class="px-2 py-2 w-1/6 text-sm align-top">{{ columna.estrategias_metodologicas }}</td>
+                                <td class="px-2 py-2 w-1/6 text-sm align-top">{{ columna.evaluacion_de_oa }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Sección 8: Colaboración de la Familia -->
+                <div>
+                    <h3 class="text-white text-start text-xl font-semibold mb-4">8. COLABORACIÓN DE LA FAMILIA</h3>
+                    <table class="w-full border-collapse bg-white rounded-md overflow-hidden">
+                        <thead>
+                            <tr>
+                                <th class="bg-blue-100 px-2 py-2 text-start text-black font-semibold text-sm rounded-sm">Aspectos a Considerar</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for colaboracion in paci.colaboracion_familia.all %}
+                            <tr class="text-start">
+                                <td class="px-2 py-2 w-4/5 text-sm align-top">{{ colaboracion.aspectos_familia }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Sección 9: Criterios de Evaluación y Promoción -->
+                <div>
+                    <h3 class="text-white text-start text-xl font-semibold mb-4">9. CRITERIOS DE EVALUACIÓN Y PROMOCIÓN</h3>
+                    <table class="w-full border-collapse bg-white rounded-md overflow-hidden">
+                        <thead>
+                            <tr>
+                                <th class="bg-blue-100 px-2 py-2 text-start text-black font-semibold text-sm rounded-sm">Aspectos a Considerar</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for criterio in paci.crit_evaluacion_promocion.all %}
+                            <tr class="text-start">
+                                <td class="px-2 py-2 w-4/5 text-sm align-top">{{ criterio.criterios }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Sección 10: Seguimiento de PACI -->
+                <div>
+                    <h3 class="text-white text-start text-xl font-semibold mb-4">10. SEGUIMIENTO DE PACI</h3>
+                    <table class="w-full border-collapse bg-white rounded-md overflow-hidden">
+                        <thead>
+                            <tr>
+                                <th class="bg-blue-100 px-2 py-2 text-start text-black font-semibold text-sm rounded-sm">Aspectos a Considerar</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for seguimiento in paci.seguimiento_paci.all %}
+                            <tr class="text-start">
+                                <td class="px-2 py-2 w-4/5 text-sm align-top">{{ seguimiento.seguimiento }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Sección 11: Firma Equipo Responsable PACI -->
+                <div>
+                    <h3 class="text-white text-start text-xl font-semibold mb-4">11. FIRMA EQUIPO RESPONSABLE PACI</h3>
+                    <table class="w-full border-collapse bg-white rounded-md overflow-hidden">
+                        <thead>
+                            <tr>
+                                <th class="bg-blue-100 px-2 py-2 text-start text-black font-semibold text-sm rounded-sm">Nombre</th>
+                                <th class="bg-blue-100 px-2 py-2 text-start text-black font-semibold text-sm rounded-sm">Cargo</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for firma in paci.firma_paci.all %}
+                            <tr class="text-center">
+                                <td class="px-2 py-2 w-2/5 text-sm align-top">{{ firma.nombre }}</td>
+                                <td class="px-2 py-2 w-2/5 align-top">{{ firma.cargo }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                
+
+                                <!-- Modal Footer -->
+                <div class="modal-footer flex justify-end mt-3 w-full space-x-2">
+                     <button type="button" class="bg-gradient-to-b from-blue-400 via-blue-500 to-blue-400 
+                     hover:from-blue-600 hover:to-blue-500 text-white font-semibold py-2 px-3 rounded-md" 
+                     onclick="document.getElementById('paci_estudiante_modal').close()">CERRAR</button>
+                </div>
+            </form>
+        </div>
+        <!-- End of Modal Content-->
+    </div>
+</dialog>

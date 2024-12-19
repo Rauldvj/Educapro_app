@@ -1,0 +1,81 @@
+<!-- #PAGINA PARA VER EL PERFIL DE CADA USUARIO POR EL COORDINADOR O ADMINISTRADOR -->
+{% extends 'base.html' %}
+
+{% block title %} Bitácora Detail Estudiante {% endblock %}
+
+{% block content %}
+
+{% load tailwind_filters %}
+{% load static %}
+
+<!-- Incluir el archivo funciones.js -->
+<script src="{% static 'js/funciones.js' %}"></script>
+
+<body class=""></body>
+
+<div class="h-12 items-center justify-between flex-wrap fixed w-full">{% include 'componentes/navbar.html' %}</div>
+
+
+<!-- Contenedor principal -->
+<div class="container py-12">
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-8 ">
+        <!-- Tarjeta de datos de perfil -->
+        <!-- Navegación lateral -->
+        <aside class="bg-gradient-to-b from-blue-950 to-blue-800 text-lg font-bold p-3 text-white w-72 h-full fixed">
+            <div class="flex items-center">
+                <div>
+                    <!-- Nombre y apellido del usuario -->
+                    <h2 class="text-lg font-sans font-semibold text-white uppercase">{{ estudiante.nombres }}</h2>
+                    <h2 class="text-md font-sans font-semibold text-white uppercase">
+                        {{ estudiante.apellido_paterno}} {{estudiante.apellido_materno}}</h2>
+                    <h2 class="mt-4 text-xs font-sans font-semibold italic text-white">{{ estudiante.cursos}} </h2>
+                    <h2 class="mt-2 text-xs font-sans font-semibold italic text-white ">Área: {{ estudiante.cursos.area_academica.nombre}} </h2>
+                    <h2 class="mt-2 text-xs font-sans font-semibold italic text-white ">NEE: {{ estudiante.nee}}</h2>
+                </div>
+                <img src="/static/Imagenes/LOGO LICEO TECNICO ADULTOS.jpg" alt="" class="w-24 ml-10">
+            </div>
+
+            
+                <div class="space-y-1 mt-24">
+                    <hr>
+                    <p class="text-white text-sm italic py-2 px-3 uppercase">Aquí puedes revisar todas las bitácoras</p>
+                    <hr class="mt-4">
+                </div>
+
+
+                <div class="flex flex-col items-stretch text-center mt-24">               
+                <!-- Botón Regresar a Estudiante -->
+                <hr>
+                <a href="{% url 'bitacora_estudiante_edit' bitacora.id %}"
+                    class="bg-gradient-to-b from-amber-200 via-amber-300 to-amber-300 
+                    hover:from-amber-600 hover:to-amber-500 text-blue-900 
+                    font-semibold mt-4 py-2 px-4 rounded-md block w-full mb-4">
+                    EDITAR BITÁCORA
+                </a>
+                <hr>
+            </div>
+
+            <div class="flex flex-col items-stretch text-center">
+                        
+                <!-- Botón Regresar a Estudiante -->
+                <a href="{% url 'bitacora_estudiante_list' estudiante.id %}"
+                    class="bg-gradient-to-b from-blue-400 via-blue-500 to-blue-400 
+                    hover:from-blue-600 hover:to-blue-500 text-white mt-4 
+                    py-2 px-4 rounded-md block w-full mb-4 font-semibold">
+                    REGRESAR
+                </a>
+                <hr>
+            </div>
+        </aside>
+
+        <div class="mx-auto w-full col-span-3 ml-10">
+                        <!-- Contenido de la bitácora -->
+                         <!-- INCLUIR LA BITACORA DETAIL DE bitacora_estudiante_detail.html -->
+
+                         {% include 'informes/bitacora_estudiante_detail.html' %}
+        </div>
+    </div>
+
+    
+</div>
+{% endblock %}

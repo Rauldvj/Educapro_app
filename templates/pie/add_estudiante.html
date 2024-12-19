@@ -1,0 +1,186 @@
+<!-- Modal centrado verticalmente -->
+<dialog id="add_estudiante_modal" class="max-w-2xl p-3 rounded-md bg-gradient-to-b from-blue-950 to-blue-900">
+    <div class="flex flex-col w-full h-auto">
+        <!-- Header -->
+        <h2 class="flex w-full justify-center items-center text-xl font-semibold font-sans text-white">
+            REGISTRO NUEVO ESTUDIANTE NEE PIE
+        </h2>
+        <hr>
+
+        <!-- Modal Content-->
+        <div class="flex max-w-xl py-0 px-2 mt-5 justify-center items-center rounded-md text-center text-gray-500">
+            <form action="{% url 'add_estudiante' %}" method="post" id="add_estudiante_form" class="" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <!-- ---------FILA 0--------- -->
+                <div class="mb-2 flex space-x-2">
+                    <div class="w-full text-start">
+                        <label for="nee" class="form-label text-white text-sm italic mb-0">Necesidades Educativas</label>
+                        <select name="nee" id="nee" class="bg-white text-gray-900 rounded-md pl-2 py-1 md:py-1 text-sm focus:outline-none w-full" required>
+                            <!-- Opciones de nee -->
+                            <option value="">Seleccione Necesidad Educativa</option>
+                            {% for opcion in opciones_nee %}
+                                <option value="{{ opcion.0 }}">{{ opcion.1 }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <!-- ---------FILA 1--------- -->
+                <div class="mb-2 flex space-x-2">
+                    <div class="w-1/2 text-start">
+                        <label for="area_academica" class="form-label text-white text-sm italic mb-0">Área Académica</label>
+                        <select name="area_academica" id="area_academica" class="area-select bg-white text-gray-900 rounded-md pl-2 py-1 md:py-1 text-sm focus:outline-none w-full" required onchange="filterCursos(this, document.getElementById('cursos'))">
+                            <!-- Opciones de área académica -->
+                            <option value="">Seleccione Área Académica</option>
+                            {% for area in areas_academicas %}
+                                <option value="{{ area.id }}">{{ area.nombre }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="w-1/2 text-start">
+                        <label for="cursos" class="form-label text-white text-sm italic mb-0">Curso</label>
+                        <select name="cursos" id="cursos" class="curso-select bg-white text-gray-900 rounded-md pl-2 py-1 md:py-1 text-sm focus:outline-none w-full" required>
+                            <!-- Opciones de curso -->
+                            <option value="">Seleccione Curso</option>
+                            {% for curso in opciones_curso %}
+                                <option value="{{ curso.id }}" data-area="{{ curso.area_academica_id }}">{{ curso.nombre }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <!-- ---------FILA 2--------- -->
+                <div class="mb-2 flex space-x-2">
+                    <div class="w-1/3 text-start">
+                        <label for="rut" class="form-label text-white text-sm italic mb-0">Rut</label>
+                        <input type="text" name="rut" id="rut" 
+                        class="rut-input bg-white text-gray-900 rounded-md pl-2 py-1 md:py-1 text-sm focus:outline-none w-full" placeholder="Ej: 11111111-1" maxlength="12" required />
+                    </div>
+                    <div class="w-1/3 text-start">
+                        <label for="etnia" class="form-label text-white text-sm italic mb-0">Etnia</label>
+                        <select name="etnia" id="etnia" class="bg-white text-gray-900 rounded-md pl-2 py-1 md:py-1 text-sm focus:outline-none w-full" required>
+                            <!-- Opciones de etnia -->
+                            <option value="">Seleccione Etnia</option>
+                            {% for opcion in opciones_etnia %}
+                                <option value="{{ opcion.0 }}">{{ opcion.1 }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="w-1/3 text-start">
+                        <label for="fecha_nacimiento" class="form-label text-white text-sm italic mb-0">Fecha Nacimiento</label>
+                        <input type="text" name="fecha_nacimiento" id="fecha_nacimiento" value="{{ estudiante.fecha_nacimiento|date:'d-m-Y' }}" 
+                                class="fecha-nacimiento-input bg-white text-gray-900 rounded-md pl-2 py-1 md:py-1 text-sm focus:outline-none w-full" 
+                                placeholder="DD-MM-YYYY" maxlength="10" required />
+                    </div>
+                </div>
+
+                <!-- ---------FILA 3--------- -->
+                <div class="mb-2 flex space-x-2">
+                    <div class="w-1/3 text-start">
+                        <label for="nombres" class="form-label text-white text-sm italic mb-0">Nombres</label>
+                        <input type="text" name="nombres" id="nombres" 
+                        class="bg-white text-gray-900 rounded-md pl-2 py-1 md:py-1 text-sm focus:outline-none w-full" placeholder="Nombres" required />
+                    </div>
+                    <div class="w-1/3 text-start">
+                        <label for="apellido_paterno" class="form-label text-white text-sm italic mb-0">Apellido Paterno</label>
+                        <input type="text" name="apellido_paterno" id="apellido_paterno" 
+                        class="bg-white text-gray-900 rounded-md pl-2 py-1 md:py-1 text-sm focus:outline-none w-full" placeholder="Apellido Paterno" required />
+                    </div>
+                    <div class="w-1/3 text-start">
+                        <label for="apellido_materno" class="form-label text-white text-sm italic mb-0">Apellido Materno</label>
+                        <input type="text" name="apellido_materno" id="apellido_materno" 
+                        class="bg-white text-gray-900 rounded-md pl-2 py-1 md:py-1 text-sm focus:outline-none w-full" placeholder="Apellido Materno" required />
+                    </div>
+                </div>
+
+                <!-- ---------FILA 4--------- -->
+                <div class="mb-2 flex space-x-2">
+                    <div class="w-1/2 text-start">
+                        <label for="direccion" class="form-label text-white text-sm italic mb-0">Dirección</label>
+                        <input type="text" name="direccion" id="direccion" 
+                        class="bg-white text-gray-900 rounded-md pl-2 py-1 md:py-1 text-sm focus:outline-none w-full" placeholder="Dirección 445" required />
+                    </div>
+                    <div class="w-1/4 text-start">
+                        <label for="telefono" class="form-label text-white text-sm italic mb-0">Teléfono +56</label>
+                        <input type="text" name="telefono" id="telefono" 
+                        class="bg-white text-gray-900 rounded-md pl-2 py-1 md:py-1 text-sm focus:outline-none w-full" placeholder="Ej: 912233333" maxlength="9" required />
+                    </div>
+                    <div class="w-1/4 text-start">
+                        <label for="correo" class="form-label text-white text-sm italic mb-0">Correo</label>
+                        <input type="email" name="correo" id="correo" 
+                        class="bg-white text-gray-900 rounded-md pl-2 py-1 md:py-1 text-sm focus:outline-none w-full" placeholder="Ejemplo: 7Kqeh@gmail.com" required />
+                    </div>
+                </div>
+
+                <!-- ---------FILA 5--------- -->
+                <div class="mb-2 flex space-x-2">
+                    <div class="w-1/2 text-start">
+                        <label for="region" class="form-label text-white text-sm italic mb-0">Región</label>
+                        <select name="region" id="region" class="region-select bg-white text-gray-900 rounded-md pl-2 py-1 md:py-1 text-sm focus:outline-none w-full" required onchange="filterComunas(this, document.getElementById('comuna'))">
+                            <!-- Opciones de región -->
+                            {% for region in regiones %}
+                                <option value="{{ region.id }}">{{ region.region }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="w-1/2 text-start">
+                        <label for="comuna" class="form-label text-white text-sm italic mb-0">Comuna</label>
+                        <select name="comuna" id="comuna" class="comuna-select bg-white text-gray-900 rounded-md pl-2 py-1 md:py-1 text-sm focus:outline-none w-full" required>
+                            <option value="">Seleccione comuna</option>
+                            <!-- Opciones de comuna -->
+                            {% for comuna in comunas %}
+                                <option value="{{ comuna.id }}" data-region="{{ comuna.region_id }}">{{ comuna.comuna }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <!-- ---------FILA 6--------- -->
+                <div class="mb-2 flex space-x-2">
+                    <div class="w-full text-start">
+                        <label for="comorbilidad" class="form-label text-white text-sm italic mb-0">Comorbilidad</label>
+                        <textarea name="comorbilidad" id="comorbilidad" 
+                        class="bg-white text-black rounded-md pl-2 py-1 md:py-1 text-sm focus:outline-none w-full" rows="4" required>{{ comorbilidad }}</textarea>
+                    </div>
+                </div>
+
+                <!-- Modal Footer -->
+                <div class="modal-footer flex justify-end mt-3 w-full space-x-2">
+                    <button type="submit" class="bg-gradient-to-b from-amber-200 via-amber-300 to-amber-300 
+                    hover:from-amber-600 hover:to-amber-500 text-blue-900 font-semibold text-md p-2 
+                    md:p-2 uppercase rounded-md">GUARDAR NUEVO ESTUDIANTE</button>
+
+                    <button type="button" class="bg-gradient-to-b from-blue-400 via-blue-500 to-blue-400 
+                    hover:from-blue-600 hover:to-blue-500 text-white py-2 px-4 rounded-md" 
+                    onclick="document.getElementById('add_estudiante_modal').close()">CERRAR</button>
+                </div>
+
+            </form>
+        </div>
+        <!-- End of Modal Content-->
+    </div>
+</dialog>
+
+<!-- Estilos personalizados del Modal -->
+<style>
+    dialog[open] {
+        animation: appear 0.3s cubic-bezier(0, 1.8, 1, 1);
+    }
+    dialog::backdrop {
+        background: linear-gradient(45deg, rgba(0, 0, 0, 0.5), rgba(54, 54, 54, 0.5));
+        backdrop-filter: blur(3px);
+    }
+   
+    @keyframes appear {
+        from {
+            opacity: 0;
+            transform: scale(0.5);
+        }
+   
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+</style>
